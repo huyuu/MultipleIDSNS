@@ -15,6 +15,11 @@
 		26C0C06021BE888600667E87 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26C0C05E21BE888600667E87 /* LaunchScreen.storyboard */; };
 		26C0C06821BE89C000667E87 /* PageManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C06721BE89C000667E87 /* PageManagerViewController.swift */; };
 		26C0C06A21BE8A0400667E87 /* Main1TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C06921BE8A0400667E87 /* Main1TableViewController.swift */; };
+		26C0C07121BEB79000667E87 /* WeakErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C07021BEB79000667E87 /* WeakErrorHandler.swift */; };
+		26C0C07521BF48CC00667E87 /* SNSID+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C07321BF48CC00667E87 /* SNSID+CoreDataClass.swift */; };
+		26C0C07621BF48CC00667E87 /* SNSID+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C07421BF48CC00667E87 /* SNSID+CoreDataProperties.swift */; };
+		26C0C07921BF553600667E87 /* Account+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C07721BF553600667E87 /* Account+CoreDataClass.swift */; };
+		26C0C07A21BF553600667E87 /* Account+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C07821BF553600667E87 /* Account+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +33,11 @@
 		26C0C06121BE888600667E87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		26C0C06721BE89C000667E87 /* PageManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageManagerViewController.swift; sourceTree = "<group>"; };
 		26C0C06921BE8A0400667E87 /* Main1TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main1TableViewController.swift; sourceTree = "<group>"; };
+		26C0C07021BEB79000667E87 /* WeakErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakErrorHandler.swift; sourceTree = "<group>"; };
+		26C0C07321BF48CC00667E87 /* SNSID+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SNSID+CoreDataClass.swift"; sourceTree = "<group>"; };
+		26C0C07421BF48CC00667E87 /* SNSID+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SNSID+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		26C0C07721BF553600667E87 /* Account+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataClass.swift"; sourceTree = "<group>"; };
+		26C0C07821BF553600667E87 /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,8 +75,10 @@
 				26C0C05621BE888500667E87 /* Main.storyboard */,
 				26C0C06C21BEAFB000667E87 /* CustomDefinitions */,
 				26C0C06B21BEAF8200667E87 /* MainControllers */,
-				26C0C05C21BE888600667E87 /* Assets.xcassets */,
+				26C0C06F21BEB73300667E87 /* ErrorHandling */,
 				26C0C05E21BE888600667E87 /* LaunchScreen.storyboard */,
+				26C0C05C21BE888600667E87 /* Assets.xcassets */,
+				26C0C07221BF489500667E87 /* CoreDataDefinitions */,
 				26C0C06121BE888600667E87 /* Info.plist */,
 				26C0C05921BE888500667E87 /* MID.xcdatamodeld */,
 			);
@@ -87,6 +99,25 @@
 			children = (
 			);
 			path = CustomDefinitions;
+			sourceTree = "<group>";
+		};
+		26C0C06F21BEB73300667E87 /* ErrorHandling */ = {
+			isa = PBXGroup;
+			children = (
+				26C0C07021BEB79000667E87 /* WeakErrorHandler.swift */,
+			);
+			path = ErrorHandling;
+			sourceTree = "<group>";
+		};
+		26C0C07221BF489500667E87 /* CoreDataDefinitions */ = {
+			isa = PBXGroup;
+			children = (
+				26C0C07321BF48CC00667E87 /* SNSID+CoreDataClass.swift */,
+				26C0C07421BF48CC00667E87 /* SNSID+CoreDataProperties.swift */,
+				26C0C07721BF553600667E87 /* Account+CoreDataClass.swift */,
+				26C0C07821BF553600667E87 /* Account+CoreDataProperties.swift */,
+			);
+			path = CoreDataDefinitions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -162,8 +193,13 @@
 			files = (
 				26C0C05B21BE888500667E87 /* MID.xcdatamodeld in Sources */,
 				26C0C06821BE89C000667E87 /* PageManagerViewController.swift in Sources */,
+				26C0C07A21BF553600667E87 /* Account+CoreDataProperties.swift in Sources */,
 				26C0C06A21BE8A0400667E87 /* Main1TableViewController.swift in Sources */,
+				26C0C07121BEB79000667E87 /* WeakErrorHandler.swift in Sources */,
 				26C0C05521BE888500667E87 /* ViewController.swift in Sources */,
+				26C0C07621BF48CC00667E87 /* SNSID+CoreDataProperties.swift in Sources */,
+				26C0C07521BF48CC00667E87 /* SNSID+CoreDataClass.swift in Sources */,
+				26C0C07921BF553600667E87 /* Account+CoreDataClass.swift in Sources */,
 				26C0C05321BE888500667E87 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

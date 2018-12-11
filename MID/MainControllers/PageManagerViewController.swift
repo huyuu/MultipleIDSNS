@@ -25,7 +25,9 @@ class PageManagerViewController: UIPageViewController {
     func initiatePage() -> UITableViewController? {
         guard let page = storyboard!.instantiateViewController(withIdentifier: "MainViewController") as? UITableViewController else {   return nil }
         
-        // page exits:
+        // page exists
+        
+        
         return page
     }
 
@@ -39,4 +41,20 @@ class PageManagerViewController: UIPageViewController {
     }
     */
 
+}
+
+
+extension PageManagerViewController: UIPageViewControllerDataSource {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        if let viewController = viewController as? UITableViewController,
+            let pageIndex = viewController.pageIndex {
+            return
+        }
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        <#code#>
+    }
+    
+    
 }
