@@ -3,11 +3,17 @@
     <entity name="Account" representedClassName=".Account" syncable="YES">
         <attribute name="name" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="Post" representedClassName=".Post" syncable="YES">
+        <attribute name="content" attributeType="String" syncable="YES"/>
+        <attribute name="speakerID" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="speakerName" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="SNSID" representedClassName=".SNSID" syncable="YES">
         <attribute name="name" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="SNSID" positionX="-63" positionY="-18" width="128" height="60"/>
         <element name="Account" positionX="-54" positionY="0" width="128" height="60"/>
+        <element name="SNSID" positionX="-63" positionY="-18" width="128" height="60"/>
+        <element name="Post" positionX="-54" positionY="0" width="128" height="90"/>
     </elements>
 </model>

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		260D706621CF63AC0024B1A0 /* ThreadDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260D706521CF63AC0024B1A0 /* ThreadDetailTableViewController.swift */; };
+		263AE67C21CBD6D20046B2F4 /* AddSNSIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263AE67B21CBD6D20046B2F4 /* AddSNSIDViewController.swift */; };
+		266693EB21C3F23A008C8DFE /* JSONDataForConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266693EA21C3F23A008C8DFE /* JSONDataForConnection.swift */; };
 		26C0C05321BE888500667E87 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C05221BE888500667E87 /* AppDelegate.swift */; };
 		26C0C05521BE888500667E87 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C05421BE888500667E87 /* ViewController.swift */; };
 		26C0C05821BE888500667E87 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26C0C05621BE888500667E87 /* Main.storyboard */; };
@@ -14,15 +17,21 @@
 		26C0C05D21BE888600667E87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26C0C05C21BE888600667E87 /* Assets.xcassets */; };
 		26C0C06021BE888600667E87 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26C0C05E21BE888600667E87 /* LaunchScreen.storyboard */; };
 		26C0C06821BE89C000667E87 /* PageManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C06721BE89C000667E87 /* PageManagerViewController.swift */; };
-		26C0C06A21BE8A0400667E87 /* Main1TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C06921BE8A0400667E87 /* Main1TableViewController.swift */; };
+		26C0C06A21BE8A0400667E87 /* Main0TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C06921BE8A0400667E87 /* Main0TableViewController.swift */; };
 		26C0C07121BEB79000667E87 /* WeakErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C07021BEB79000667E87 /* WeakErrorHandler.swift */; };
 		26C0C07521BF48CC00667E87 /* SNSID+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C07321BF48CC00667E87 /* SNSID+CoreDataClass.swift */; };
 		26C0C07621BF48CC00667E87 /* SNSID+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C07421BF48CC00667E87 /* SNSID+CoreDataProperties.swift */; };
 		26C0C07921BF553600667E87 /* Account+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C07721BF553600667E87 /* Account+CoreDataClass.swift */; };
 		26C0C07A21BF553600667E87 /* Account+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C07821BF553600667E87 /* Account+CoreDataProperties.swift */; };
+		26E5571421C0AEF6000604DE /* Main1TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5571321C0AEF6000604DE /* Main1TableViewController.swift */; };
+		26E5571721C11B9D000604DE /* Post+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5571521C11B9D000604DE /* Post+CoreDataClass.swift */; };
+		26E5571C21C120E5000604DE /* Post+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5571B21C120E5000604DE /* Post+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		260D706521CF63AC0024B1A0 /* ThreadDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadDetailTableViewController.swift; sourceTree = "<group>"; };
+		263AE67B21CBD6D20046B2F4 /* AddSNSIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSNSIDViewController.swift; sourceTree = "<group>"; };
+		266693EA21C3F23A008C8DFE /* JSONDataForConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDataForConnection.swift; sourceTree = "<group>"; };
 		26C0C04F21BE888500667E87 /* MID.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MID.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26C0C05221BE888500667E87 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		26C0C05421BE888500667E87 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -32,12 +41,15 @@
 		26C0C05F21BE888600667E87 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		26C0C06121BE888600667E87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		26C0C06721BE89C000667E87 /* PageManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageManagerViewController.swift; sourceTree = "<group>"; };
-		26C0C06921BE8A0400667E87 /* Main1TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main1TableViewController.swift; sourceTree = "<group>"; };
+		26C0C06921BE8A0400667E87 /* Main0TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main0TableViewController.swift; sourceTree = "<group>"; };
 		26C0C07021BEB79000667E87 /* WeakErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakErrorHandler.swift; sourceTree = "<group>"; };
 		26C0C07321BF48CC00667E87 /* SNSID+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SNSID+CoreDataClass.swift"; sourceTree = "<group>"; };
 		26C0C07421BF48CC00667E87 /* SNSID+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SNSID+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		26C0C07721BF553600667E87 /* Account+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataClass.swift"; sourceTree = "<group>"; };
 		26C0C07821BF553600667E87 /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		26E5571321C0AEF6000604DE /* Main1TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main1TableViewController.swift; sourceTree = "<group>"; };
+		26E5571521C11B9D000604DE /* Post+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Post+CoreDataClass.swift"; sourceTree = "<group>"; };
+		26E5571B21C120E5000604DE /* Post+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Post+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +63,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		263AE67A21CBD6740046B2F4 /* SubControllers */ = {
+			isa = PBXGroup;
+			children = (
+				263AE67B21CBD6D20046B2F4 /* AddSNSIDViewController.swift */,
+				260D706521CF63AC0024B1A0 /* ThreadDetailTableViewController.swift */,
+			);
+			path = SubControllers;
+			sourceTree = "<group>";
+		};
 		26C0C04621BE888500667E87 = {
 			isa = PBXGroup;
 			children = (
@@ -73,6 +94,7 @@
 				26C0C05221BE888500667E87 /* AppDelegate.swift */,
 				26C0C05421BE888500667E87 /* ViewController.swift */,
 				26C0C05621BE888500667E87 /* Main.storyboard */,
+				263AE67A21CBD6740046B2F4 /* SubControllers */,
 				26C0C06C21BEAFB000667E87 /* CustomDefinitions */,
 				26C0C06B21BEAF8200667E87 /* MainControllers */,
 				26C0C06F21BEB73300667E87 /* ErrorHandling */,
@@ -89,7 +111,8 @@
 			isa = PBXGroup;
 			children = (
 				26C0C06721BE89C000667E87 /* PageManagerViewController.swift */,
-				26C0C06921BE8A0400667E87 /* Main1TableViewController.swift */,
+				26C0C06921BE8A0400667E87 /* Main0TableViewController.swift */,
+				26E5571321C0AEF6000604DE /* Main1TableViewController.swift */,
 			);
 			path = MainControllers;
 			sourceTree = "<group>";
@@ -97,6 +120,7 @@
 		26C0C06C21BEAFB000667E87 /* CustomDefinitions */ = {
 			isa = PBXGroup;
 			children = (
+				266693EA21C3F23A008C8DFE /* JSONDataForConnection.swift */,
 			);
 			path = CustomDefinitions;
 			sourceTree = "<group>";
@@ -116,6 +140,8 @@
 				26C0C07421BF48CC00667E87 /* SNSID+CoreDataProperties.swift */,
 				26C0C07721BF553600667E87 /* Account+CoreDataClass.swift */,
 				26C0C07821BF553600667E87 /* Account+CoreDataProperties.swift */,
+				26E5571521C11B9D000604DE /* Post+CoreDataClass.swift */,
+				26E5571B21C120E5000604DE /* Post+CoreDataProperties.swift */,
 			);
 			path = CoreDataDefinitions;
 			sourceTree = "<group>";
@@ -192,15 +218,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				26C0C05B21BE888500667E87 /* MID.xcdatamodeld in Sources */,
+				263AE67C21CBD6D20046B2F4 /* AddSNSIDViewController.swift in Sources */,
+				260D706621CF63AC0024B1A0 /* ThreadDetailTableViewController.swift in Sources */,
+				26E5571721C11B9D000604DE /* Post+CoreDataClass.swift in Sources */,
 				26C0C06821BE89C000667E87 /* PageManagerViewController.swift in Sources */,
+				26E5571421C0AEF6000604DE /* Main1TableViewController.swift in Sources */,
 				26C0C07A21BF553600667E87 /* Account+CoreDataProperties.swift in Sources */,
-				26C0C06A21BE8A0400667E87 /* Main1TableViewController.swift in Sources */,
+				26C0C06A21BE8A0400667E87 /* Main0TableViewController.swift in Sources */,
 				26C0C07121BEB79000667E87 /* WeakErrorHandler.swift in Sources */,
 				26C0C05521BE888500667E87 /* ViewController.swift in Sources */,
 				26C0C07621BF48CC00667E87 /* SNSID+CoreDataProperties.swift in Sources */,
+				266693EB21C3F23A008C8DFE /* JSONDataForConnection.swift in Sources */,
 				26C0C07521BF48CC00667E87 /* SNSID+CoreDataClass.swift in Sources */,
 				26C0C07921BF553600667E87 /* Account+CoreDataClass.swift in Sources */,
 				26C0C05321BE888500667E87 /* AppDelegate.swift in Sources */,
+				26E5571C21C120E5000604DE /* Post+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

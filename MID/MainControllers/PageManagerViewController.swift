@@ -9,27 +9,30 @@
 import UIKit
 
 class PageManagerViewController: UIPageViewController {
+    
+    var currentPageIndex = 0
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        print("view did load.")
+        print("PageManagerViewController did load.")
         
-        if let viewController = initiatePage(){
+        if let viewController = initiatePage(withIdentifier: "Main0Scene") {
             setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
-            print("page exists.")
+            print("Main0Scene page exists.")
+            dataSource = self
         }
     }
     
     
-    func initiatePage() -> UITableViewController? {
-        guard let page = storyboard!.instantiateViewController(withIdentifier: "MainViewController") as? UITableViewController else {   return nil }
-        
-        // page exists
-        
-        
+    func initiatePage(withIdentifier identifier: String) -> UITableViewController? {
+        guard let page = storyboard!.instantiateViewController(withIdentifier: identifier) as? UITableViewController else {   return nil }
         return page
     }
+    
+    
+    
 
     /*
     // MARK: - Navigation
@@ -44,17 +47,77 @@ class PageManagerViewController: UIPageViewController {
 }
 
 
+
+// MARK: - Manage page changing
+
 extension PageManagerViewController: UIPageViewControllerDataSource {
+    
+    // Prepare for forward and backward swips
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        if let viewController = viewController as? UITableViewController,
-            let pageIndex = viewController.pageIndex {
-            return
+//        switch viewController {  // Current viewController
+//        case is Main0TableViewController:
+//            currentPageIndex = (viewController as! Main0TableViewController).pageIndex
+//            return nil  // Left swip is invalid
+//
+//        case is Main1TableViewController:
+//            currentPageIndex = (viewController as! Main1TableViewController).pageIndex
+//            return self.initiatePage(withIdentifier: "Main0Scene")
+//
+//        // Shouldn't happen
+//        default:
+//            raiseFatalError("We lost the current page when swipping backward.")
+//            return nil
+//        }
+        
+        if viewController.isKind(of: Main0TableViewController.self) {
+            currentPageIndex = (viewController as! Main0TableViewController).pageIndex
+            return nil  // Left swip is invalid
+        } else if viewController.isKind(of: Main1TableViewController.self) {
+            currentPageIndex = (viewController as! Main1TableViewController).pageIndex
+            return self.initiatePage(withIdentifier: "Main0Scene")
+        } else {
+            raiseFatalError("We lost the current page when changing pages.")
+            return nil
         }
     }
     
+    
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        <#code#>
+//        switch viewController {
+//        case is Main0TableViewController:
+//            currentPageIndex = (viewController as! Main0TableViewController).pageIndex
+//            return self.initiatePage(withIdentifier: "Main1Scene")
+//
+//        case is Main1TableViewController:
+//            currentPageIndex = (viewController as! Main1TableViewController).pageIndex
+//            return nil
+//
+//        // Shouldn't happen
+//        default:
+//            raiseFatalError("We lost the current page when swipping forward.")
+//            return nil
+//        }
+        
+        
+        if viewController.isKind(of: Main0TableViewController.self) {
+            currentPageIndex = (viewController as! Main0TableViewController).pageIndex
+            return self.initiatePage(withIdentifier: "Main1Scene")
+        } else if viewController.isKind(of: Main0TableViewController.self) {
+            currentPageIndex = (viewController as! Main1TableViewController).pageIndex
+            return nil
+        } else {
+            raiseFatalError("We lost the current page when changing pages.")
+            return nil
+        }
     }
     
     
+    // Methods for pageIndicator
+    func presentationCount(for pageViewController: UIPageViewController) -> Int {
+        return 2
+    }
+    
+    func presentationIndex(for pageViewController: UIPageViewController) -> Int {
+        return currentPageIndex
+    }
 }
