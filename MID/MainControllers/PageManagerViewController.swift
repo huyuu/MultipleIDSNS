@@ -26,7 +26,7 @@ class PageManagerViewController: UIPageViewController {
     }
     
     
-    func initiatePage(withIdentifier identifier: String) -> UITableViewController? {
+    private func initiatePage(withIdentifier identifier: String) -> UITableViewController? {
         guard let page = storyboard!.instantiateViewController(withIdentifier: identifier) as? UITableViewController else {   return nil }
         return page
     }
@@ -72,10 +72,13 @@ extension PageManagerViewController: UIPageViewControllerDataSource {
         if viewController.isKind(of: Main0TableViewController.self) {
             currentPageIndex = (viewController as! Main0TableViewController).pageIndex
             return nil  // Left swip is invalid
+            
         } else if viewController.isKind(of: Main1TableViewController.self) {
             currentPageIndex = (viewController as! Main1TableViewController).pageIndex
             return self.initiatePage(withIdentifier: "Main0Scene")
-        } else {
+            
+        }
+        else {
             raiseFatalError("We lost the current page when changing pages.")
             return nil
         }
@@ -102,9 +105,11 @@ extension PageManagerViewController: UIPageViewControllerDataSource {
         if viewController.isKind(of: Main0TableViewController.self) {
             currentPageIndex = (viewController as! Main0TableViewController).pageIndex
             return self.initiatePage(withIdentifier: "Main1Scene")
+            
         } else if viewController.isKind(of: Main0TableViewController.self) {
             currentPageIndex = (viewController as! Main1TableViewController).pageIndex
             return nil
+            
         } else {
             raiseFatalError("We lost the current page when changing pages.")
             return nil

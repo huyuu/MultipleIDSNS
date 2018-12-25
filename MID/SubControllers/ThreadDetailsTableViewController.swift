@@ -8,7 +8,12 @@
 
 import UIKit
 
-class ThreadDetailTableViewController: UITableViewController {
+class ThreadDetailsTableViewController: UITableViewController {
+    
+    let pageIndex = 1
+    // The post been tabbed, should be set by the ViewController who calls the segue.
+    var postTabbed: CodablePost?
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,29 +24,68 @@ class ThreadDetailTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-
+    
+    
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        // Default value, need to be changed.
+        return 2
     }
 
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        // Check whether postTabbed exists, which should always be true, otherwise raise fatal error and return an empty cell
+        guard let post = postTabbed else {
+            raiseFatalError("The optional variable 'postTabbed' in ThreadDetailsTableViewController is nil.")
+            return tableView.dequeueReusableCell(withIdentifier: "reusableCellOfPostDetail", for: indexPath)
+        }
 
-        // Configure the cell...
-
-        return cell
+        // Check which row to present
+        switch indexPath.row {
+        case 0: // Show the post
+            let cell = tableView.dequeueReusableCell(withIdentifier: "reusableCellOfPostDetail", for: indexPath)
+            // Set speakerName
+            let speakerNameLabel = cell.viewWithTag(200) as! UILabel
+            speakerNameLabel.text = post.speakerName
+            // Set content
+            let contentLabel = cell.viewWithTag(201) as! UILabel
+            contentLabel.text = post.content
+            // Set time
+            let timeLabel = cell.viewWithTag(202) as! UILabel
+            
+            return cell
+            
+        case 1: // Show buttons for action
+            let cell = tableView.dequeueReusableCell(withIdentifier: "reusableCellOfActionButtons", for: indexPath)
+            return cell
+            
+        default: // Show replies of the post
+            let cell = tableView.dequeueReusableCell(withIdentifier: "reusableCellOfReply", for: indexPath)
+            // Check if there is any reply to the post
+            guard let reply = post.replies?[indexPath.row-2] else {
+                return cell
+            }
+            // Set speakerName
+            let speakerNameLabel = cell.viewWithTag(200) as! UILabel
+            speakerNameLabel.text = reply.speakerName
+            // Set content
+            let contentLabel = cell.viewWithTag(201) as! UILabel
+            contentLabel.text = reply.content
+            // Set time
+            let timeLabel = cell.viewWithTag(202) as! UILabel
+            
+            return cell
+        }
     }
-    */
+ 
 
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -87,4 +131,9 @@ class ThreadDetailTableViewController: UITableViewController {
     }
     */
 
+    
+    @IBAction func backToTimeLine(_ sender: UIBarButtonItem) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
 }

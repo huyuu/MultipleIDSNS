@@ -13,4 +13,20 @@ public struct CodablePost: Codable {
     let speakerName: String
     let speakerID: Int64
     let content: String
+    var replies: [CodableReply]?
+    
+    // Initializer direct for CoreData type 'Post'
+    init(_ post: Post) {
+        self.speakerName = post.speakerName
+        self.speakerID = post.speakerID
+        self.content = post.content
+        self.replies = nil
+    }
+}
+
+
+public struct CodableReply: Codable {
+    let speakerName: String
+    let speakerID: Int64
+    let content: String
 }

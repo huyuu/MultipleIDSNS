@@ -26,4 +26,8 @@ class AddSNSIDViewController: UIViewController {
     }
     */
 
+    
+    @IBAction func addSNSIDdidCancel(_ sender: UIBarButtonItem) {
+        self.dismiss(animated: true, completion: nil)
+    }
 }

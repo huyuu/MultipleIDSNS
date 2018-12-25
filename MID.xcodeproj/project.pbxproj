@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		260D706621CF63AC0024B1A0 /* ThreadDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260D706521CF63AC0024B1A0 /* ThreadDetailTableViewController.swift */; };
+		260D706621CF63AC0024B1A0 /* ThreadDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260D706521CF63AC0024B1A0 /* ThreadDetailsTableViewController.swift */; };
 		263AE67C21CBD6D20046B2F4 /* AddSNSIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263AE67B21CBD6D20046B2F4 /* AddSNSIDViewController.swift */; };
 		266693EB21C3F23A008C8DFE /* JSONDataForConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266693EA21C3F23A008C8DFE /* JSONDataForConnection.swift */; };
+		2693820E21CFD194007549F6 /* Reply+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2693820B21CFD193007549F6 /* Reply+CoreDataClass.swift */; };
+		2693820F21CFD194007549F6 /* Reply+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2693820C21CFD193007549F6 /* Reply+CoreDataProperties.swift */; };
 		26C0C05321BE888500667E87 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C05221BE888500667E87 /* AppDelegate.swift */; };
 		26C0C05521BE888500667E87 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C05421BE888500667E87 /* ViewController.swift */; };
 		26C0C05821BE888500667E87 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26C0C05621BE888500667E87 /* Main.storyboard */; };
@@ -29,9 +31,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		260D706521CF63AC0024B1A0 /* ThreadDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadDetailTableViewController.swift; sourceTree = "<group>"; };
+		260D706521CF63AC0024B1A0 /* ThreadDetailsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadDetailsTableViewController.swift; sourceTree = "<group>"; };
 		263AE67B21CBD6D20046B2F4 /* AddSNSIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSNSIDViewController.swift; sourceTree = "<group>"; };
 		266693EA21C3F23A008C8DFE /* JSONDataForConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDataForConnection.swift; sourceTree = "<group>"; };
+		2693820B21CFD193007549F6 /* Reply+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reply+CoreDataClass.swift"; sourceTree = "<group>"; };
+		2693820C21CFD193007549F6 /* Reply+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reply+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		26C0C04F21BE888500667E87 /* MID.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MID.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26C0C05221BE888500667E87 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		26C0C05421BE888500667E87 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -67,7 +71,7 @@
 			isa = PBXGroup;
 			children = (
 				263AE67B21CBD6D20046B2F4 /* AddSNSIDViewController.swift */,
-				260D706521CF63AC0024B1A0 /* ThreadDetailTableViewController.swift */,
+				260D706521CF63AC0024B1A0 /* ThreadDetailsTableViewController.swift */,
 			);
 			path = SubControllers;
 			sourceTree = "<group>";
@@ -136,6 +140,8 @@
 		26C0C07221BF489500667E87 /* CoreDataDefinitions */ = {
 			isa = PBXGroup;
 			children = (
+				2693820B21CFD193007549F6 /* Reply+CoreDataClass.swift */,
+				2693820C21CFD193007549F6 /* Reply+CoreDataProperties.swift */,
 				26C0C07321BF48CC00667E87 /* SNSID+CoreDataClass.swift */,
 				26C0C07421BF48CC00667E87 /* SNSID+CoreDataProperties.swift */,
 				26C0C07721BF553600667E87 /* Account+CoreDataClass.swift */,
@@ -219,16 +225,18 @@
 			files = (
 				26C0C05B21BE888500667E87 /* MID.xcdatamodeld in Sources */,
 				263AE67C21CBD6D20046B2F4 /* AddSNSIDViewController.swift in Sources */,
-				260D706621CF63AC0024B1A0 /* ThreadDetailTableViewController.swift in Sources */,
+				260D706621CF63AC0024B1A0 /* ThreadDetailsTableViewController.swift in Sources */,
 				26E5571721C11B9D000604DE /* Post+CoreDataClass.swift in Sources */,
 				26C0C06821BE89C000667E87 /* PageManagerViewController.swift in Sources */,
 				26E5571421C0AEF6000604DE /* Main1TableViewController.swift in Sources */,
 				26C0C07A21BF553600667E87 /* Account+CoreDataProperties.swift in Sources */,
 				26C0C06A21BE8A0400667E87 /* Main0TableViewController.swift in Sources */,
+				2693820F21CFD194007549F6 /* Reply+CoreDataProperties.swift in Sources */,
 				26C0C07121BEB79000667E87 /* WeakErrorHandler.swift in Sources */,
 				26C0C05521BE888500667E87 /* ViewController.swift in Sources */,
 				26C0C07621BF48CC00667E87 /* SNSID+CoreDataProperties.swift in Sources */,
 				266693EB21C3F23A008C8DFE /* JSONDataForConnection.swift in Sources */,
+				2693820E21CFD194007549F6 /* Reply+CoreDataClass.swift in Sources */,
 				26C0C07521BF48CC00667E87 /* SNSID+CoreDataClass.swift in Sources */,
 				26C0C07921BF553600667E87 /* Account+CoreDataClass.swift in Sources */,
 				26C0C05321BE888500667E87 /* AppDelegate.swift in Sources */,
