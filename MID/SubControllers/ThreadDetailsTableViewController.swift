@@ -57,7 +57,7 @@ class ThreadDetailsTableViewController: UITableViewController {
             let contentLabel = cell.viewWithTag(201) as! UILabel
             contentLabel.text = post.content
             // Set time
-            let timeLabel = cell.viewWithTag(202) as! UILabel
+            let dateLabel = cell.viewWithTag(202) as! UILabel
             
             return cell
             
@@ -78,7 +78,7 @@ class ThreadDetailsTableViewController: UITableViewController {
             let contentLabel = cell.viewWithTag(201) as! UILabel
             contentLabel.text = reply.content
             // Set time
-            let timeLabel = cell.viewWithTag(202) as! UILabel
+            let dateLabel = cell.viewWithTag(202) as! UILabel
             
             return cell
         }

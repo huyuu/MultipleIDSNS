@@ -2,7 +2,7 @@
 //  Reply+CoreDataProperties.swift
 //  MID
 //
-//  Created by 江宇揚 on 2018/12/23.
+//  Created by 江宇揚 on 2018/12/26.
 //  Copyright © 2018 Jiang Yuyang. All rights reserved.
 //
 //
@@ -17,9 +17,10 @@ extension Reply {
         return NSFetchRequest<Reply>(entityName: "Reply")
     }
 
-    @NSManaged public var speakerName: String
-    @NSManaged public var speakerID: Int64
     @NSManaged public var content: String
+    @NSManaged public var speakerID: Int64
+    @NSManaged public var speakerName: String
+    @NSManaged public var date: NSDate
     @NSManaged public var belongingPost: Post
 
 }

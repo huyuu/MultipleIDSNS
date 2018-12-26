@@ -14,8 +14,10 @@ class Main1TableViewController: UITableViewController {
     // Prepare coreDataContext
     private let appDelegate = UIApplication.shared.delegate as! AppDelegate
     private let coreDataContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    // For local stored posts
-    var localStoredPosts: [Post]? = nil
+    /** For tabbed SNSID */
+    var tabbedSNSID: SNSID?
+    /** For local stored posts */
+    var localStoredPosts: [Post]?
 
     
     // MARK: - Load the view
@@ -37,12 +39,8 @@ class Main1TableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         print("Main1TableViewController will appear.")
         
-        // Fetch local stored posts from CoreData
-        do {
-            localStoredPosts = try coreDataContext.fetch(Post.fetchRequest())
-        } catch let error as NSError {
-            raiseFatalError("Couldn't fetch posts from coreDataContext. \(error), \(error.userInfo)")
-        }
+        // Fetch posts, which is [Post], from SNSID.posts which is a NSSet
+        localStoredPosts = tabbedSNSID!.posts?.allObjects as? [Post]
     }
     
     
@@ -146,7 +144,7 @@ class Main1TableViewController: UITableViewController {
                 let posts = try JSONDecoder().decode([CodablePost].self, from: data)
                 for post in posts {
                     blockOperations.addExecutionBlock {
-                        let newPost = Post(of: post, insertInto: self.coreDataContext)
+                        let newPost = Post(from: post, insertInto: self.coreDataContext)
                     }
                 }
                 // When all post is read, update the UI by a completion handler
@@ -182,17 +180,18 @@ class Main1TableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
+            coreDataContext.delete(localStoredPosts![indexPath.row])
+            appDelegate.saveContext()
+            localStoredPosts!.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        }
     }
-    */
+    
 
     /*
     // Override to support rearranging the table view.
@@ -225,6 +224,11 @@ class Main1TableViewController: UITableViewController {
         default:
             raiseFatalError("Segue preparing error, segue.identifier = \(segue.identifier)")
         }
+    }
+    
+    
+    @IBAction func backToSNSIDList(_ sender: UIBarButtonItem) {
+        self.dismiss(animated: true, completion: nil)
     }
 }
 

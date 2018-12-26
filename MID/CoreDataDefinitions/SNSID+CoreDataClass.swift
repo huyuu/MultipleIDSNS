@@ -12,5 +12,15 @@ import CoreData
 
 
 public class SNSID: NSManagedObject {
-
+    // Designed initiater of the superClass of Post
+    override public init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertInto: context)
+    }
+    
+    // Designed initiater of Post
+    public init(from newSNSID: CodableSNSID, insertInto context: NSManagedObjectContext) {
+        super.init(entity: SNSID.entity(), insertInto: context)
+        self.name = newSNSID.name
+        self.iDnumber = newSNSID.iDnumber
+    }
 }
