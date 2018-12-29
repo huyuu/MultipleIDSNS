@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import CoreData
+import Firebase
+
 
 class Main1TableViewController: UITableViewController {
     
@@ -15,9 +18,11 @@ class Main1TableViewController: UITableViewController {
     private let appDelegate = UIApplication.shared.delegate as! AppDelegate
     private let coreDataContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     /** For tabbed SNSID */
-    var tabbedSNSID: SNSID?
+    var tabbedSNSID: SNSID!
     /** For local stored posts */
     var localStoredPosts: [Post]?
+    /** For Firebase */
+    var firebaseRoot: DatabaseReference!
 
     
     // MARK: - Load the view
@@ -25,10 +30,6 @@ class Main1TableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("Main1TableViewController did load.")
-        
-//        self.tableView.rowHeight = UITableView.automaticDimension
-
-        // self.addPosts()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -37,10 +38,20 @@ class Main1TableViewController: UITableViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        print("Main1TableViewController will appear.")
+        print("Main1TableViewController will appear. Owner = \(tabbedSNSID.name)")
         
         // Fetch posts, which is [Post], from SNSID.posts which is a NSSet
-        localStoredPosts = tabbedSNSID!.posts?.allObjects as? [Post]
+//        localStoredPosts = tabbedSNSID.posts?.allObjects as? [Post]
+        
+        // Fetch from Firebase
+        firebaseRoot.observe(.childAdded) { (snapshot) in
+            print("Hello!!! \(snapshot.value)")
+            if let posts = snapshot.decodeToPost(speaker: self.tabbedSNSID, insertInto: self.coreDataContext) {
+                self.localStoredPosts = posts
+            }
+            self.tableView.reloadData()
+        }
+        
     }
     
     
@@ -55,10 +66,7 @@ class Main1TableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // If there are presaved posts return the amount, otherwise 0 (only as a original setting for a new SNSID).
-        if let posts = localStoredPosts {
-            return posts.count
-        }
-        return 0
+        return localStoredPosts?.count ?? 0
     }
     
     
@@ -75,7 +83,7 @@ class Main1TableViewController: UITableViewController {
         let post = posts[indexPath.row]
         // Speaker's name
         let speakerNameLabel = cell.viewWithTag(100) as! UILabel
-        let speakerName = post.speakerName
+        let speakerName = post.speaker.name
         speakerNameLabel.text = speakerName
         // Content
         let contentLabel = cell.viewWithTag(101) as! UILabel
@@ -95,73 +103,73 @@ class Main1TableViewController: UITableViewController {
     // MARK: - Custom actions
     
     // For debug only
-    func addPosts() {
-        for i in 1...3 {
-            let newPost = Post(entity: Post.entity(), insertInto: coreDataContext)
-            newPost.speakerName = "user\(i)"
-            newPost.speakerID = Int64(i)
-            newPost.content = "I like the number \(i)"
-            appDelegate.saveContext()
-        }
-    }
+//    func addPosts() {
+//        for i in 1...3 {
+//            let newPost = Post(entity: Post.entity(), insertInto: coreDataContext)
+//            newPost.speakerName = "user\(i)"
+//            newPost.speakerID = Int64(i)
+//            newPost.content = "I like the number \(i)"
+//            appDelegate.saveContext()
+//        }
+//    }
 
     
-    func requestPostsFromServer(baseURL: String) {
-        let defaultURLSession = URLSession(configuration: .default)
-        let url = URL(string: baseURL)!
-        defaultURLSession.dataTask(with: url) { (data, response, error) in
-            // Check error
-            if let error = error {
-                raiseFatalError("Response error: \(error)")
-                return
-            }
-            
-            // Check whether there is a response from server
-            guard let httpResponse = response as? HTTPURLResponse else {
-                raiseFatalError("Response is not a correct HTTP Response.")
-                return
-            }
-            
-            // Check whether the status code is 200 OK
-            switch httpResponse.statusCode {
-            case 200:
-                break
-            default:
-                raiseWeakError("Response is not '200 OK'.")
-                return
-            }
-            
-            // Check whether the data exist
-            guard let data = data else {
-                raiseFatalError("Data from the server is nil.")
-                return
-            }
-            
-            // Check valid JSONData
-            do {
-                let blockOperations = BlockOperation()
-                // Decode into [CodablePost]
-                let posts = try JSONDecoder().decode([CodablePost].self, from: data)
-                for post in posts {
-                    blockOperations.addExecutionBlock {
-                        let newPost = Post(from: post, insertInto: self.coreDataContext)
-                    }
-                }
-                // When all post is read, update the UI by a completion handler
-                blockOperations.completionBlock = {
-                    self.appDelegate.saveContext()
-                    OperationQueue.main.addOperation {
-                        self.tableView.reloadData()
-                    }
-                }
-                blockOperations.start()
-                
-            } catch let error {
-                raiseFatalError("Can't decode to Post: \(error)")
-                return
-            }
-        }.resume()
-    }
+//    func requestPostsFromServer(baseURL: String) {
+//        let defaultURLSession = URLSession(configuration: .default)
+//        let url = URL(string: baseURL)!
+//        defaultURLSession.dataTask(with: url) { (data, response, error) in
+//            // Check error
+//            if let error = error {
+//                raiseFatalError("Response error: \(error)")
+//                return
+//            }
+//
+//            // Check whether there is a response from server
+//            guard let httpResponse = response as? HTTPURLResponse else {
+//                raiseFatalError("Response is not a correct HTTP Response.")
+//                return
+//            }
+//
+//            // Check whether the status code is 200 OK
+//            switch httpResponse.statusCode {
+//            case 200:
+//                break
+//            default:
+//                raiseWeakError("Response is not '200 OK'.")
+//                return
+//            }
+//
+//            // Check whether the data exist
+//            guard let data = data else {
+//                raiseFatalError("Data from the server is nil.")
+//                return
+//            }
+//
+//            // Check valid JSONData
+//            do {
+//                let blockOperations = BlockOperation()
+//                // Decode into [CodablePost]
+//                let posts = try JSONDecoder().decode([CodablePost].self, from: data)
+//                for post in posts {
+//                    blockOperations.addExecutionBlock {
+//                        let newPost = Post(from: post, insertInto: self.coreDataContext)
+//                    }
+//                }
+//                // When all post is read, update the UI by a completion handler
+//                blockOperations.completionBlock = {
+//                    self.appDelegate.saveContext()
+//                    OperationQueue.main.addOperation {
+//                        self.tableView.reloadData()
+//                    }
+//                }
+//                blockOperations.start()
+//
+//            } catch let error {
+//                raiseFatalError("Can't decode to Post: \(error)")
+//                return
+//            }
+//        }.resume()
+//    }
     
  
     
@@ -185,8 +193,13 @@ class Main1TableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
-            coreDataContext.delete(localStoredPosts![indexPath.row])
-            appDelegate.saveContext()
+//            coreDataContext.delete(localStoredPosts![indexPath.row])
+//            appDelegate.saveContext()
+            
+            // Delete from Firebase
+            let toBeDeletePost = localStoredPosts![indexPath.row]
+            firebaseRoot.child("posts").child(toBeDeletePost.date.toString).removeValue()
+            
             localStoredPosts!.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
@@ -216,10 +229,15 @@ class Main1TableViewController: UITableViewController {
         switch segue.identifier! {
         case "showThreadDetails":
             let destinationController = segue.destination as! ThreadDetailsTableViewController
-            
             // Set the postTabbed of ThreadDetailsViewController
             let indexPathTabbed = tableView.indexPath(for: sender as! UITableViewCell)!
-            destinationController.postTabbed = CodablePost( localStoredPosts![indexPathTabbed.row] )
+            destinationController.postTabbed = localStoredPosts![indexPathTabbed.row]
+            
+        case "showAddPostView":
+            let destinationController = segue.destination as! AddPostViewController
+            // Pass speaker to AddSNSIDViewController
+            destinationController.speaker = tabbedSNSID
+            destinationController.firebaseRoot = firebaseRoot.child("posts")
             
         default:
             raiseFatalError("Segue preparing error, segue.identifier = \(segue.identifier)")

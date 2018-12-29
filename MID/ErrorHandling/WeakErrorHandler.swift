@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+
 public func raiseWeakError(_ message: String) {
     sendMessageToControlCenter(message)
     print("A weak error has occured:\n" + message)

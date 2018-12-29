@@ -2,7 +2,7 @@
 //  Post+CoreDataProperties.swift
 //  MID
 //
-//  Created by 江宇揚 on 2018/12/26.
+//  Created by 江宇揚 on 2018/12/29.
 //  Copyright © 2018 Jiang Yuyang. All rights reserved.
 //
 //
@@ -18,10 +18,9 @@ extension Post {
     }
 
     @NSManaged public var content: String
-    @NSManaged public var speakerID: Int64
-    @NSManaged public var speakerName: String
     @NSManaged public var date: NSDate
-    @NSManaged public var replies: NSSet
+    @NSManaged public var iDnumber: Int64
+    @NSManaged public var replies: NSSet?
     @NSManaged public var speaker: SNSID
 
 }
@@ -42,5 +41,3 @@ extension Post {
     @NSManaged public func removeFromReplies(_ values: NSSet)
 
 }
-
-

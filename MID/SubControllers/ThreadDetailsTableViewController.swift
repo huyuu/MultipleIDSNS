@@ -7,12 +7,16 @@
 //
 
 import UIKit
+import CoreData
+import Firebase
 
 class ThreadDetailsTableViewController: UITableViewController {
     
     let pageIndex = 1
     // The post been tabbed, should be set by the ViewController who calls the segue.
-    var postTabbed: CodablePost?
+    var postTabbed: Post!
+    /** For Firebase */
+    var firebaseRoot: DatabaseReference!
     
 
     override func viewDidLoad() {
@@ -52,7 +56,7 @@ class ThreadDetailsTableViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "reusableCellOfPostDetail", for: indexPath)
             // Set speakerName
             let speakerNameLabel = cell.viewWithTag(200) as! UILabel
-            speakerNameLabel.text = post.speakerName
+            speakerNameLabel.text = post.speaker.name
             // Set content
             let contentLabel = cell.viewWithTag(201) as! UILabel
             contentLabel.text = post.content
@@ -68,12 +72,14 @@ class ThreadDetailsTableViewController: UITableViewController {
         default: // Show replies of the post
             let cell = tableView.dequeueReusableCell(withIdentifier: "reusableCellOfReply", for: indexPath)
             // Check if there is any reply to the post
-            guard let reply = post.replies?[indexPath.row-2] else {
+            guard let replies = post.replies?.allObjects as? [Reply] else {
                 return cell
             }
+            
+            let reply = replies[indexPath.row-2]
             // Set speakerName
             let speakerNameLabel = cell.viewWithTag(200) as! UILabel
-            speakerNameLabel.text = reply.speakerName
+            speakerNameLabel.text = reply.belongingPost.speaker.name
             // Set content
             let contentLabel = cell.viewWithTag(201) as! UILabel
             contentLabel.text = reply.content

@@ -2,7 +2,7 @@
 //  SNSID+CoreDataProperties.swift
 //  MID
 //
-//  Created by 江宇揚 on 2018/12/25.
+//  Created by 江宇揚 on 2018/12/27.
 //  Copyright © 2018 Jiang Yuyang. All rights reserved.
 //
 //
@@ -17,9 +17,10 @@ extension SNSID {
         return NSFetchRequest<SNSID>(entityName: "SNSID")
     }
 
-    @NSManaged public var name: String
     @NSManaged public var iDnumber: Int64
+    @NSManaged public var name: String
     @NSManaged public var posts: NSSet?
+    @NSManaged public var owner: Account
 
 }
 
