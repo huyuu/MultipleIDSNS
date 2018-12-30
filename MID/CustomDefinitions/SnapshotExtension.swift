@@ -13,12 +13,12 @@ import UIKit
 
 
 public extension DataSnapshot {
-    public func decodeToSNSID(owner: Account, insertInto context: NSManagedObjectContext) -> [SNSID]? {
+    public func decodeToSNSIDs(owner: Account, insertInto context: NSManagedObjectContext) -> [SNSID]? {
         var newInstances: [SNSID] = []
-        
         // Check if snapshot contains a set of snsids
-        if let instancesSet = self.value as? JSONDATA {
-            // key: iDnumber, value: snsidInfo
+        if self.key == "snsids",
+            let instancesSet = self.value as? JSONDATA {
+            // key: name, value: snsidInfo
             for instance in instancesSet {
                 // Check if snsid.value contains snsidInfo
                 if let instanceInfo = instance.value as? JSONDATA {
@@ -32,15 +32,37 @@ public extension DataSnapshot {
         }
     }
     
-    public func decodeToPost(speaker: SNSID, insertInto context: NSManagedObjectContext) -> [Post]? {
+    
+    public func decodeToPosts(speaker: SNSID, insertInto context: NSManagedObjectContext) -> [Post]? {
         var newInstances: [Post] = []
         // Check if snapshot contains a set of posts
-        if let instancesSet = self.value as? JSONDATA {
-            // key: iDnumber, value: postInfo
+        if self.key == "posts",
+            let instancesSet = self.value as? JSONDATA {
+            // key: date, value: postInfo
             for instance in instancesSet {
                 // Check if postInfo.value contains postInfo
                 if let instanceInfo = instance.value as? JSONDATA {
                     let newInstance = Post(fromJSON: instanceInfo, speaker: speaker, insertInto: context)
+                    newInstances.append(newInstance)
+                }
+            }
+            return newInstances
+        } else {
+            return nil
+        }
+    }
+    
+    
+    public func decodeToReplies(belongingPost: Post, insertInto context: NSManagedObjectContext) -> [Reply]? {
+        var newInstances: [Reply] = []
+        // Check if snapshot contains a set of posts
+        if self.key == "replies",
+            let instancesSet = self.value as? JSONDATA {
+            // key: date, value: replyInfo
+            for instance in instancesSet {
+                // Check if postInfo.value contains postInfo
+                if let instanceInfo = instance.value as? JSONDATA {
+                    let newInstance = Reply(fromJSON: instanceInfo, belongsTo: belongingPost, insertInto: context)
                     newInstances.append(newInstance)
                 }
             }

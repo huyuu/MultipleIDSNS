@@ -46,7 +46,7 @@ class Main1TableViewController: UITableViewController {
         // Fetch from Firebase
         firebaseRoot.observe(.childAdded) { (snapshot) in
             print("Hello!!! \(snapshot.value)")
-            if let posts = snapshot.decodeToPost(speaker: self.tabbedSNSID, insertInto: self.coreDataContext) {
+            if let posts = snapshot.decodeToPosts(speaker: self.tabbedSNSID, insertInto: self.coreDataContext) {
                 self.localStoredPosts = posts
             }
             self.tableView.reloadData()
@@ -88,6 +88,9 @@ class Main1TableViewController: UITableViewController {
         // Content
         let contentLabel = cell.viewWithTag(101) as! UILabel
         contentLabel.text = post.content
+        // Date
+        let dateLabel = cell.viewWithTag(102) as! UILabel
+        dateLabel.text = post.date.toStringForPresentation
         
         return cell
     }

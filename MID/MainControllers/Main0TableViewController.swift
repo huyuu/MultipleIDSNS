@@ -11,7 +11,10 @@ import Firebase
 
 class Main0TableViewController: UITableViewController {
     
-    // Prepare coreDataContext
+    /**
+     Prepare coreDataContext
+     [Here](https://qiita.com/ktanaka117/items/e721b076ceffd182123f) is some useful source to be refered to :)
+    */
     private let appDelegate = UIApplication.shared.delegate as! AppDelegate
     private let coreDataContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -21,8 +24,9 @@ class Main0TableViewController: UITableViewController {
     var account: Account! = nil
     /** For generate viewController */
     let pageIndex = 0
-    /** For FirebaseDatabase
-     - Please refer to [this URL](https://www.raywenderlich.com/3-firebase-tutorial-getting-started)
+    /**
+     A Firebase database reference.
+     * Questions? refer to [this URL](https://www.raywenderlich.com/3-firebase-tutorial-getting-started)
     */
     var firebaseRoot: DatabaseReference!
     
@@ -62,9 +66,8 @@ class Main0TableViewController: UITableViewController {
         // Fetch data from Firebase and reload Data
         firebaseRoot = Database.database().reference(withPath: account.email)
         firebaseRoot.observe(.childAdded, with: { snapshot in
-            print("Here!!!: \(snapshot.value)")
-
-            if let snsids = snapshot.decodeToSNSID(owner: self.account, insertInto: self.coreDataContext) {
+//            print("Here!!!: \(snapshot.key):\(snapshot.value)")
+            if let snsids = snapshot.decodeToSNSIDs(owner: self.account, insertInto: self.coreDataContext) {
                 self.localStoredIDs = snsids
             }
             self.tableView.reloadData()

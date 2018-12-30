@@ -41,6 +41,7 @@ public class Reply: NSManagedObject, Codable {
     }
     
     
+    
     // MARK: - For Codable
     
     enum CodingKeysOfReply: String, CodingKey {

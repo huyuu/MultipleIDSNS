@@ -32,11 +32,13 @@ class AddSNSIDViewController: UIViewController {
             raiseFatalError("Account doesn't exists when calling AddSNSIDViewController.")
             return
         }
-        
+        // Check if firebase reference exists
         guard let _ = firebaseRoot else {
             raiseFatalError("FirebaseRoot isn't set when calling AddSNSIDViewController.")
             return
         }
+        // nameTextField is the first responder!
+        nameTextField.becomeFirstResponder()
     }
 
     

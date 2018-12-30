@@ -52,7 +52,7 @@ public class SNSID: NSManagedObject, Codable {
         // If any post exists
         if let posts = jsonData["posts"] as? JSONDATA {
             for post in posts {
-                // Get postInformation from post. Mark that post.key = post.iDnumber; and post.value = ["content":"content", "date":"date"] dictionary
+                // Get postInformation from post. Mark that post.key = post.date; and post.value = ["content":"content", "date":"date"] dictionary
                 guard let postInfo = post.value as? JSONDATA else {
                     raiseFatalError("Can't get postInfo from post.")
                     fatalError()
