@@ -2,7 +2,7 @@
 //  Post+CoreDataProperties.swift
 //  MID
 //
-//  Created by 江宇揚 on 2018/12/29.
+//  Created by 江宇揚 on 2018/12/30.
 //  Copyright © 2018 Jiang Yuyang. All rights reserved.
 //
 //
@@ -20,6 +20,7 @@ extension Post {
     @NSManaged public var content: String
     @NSManaged public var date: NSDate
     @NSManaged public var iDnumber: Int64
+    @NSManaged public var ref: String
     @NSManaged public var replies: NSSet?
     @NSManaged public var speaker: SNSID
 

@@ -52,11 +52,11 @@ class AddSNSIDViewController: UIViewController {
     
     @IBAction func addSNSIDdone(_ sender: UIBarButtonItem) {
         let name = nameTextField.text!
-        /** Create a new SNSID on CoreData */
-        let newSNSID = SNSID(name: name, owner: owner, insertInto: coreDataContext)
         
         /** Save new child to Firebase */
-        let newChildReference = firebaseRoot.child(newSNSID.name)
+        let newChildReference = firebaseRoot.child(name)
+        /** Create a new SNSID on CoreData */
+        let newSNSID = SNSID(name: name, owner: owner, ref: newChildReference.url, insertInto: coreDataContext)
         newChildReference.setValue(newSNSID.toJSON)
         
         coreDataContext.delete(newSNSID)

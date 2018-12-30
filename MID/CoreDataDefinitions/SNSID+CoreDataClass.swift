@@ -29,13 +29,32 @@ public class SNSID: NSManagedObject, Codable {
     
     
     /** Public all terms initializer */
-    public init(name: String, owner: Account, insertInto context: NSManagedObjectContext) {
+    public init(name: String, owner: Account, ref: String, insertInto context: NSManagedObjectContext) {
         super.init(entity: SNSID.entity(), insertInto: context)
         self.name = name
         self.iDnumber = Int64(name.hashValue)
-        self.posts = nil
+        self.myPosts = nil
+        self.publishedReplies = nil
         self.owner = owner
+        self.ref = ref
         owner.addToSnsids(self)
+    }
+    
+    
+    public convenience init(from refString: String, insertInto context: NSManagedObjectContext) {
+        let firebaseRef = Database.database().reference(fromURL: refString)
+        var snsidInfo: JSONDATA = [:]
+        
+        firebaseRef.observe(.value, with: { snapshot in
+            guard let value = snapshot.value else {
+                raiseFatalError("snapshot's value is nil.")
+                fatalError()
+            }
+            snsidInfo[snapshot.key] = value
+            firebaseRef.removeAllObservers()
+        })
+        
+        self.init(fromJSON: snsidInfo, owner: <#T##Account#>, ref: refString, insertInto: context)
     }
     
     
@@ -43,22 +62,37 @@ public class SNSID: NSManagedObject, Codable {
      From JSON data of a snapshot. Must contain **"name"** property (["posts": JSONDATA] for option).
      - parameter jsonData: a [String: Any]
     */
-    public convenience init(fromJSON jsonData: JSONDATA, owner: Account, insertInto context: NSManagedObjectContext) {
-        guard let name = jsonData["name"] as? String else {
+    public convenience init(fromJSON jsonData: JSONDATA, owner: Account, ref: String, insertInto context: NSManagedObjectContext) {
+        guard let name = jsonData[SNSID.CodingKeysOfSNSID.name.rawValue] as? String else {
             raiseFatalError("Some keys are not matched to the properties of SNSID.")
             fatalError()
         }
-        self.init(name: name, owner: owner, insertInto: context)
+        self.init(name: name, owner: owner, ref: ref, insertInto: context)
+        
         // If any post exists
-        if let posts = jsonData["posts"] as? JSONDATA {
-            for post in posts {
+        if let myPosts = jsonData[SNSID.CodingKeysOfSNSID.myPosts.rawValue] as? JSONDATA {
+            for myPost in myPosts {
                 // Get postInformation from post. Mark that post.key = post.date; and post.value = ["content":"content", "date":"date"] dictionary
-                guard let postInfo = post.value as? JSONDATA else {
+                guard let myPostInfo = myPost.value as? JSONDATA else {
                     raiseFatalError("Can't get postInfo from post.")
                     fatalError()
                 }
-                let newPost = Post(fromJSON: postInfo, speaker: self, insertInto: context)
-                self.addToPosts(newPost)
+                let newPost = Post(fromJSON: myPostInfo, speaker: self, ref: self.ref.addChild("\(SNSID.CodingKeysOfSNSID.myPosts.rawValue)/\(myPost.key)"), insertInto: context)
+                self.addToMyPosts(newPost)
+            }
+        }
+        
+        // If any publishedReply exists
+        if let publishedReplies = jsonData["publishedReplies"] as? JSONDATA {
+            for publishedReply in publishedReplies {
+                // Get repliesInformation from post. Mark that reply.key = reply.date; and reply.value = ["content":"content", "date":"date"] dictionary
+                guard let replyInfo = publishedReply.value as? JSONDATA else {
+                    raiseFatalError("Can't get publishedReplyInfo from publishedReply.")
+                    fatalError()
+                }
+                // From SNSID, rather than create a full instance of belongingPost of the reply, we only store the reference of belongingPost.
+                let newReply = Reply(fromJSON: replyInfo, insertInto: context)
+                self.addToPublishedReplies(newReply)
             }
         }
     }
@@ -77,7 +111,7 @@ public class SNSID: NSManagedObject, Codable {
         typealias RawValue = String
         case name
         case owner
-        case posts
+        case myPosts
     }
     
     
@@ -96,7 +130,7 @@ public class SNSID: NSManagedObject, Codable {
         let container = try decoder.container(keyedBy: CodingKeysOfSNSID.self)
         self.name = try container.decode(String.self, forKey: .name)
         self.iDnumber = Int64(self.name.hashValue)
-        self.posts = try container.decodeIfPresent(Set<Post>.self, forKey: .posts) as NSSet?
+        self.myPosts = try container.decodeIfPresent(Set<Post>.self, forKey: .myPosts) as NSSet?
         self.owner = try container.decode(Account.self, forKey: .owner)
     }
     
@@ -106,13 +140,13 @@ public class SNSID: NSManagedObject, Codable {
         var container = encoder.container(keyedBy: CodingKeysOfSNSID.self)
         try container.encode(self.name, forKey: .name)
         try container.encode(self.owner, forKey: .owner)
-        if let nssetPosts = self.posts { // At least one SNSID exists
+        if let nssetPosts = self.myPosts { // At least one SNSID exists
             // Check if NSSet is convertible to Set<SNSID>
             guard let setPosts = nssetPosts as? Set<Post> else {
                 raiseFatalError("Can't convert NSSet into Set<Post> when encoding.")
                 fatalError()
             }
-            try container.encode(setPosts, forKey: .posts)
+            try container.encode(setPosts, forKey: .myPosts)
         }
     }
     

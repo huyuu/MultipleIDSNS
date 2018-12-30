@@ -11,24 +11,30 @@
         <attribute name="content" attributeType="String" syncable="YES"/>
         <attribute name="date" attributeType="Date" minDateTimeInterval="567488520" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="iDnumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="ref" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="replies" toMany="YES" deletionRule="Cascade" destinationEntity="Reply" inverseName="belongingPost" inverseEntity="Reply" syncable="YES"/>
-        <relationship name="speaker" maxCount="1" deletionRule="Nullify" destinationEntity="SNSID" inverseName="posts" inverseEntity="SNSID" syncable="YES"/>
+        <relationship name="speaker" maxCount="1" deletionRule="Nullify" destinationEntity="SNSID" inverseName="myPosts" inverseEntity="SNSID" syncable="YES"/>
     </entity>
     <entity name="Reply" representedClassName=".Reply" syncable="YES">
+        <attribute name="belongingPostRef" attributeType="String" syncable="YES"/>
         <attribute name="content" attributeType="String" syncable="YES"/>
         <attribute name="date" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="selfSNSIDRef" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="belongingPost" maxCount="1" deletionRule="Nullify" destinationEntity="Post" inverseName="replies" inverseEntity="Post" syncable="YES"/>
+        <relationship name="selfSNSID" maxCount="1" deletionRule="Nullify" destinationEntity="SNSID" inverseName="publishedReplies" inverseEntity="SNSID" syncable="YES"/>
     </entity>
     <entity name="SNSID" representedClassName=".SNSID" syncable="YES">
         <attribute name="iDnumber" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="ref" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="myPosts" toMany="YES" deletionRule="Cascade" destinationEntity="Post" inverseName="speaker" inverseEntity="Post" syncable="YES"/>
         <relationship name="owner" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="snsids" inverseEntity="Account" syncable="YES"/>
-        <relationship name="posts" toMany="YES" deletionRule="Cascade" destinationEntity="Post" inverseName="speaker" inverseEntity="Post" syncable="YES"/>
+        <relationship name="publishedReplies" toMany="YES" deletionRule="Cascade" destinationEntity="Reply" inverseName="selfSNSID" inverseEntity="Reply" syncable="YES"/>
     </entity>
     <elements>
         <element name="Account" positionX="-54" positionY="0" width="128" height="120"/>
-        <element name="Post" positionX="-54" positionY="0" width="128" height="120"/>
-        <element name="Reply" positionX="-54" positionY="18" width="128" height="90"/>
-        <element name="SNSID" positionX="-63" positionY="-18" width="128" height="105"/>
+        <element name="Post" positionX="-54" positionY="0" width="128" height="135"/>
+        <element name="Reply" positionX="-54" positionY="18" width="128" height="135"/>
+        <element name="SNSID" positionX="-63" positionY="-18" width="128" height="135"/>
     </elements>
 </model>

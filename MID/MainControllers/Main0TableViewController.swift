@@ -169,7 +169,7 @@ class Main0TableViewController: UITableViewController {
             
             // Delete the item from Firebase
             let toBeDeleteSNSID = localStoredIDs![indexPath.row]
-            firebaseRoot.child("snsids").child(toBeDeleteSNSID.name).removeValue()
+            firebaseRoot.child(Account.CodingKeysOfAccount.snsids.rawValue).child(toBeDeleteSNSID.name).removeValue()
             
             // Delete the row of tableView
             localStoredIDs!.remove(at: indexPath.row)
@@ -204,13 +204,13 @@ class Main0TableViewController: UITableViewController {
             let tabbedSNSID = localStoredIDs![indexPathTabbed.row]
             destinationController.tabbedSNSID = tabbedSNSID
             // Pass account information to AddSNSIDViewController
-            destinationController.firebaseRoot = firebaseRoot.child("snsids").child(tabbedSNSID.name)
+            destinationController.firebaseRoot = firebaseRoot.child(Account.CodingKeysOfAccount.snsids.rawValue).child(tabbedSNSID.name)
             
         case "addSNSID":
             let destinationController = segue.destination as! AddSNSIDViewController
             // Pass account information to AddSNSIDViewController
             destinationController.owner = account
-            destinationController.firebaseRoot = firebaseRoot.child("snsids")
+            destinationController.firebaseRoot = firebaseRoot.child(Account.CodingKeysOfAccount.snsids.rawValue)
             
         default:
             raiseFatalError("Segue preparing error, segue.identifier = \(segue.identifier)")

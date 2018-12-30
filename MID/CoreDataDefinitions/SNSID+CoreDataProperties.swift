@@ -2,7 +2,7 @@
 //  SNSID+CoreDataProperties.swift
 //  MID
 //
-//  Created by 江宇揚 on 2018/12/27.
+//  Created by 江宇揚 on 2018/12/30.
 //  Copyright © 2018 Jiang Yuyang. All rights reserved.
 //
 //
@@ -19,24 +19,43 @@ extension SNSID {
 
     @NSManaged public var iDnumber: Int64
     @NSManaged public var name: String
-    @NSManaged public var posts: NSSet?
+    @NSManaged public var ref: String
     @NSManaged public var owner: Account
+    @NSManaged public var myPosts: NSSet?
+    @NSManaged public var publishedReplies: NSSet?
 
 }
 
-// MARK: Generated accessors for posts
+// MARK: Generated accessors for myPosts
 extension SNSID {
 
-    @objc(addPostsObject:)
-    @NSManaged public func addToPosts(_ value: Post)
+    @objc(addMyPostsObject:)
+    @NSManaged public func addToMyPosts(_ value: Post)
 
-    @objc(removePostsObject:)
-    @NSManaged public func removeFromPosts(_ value: Post)
+    @objc(removeMyPostsObject:)
+    @NSManaged public func removeFromMyPosts(_ value: Post)
 
-    @objc(addPosts:)
-    @NSManaged public func addToPosts(_ values: NSSet)
+    @objc(addMyPosts:)
+    @NSManaged public func addToMyPosts(_ values: NSSet)
 
-    @objc(removePosts:)
-    @NSManaged public func removeFromPosts(_ values: NSSet)
+    @objc(removeMyPosts:)
+    @NSManaged public func removeFromMyPosts(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for publishedReplies
+extension SNSID {
+
+    @objc(addPublishedRepliesObject:)
+    @NSManaged public func addToPublishedReplies(_ value: Reply)
+
+    @objc(removePublishedRepliesObject:)
+    @NSManaged public func removeFromPublishedReplies(_ value: Reply)
+
+    @objc(addPublishedReplies:)
+    @NSManaged public func addToPublishedReplies(_ values: NSSet)
+
+    @objc(removePublishedReplies:)
+    @NSManaged public func removeFromPublishedReplies(_ values: NSSet)
 
 }

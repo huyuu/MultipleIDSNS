@@ -201,7 +201,7 @@ class Main1TableViewController: UITableViewController {
             
             // Delete from Firebase
             let toBeDeletePost = localStoredPosts![indexPath.row]
-            firebaseRoot.child("posts").child(toBeDeletePost.date.toString).removeValue()
+            firebaseRoot.child(SNSID.CodingKeysOfSNSID.myPosts.rawValue).child(toBeDeletePost.date.toString).removeValue()
             
             localStoredPosts!.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
@@ -240,7 +240,7 @@ class Main1TableViewController: UITableViewController {
             let destinationController = segue.destination as! AddPostViewController
             // Pass speaker to AddSNSIDViewController
             destinationController.speaker = tabbedSNSID
-            destinationController.firebaseRoot = firebaseRoot.child("posts")
+            destinationController.firebaseRoot = firebaseRoot.child(SNSID.CodingKeysOfSNSID.myPosts.rawValue)
             
         default:
             raiseFatalError("Segue preparing error, segue.identifier = \(segue.identifier)")

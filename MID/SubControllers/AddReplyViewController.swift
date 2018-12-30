@@ -44,7 +44,7 @@ class AddReplyViewController: UIViewController {
     @IBAction func replyDone(_ sender: UIBarButtonItem) {
         let content = contentTextField.text!
         /** Create a new Reply on CoreData */
-        let newReply = Reply(of: belongingPost, content: content, insertInto: coreDataContext)
+        let newReply = Reply(to: belongingPost, content: content, selfSNSIDRef: , insertInto: coreDataContext)
         /** Save new child to Firebase */
         let newChildReference = firebaseRoot.child(newReply.date.toString)
         newChildReference.setValue(newReply.toJSON)

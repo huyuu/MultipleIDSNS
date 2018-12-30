@@ -15,13 +15,14 @@ import Firebase
 public class Post: NSManagedObject, Codable {
     
     /** Designed initiater from all items, and insert into the coreDataContext */
-    public convenience init(of speaker: SNSID, content: String, date: Date = Date(), insertInto context: NSManagedObjectContext) {
+    public convenience init(of speaker: SNSID, content: String, date: Date = Date(), ref: String, insertInto context: NSManagedObjectContext) {
         self.init(entity: Post.entity(), insertInto: context)
         self.content = content
         self.date = date as NSDate
         self.speaker = speaker
+        self.ref = ref
         self.iDnumber = Int64(date.toString.hashValue)
-        speaker.addToPosts(self)
+        speaker.addToMyPosts(self)
     }
     
     
@@ -32,20 +33,20 @@ public class Post: NSManagedObject, Codable {
     
     
     /**  For JSON data of snapshot */
-    public convenience init(fromJSON jsonData: JSONDATA, speaker: SNSID, insertInto context: NSManagedObjectContext) {
+    public convenience init(fromJSON jsonData: JSONDATA, speaker: SNSID, ref: String, insertInto context: NSManagedObjectContext) {
         guard let content = jsonData["content"] as? String,
             let dateString = jsonData["date"] as? String ,
             let date = dateString.toDate() else {
                 raiseFatalError("Some keys are not matched to the properties of Post.")
                 fatalError()
         }
-        self.init(of: speaker, content: content, date: date, insertInto: context)
+        self.init(of: speaker, content: content, date: date, ref: ref, insertInto: context)
         // If any reply exists
         if let replies = jsonData["replies"] as? JSONDATA {
             for reply in replies {
                 // Get replyInformation from reply. Mark that reply.key = reply.iDnumber; and reply.value = [String: Any] dictionary
                 if let replyInfo = reply.value as? JSONDATA {
-                    let newReply = Reply(fromJSON: replyInfo, belongsTo: self, insertInto: context)
+                    let newReply = Reply(fromJSON: replyInfo, towards: self, insertInto: context)
                     self.addToReplies(newReply)
                 }
             }

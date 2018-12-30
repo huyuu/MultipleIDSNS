@@ -46,10 +46,10 @@ class AddPostViewController: UIViewController {
     
     @IBAction func postDone(_ sender: Any) {
         let content = contentTextField.text!
-        /** Create a new Post on CoreData */
-        let newPost = Post(of: speaker, content: content, insertInto: coreDataContext)
         /** Save new child to Firebase */
-        let newChildReference = firebaseRoot.child(newPost.date.toString)
+        let newChildReference = firebaseRoot.child(Date().toString)
+        /** Create a new Post on CoreData */
+        let newPost = Post(of: speaker, content: content, ref: newChildReference.url, insertInto: coreDataContext)
         newChildReference.setValue(newPost.toJSON)
         
         coreDataContext.delete(newPost)
