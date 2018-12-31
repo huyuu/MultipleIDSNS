@@ -260,9 +260,6 @@
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="201" contentMode="left" horizontalHuggingPriority="251" text="contentLabel" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3eK-8s-1V3" userLabel="contentLabel">
                                             <rect key="frame" x="87" y="56" width="239" height="41"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="239" id="d4H-xe-W0S"/>
-                                            </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -411,6 +408,8 @@
                     </view>
                     <connections>
                         <outlet property="contentTextField" destination="pie-v7-cJ2" id="NoV-Vb-cVk"/>
+                        <outlet property="receiverNameLabel" destination="XeE-5e-5Ym" id="kYH-T7-WO9"/>
+                        <outlet property="selfSNSIDNameLabel" destination="hf4-2c-tx0" id="U95-kW-0VG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zZz-Ik-H3U" userLabel="First Responder" sceneMemberID="firstResponder"/>

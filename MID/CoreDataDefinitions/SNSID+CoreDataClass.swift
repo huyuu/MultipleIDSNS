@@ -19,42 +19,35 @@ public class SNSID: NSManagedObject, Codable {
     }
     
     
-    /** Designed initiater of Post */
-//    public init(from newSNSID: CodableSNSID, owner: Account, insertInto context: NSManagedObjectContext) {
-//        super.init(entity: SNSID.entity(), insertInto: context)
-//        self.name = newSNSID.name
-//        self.iDnumber = newSNSID.iDnumber
-//        owner.addToSnsids(self)
-//    }
-    
-    
     /** Public all terms initializer */
-    public init(name: String, owner: Account, ref: String, insertInto context: NSManagedObjectContext) {
+    public init(name: String, ownerRef: String, myPosts: Set<Post>? = nil, publishedReplies: Set<Reply>? = nil, ref: String, insertInto context: NSManagedObjectContext) {
         super.init(entity: SNSID.entity(), insertInto: context)
         self.name = name
-        self.iDnumber = Int64(name.hashValue)
-        self.myPosts = nil
-        self.publishedReplies = nil
-        self.owner = owner
+        self.myPosts = myPosts as NSSet?
+        self.publishedReplies = publishedReplies as NSSet?
+        self.ownerRef = ownerRef
         self.ref = ref
-        owner.addToSnsids(self)
     }
     
     
-    public convenience init(from refString: String, insertInto context: NSManagedObjectContext) {
-        let firebaseRef = Database.database().reference(fromURL: refString)
+    /** From reference url */
+    public convenience init(fromReference ref: String, insertInto context: NSManagedObjectContext) {
+        // Get the reference object from Firebase
+        let firebaseRef = Database.database().reference(fromURL: ref)
+        // An empty JSONDATA container
         var snsidInfo: JSONDATA = [:]
-        
-        firebaseRef.observe(.value, with: { snapshot in
+        // Observe at ref level
+        firebaseRef.observe(.childAdded, with: { (snapshot) in
+            print("Hello!!! \(snapshot.key), \(snapshot.value)")
+            // Check if value exists
             guard let value = snapshot.value else {
                 raiseFatalError("snapshot's value is nil.")
                 fatalError()
             }
+            // Add JSONDATA into info
             snsidInfo[snapshot.key] = value
-            firebaseRef.removeAllObservers()
         })
-        
-        self.init(fromJSON: snsidInfo, owner: <#T##Account#>, ref: refString, insertInto: context)
+        self.init(fromJSON: snsidInfo, insertInto: context)
     }
     
     
@@ -62,46 +55,40 @@ public class SNSID: NSManagedObject, Codable {
      From JSON data of a snapshot. Must contain **"name"** property (["posts": JSONDATA] for option).
      - parameter jsonData: a [String: Any]
     */
-    public convenience init(fromJSON jsonData: JSONDATA, owner: Account, ref: String, insertInto context: NSManagedObjectContext) {
-        guard let name = jsonData[SNSID.CodingKeysOfSNSID.name.rawValue] as? String else {
+    public convenience init(fromJSON jsonData: JSONDATA, insertInto context: NSManagedObjectContext) {
+        guard let name = jsonData[CodingKeysOfSNSID.name.rawValue] as? String,
+            let ownerRef = jsonData[CodingKeysOfSNSID.ownerRef.rawValue] as? String,
+            let ref = jsonData[CodingKeysOfSNSID.ref.rawValue] as? String else {
             raiseFatalError("Some keys are not matched to the properties of SNSID.")
             fatalError()
         }
-        self.init(name: name, owner: owner, ref: ref, insertInto: context)
-        
-        // If any post exists
-        if let myPosts = jsonData[SNSID.CodingKeysOfSNSID.myPosts.rawValue] as? JSONDATA {
-            for myPost in myPosts {
-                // Get postInformation from post. Mark that post.key = post.date; and post.value = ["content":"content", "date":"date"] dictionary
-                guard let myPostInfo = myPost.value as? JSONDATA else {
-                    raiseFatalError("Can't get postInfo from post.")
-                    fatalError()
-                }
-                let newPost = Post(fromJSON: myPostInfo, speaker: self, ref: self.ref.addChild("\(SNSID.CodingKeysOfSNSID.myPosts.rawValue)/\(myPost.key)"), insertInto: context)
-                self.addToMyPosts(newPost)
-            }
-        }
-        
+        // Container of publishedReplies
+        var publishedRepliesContainer: Set<Reply>? = nil
         // If any publishedReply exists
-        if let publishedReplies = jsonData["publishedReplies"] as? JSONDATA {
+        if let publishedReplies = jsonData[CodingKeysOfSNSID.publishedReplies.rawValue] as? JSONDATA {
+            publishedRepliesContainer = Set<Reply>()
             for publishedReply in publishedReplies {
-                // Get repliesInformation from post. Mark that reply.key = reply.date; and reply.value = ["content":"content", "date":"date"] dictionary
-                guard let replyInfo = publishedReply.value as? JSONDATA else {
-                    raiseFatalError("Can't get publishedReplyInfo from publishedReply.")
-                    fatalError()
+                if let publishedReplyInfo = publishedReply.value as? JSONDATA {
+                    publishedRepliesContainer!.insert(Reply(fromJSON: publishedReplyInfo, insertInto: context))
                 }
-                // From SNSID, rather than create a full instance of belongingPost of the reply, we only store the reference of belongingPost.
-                let newReply = Reply(fromJSON: replyInfo, insertInto: context)
-                self.addToPublishedReplies(newReply)
             }
         }
+        
+        // Container of myPosts
+        var myPostsContainer: Set<Post>? = nil
+        // If any publishedReply exists
+        if let myPosts = jsonData[CodingKeysOfSNSID.myPosts.rawValue] as? JSONDATA {
+            myPostsContainer = Set<Post>()
+            for myPost in myPosts {
+                if let myPostInfo = myPost.value as? JSONDATA {
+                    myPostsContainer!.insert(Post(fromJSON: myPostInfo, insertInto: context))
+                }
+            }
+        }
+        
+        self.init(name: name, ownerRef: ownerRef, myPosts: myPostsContainer, publishedReplies: publishedRepliesContainer, ref: ref, insertInto: context)
     }
-    
-    
-    // For Hashable
-    static func ==(lhs: SNSID, rhs: SNSID) -> Bool {
-        return (lhs.owner.iDnumber == rhs.owner.iDnumber) && (lhs.iDnumber == rhs.iDnumber)
-    }
+
     
     
     
@@ -110,8 +97,10 @@ public class SNSID: NSManagedObject, Codable {
     enum CodingKeysOfSNSID: String, CodingKey {
         typealias RawValue = String
         case name
-        case owner
+        case ownerRef
         case myPosts
+        case publishedReplies
+        case ref
     }
     
     
@@ -129,9 +118,10 @@ public class SNSID: NSManagedObject, Codable {
         
         let container = try decoder.container(keyedBy: CodingKeysOfSNSID.self)
         self.name = try container.decode(String.self, forKey: .name)
-        self.iDnumber = Int64(self.name.hashValue)
-        self.myPosts = try container.decodeIfPresent(Set<Post>.self, forKey: .myPosts) as NSSet?
-        self.owner = try container.decode(Account.self, forKey: .owner)
+        self.myPosts = try container.decodeIfPresent(Set<Post>.self, forKey: .myPosts)! as NSSet
+        self.ownerRef = try container.decode(String.self, forKey: .ownerRef)
+        self.publishedReplies = try container.decodeIfPresent(Set<Reply>.self, forKey: .publishedReplies)! as NSSet
+        self.ref = try container.decode(String.self, forKey: .ref)
     }
     
     
@@ -139,38 +129,54 @@ public class SNSID: NSManagedObject, Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeysOfSNSID.self)
         try container.encode(self.name, forKey: .name)
-        try container.encode(self.owner, forKey: .owner)
-        if let nssetPosts = self.myPosts { // At least one SNSID exists
-            // Check if NSSet is convertible to Set<SNSID>
-            guard let setPosts = nssetPosts as? Set<Post> else {
+        try container.encode(self.ownerRef, forKey: .ownerRef)
+        try container.encode(self.ref, forKey: .ref)
+        if let nssetMyPosts = self.myPosts { // At least one reply exists
+            // Check if NSSet is convertible to Set<Reply>
+            guard let setMyPosts = nssetMyPosts as? Set<Post> else {
                 raiseFatalError("Can't convert NSSet into Set<Post> when encoding.")
                 fatalError()
             }
-            try container.encode(setPosts, forKey: .myPosts)
+            try container.encode(setMyPosts, forKey: .myPosts)
+        }
+        
+        if let nssetPublishedReplies = self.publishedReplies { // At least one reply exists
+            // Check if NSSet is convertible to Set<Reply>
+            guard let setPublishedReplies = nssetPublishedReplies as? Set<Reply> else {
+                raiseFatalError("Can't convert NSSet into Set<Reply> when encoding.")
+                fatalError()
+            }
+            try container.encode(setPublishedReplies, forKey: .publishedReplies)
         }
     }
     
     
     /** Create JSON data */
-//    var toJSON: Dictionary<String, Any> {
-//        if let posts = self.posts {
-//            return [
-//                "name": self.name,
-//                "owner": self.owner,
-//                "posts": (posts.allObjects as! [Post]).map{ $0.toJSON }
-//            ]
-//        } else {
-//            return [
-//                "name": self.name,
-//                "owner": self.owner,
-//            ]
-//        }
-//    }
-    
-    
-    var toJSON: Dictionary<String, Any> {
-        return [
-            "name": self.name
+    var toJSON: JSONDATA {
+        var returnJSON: JSONDATA = [
+            CodingKeysOfSNSID.name.rawValue: self.name,
+            CodingKeysOfSNSID.ownerRef.rawValue: self.ownerRef,
+            CodingKeysOfSNSID.ref.rawValue: self.ref
         ]
+        // If any myPost exists
+        if let myPosts = self.myPosts {
+            var myPostsJSONContainer: JSONDATA = [:]
+            for myPost in (myPosts as! Set<Post>) {
+                // Store every myPost as [date: JSONDATA]
+                myPostsJSONContainer[myPost.date.toString] = myPost.toJSON
+            }
+            returnJSON[CodingKeysOfSNSID.myPosts.rawValue] = myPostsJSONContainer
+        }
+        // If any publishedReply exists
+        if let publishedReplies = self.publishedReplies {
+            var publishedRepliesJSONContainer: JSONDATA = [:]
+            for publishedReply in (publishedReplies as! Set<Reply>) {
+                // Store every reply as [date: JSONDATA]
+                publishedRepliesJSONContainer[publishedReply.date.toString] = publishedReply.toJSON
+            }
+            returnJSON[CodingKeysOfSNSID.publishedReplies.rawValue] = publishedRepliesJSONContainer
+        }
+        
+        return returnJSON
     }
 }

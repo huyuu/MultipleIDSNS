@@ -2,7 +2,7 @@
 //  Account+CoreDataProperties.swift
 //  MID
 //
-//  Created by 江宇揚 on 2018/12/28.
+//  Created by 江宇揚 on 2018/12/31.
 //  Copyright © 2018 Jiang Yuyang. All rights reserved.
 //
 //
@@ -17,10 +17,10 @@ extension Account {
         return NSFetchRequest<Account>(entityName: "Account")
     }
 
-    @NSManaged public var name: String
-    @NSManaged public var iDnumber: Int64
     @NSManaged public var email: String
+    @NSManaged public var name: String
     @NSManaged public var password: String
+    @NSManaged public var ref: String
     @NSManaged public var snsids: NSSet?
 
 }

@@ -45,13 +45,12 @@ class Main1TableViewController: UITableViewController {
         
         // Fetch from Firebase
         firebaseRoot.observe(.childAdded) { (snapshot) in
-            print("Hello!!! \(snapshot.value)")
-            if let posts = snapshot.decodeToPosts(speaker: self.tabbedSNSID, insertInto: self.coreDataContext) {
+//            print("Hello!!! \(snapshot.value)")
+            if let posts = snapshot.decodeToPosts(insertInto: self.coreDataContext) {
                 self.localStoredPosts = posts
             }
             self.tableView.reloadData()
         }
-        
     }
     
     
@@ -83,7 +82,8 @@ class Main1TableViewController: UITableViewController {
         let post = posts[indexPath.row]
         // Speaker's name
         let speakerNameLabel = cell.viewWithTag(100) as! UILabel
-        let speakerName = post.speaker.name
+//        let speakerName = (post.getSpeakerInfo(for: "name", insertInto: coreDataContext) as? String) ?? ""
+        let speakerName = tabbedSNSID.name
         speakerNameLabel.text = speakerName
         // Content
         let contentLabel = cell.viewWithTag(101) as! UILabel
@@ -234,7 +234,10 @@ class Main1TableViewController: UITableViewController {
             let destinationController = segue.destination as! ThreadDetailsTableViewController
             // Set the postTabbed of ThreadDetailsViewController
             let indexPathTabbed = tableView.indexPath(for: sender as! UITableViewCell)!
-            destinationController.postTabbed = localStoredPosts![indexPathTabbed.row]
+            let postTabbed = localStoredPosts![indexPathTabbed.row]
+            destinationController.postTabbed = postTabbed
+            destinationController.selfSNSID = tabbedSNSID
+            destinationController.firebaseRoot = firebaseRoot.child(SNSID.CodingKeysOfSNSID.myPosts.rawValue).child(postTabbed.date.toString)
             
         case "showAddPostView":
             let destinationController = segue.destination as! AddPostViewController

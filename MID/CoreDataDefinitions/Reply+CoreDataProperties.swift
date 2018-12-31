@@ -2,7 +2,7 @@
 //  Reply+CoreDataProperties.swift
 //  MID
 //
-//  Created by 江宇揚 on 2018/12/30.
+//  Created by 江宇揚 on 2018/12/31.
 //  Copyright © 2018 Jiang Yuyang. All rights reserved.
 //
 //
@@ -19,9 +19,9 @@ extension Reply {
 
     @NSManaged public var content: String
     @NSManaged public var date: NSDate
-    @NSManaged public var belongingPostRef: String
+    @NSManaged public var targetPostRef: String
     @NSManaged public var selfSNSIDRef: String
-    @NSManaged public var belongingPost: Post?
-    @NSManaged public var selfSNSID: SNSID?
+    @NSManaged public var ref: String
+    @NSManaged public var selfSNSIDName: String
 
 }

@@ -19,17 +19,21 @@ class AddReplyViewController: UIViewController {
     /** For FirebaseDatabase reference */
     public var firebaseRoot: DatabaseReference!
     /** For speaker. This property must be set by the previous controller */
-    public var speaker: SNSID!
+    public var selfSNSID: SNSID!
     /** For belongingPost. This property must be set by the previous controller */
-    public var belongingPost: Post!
+    public var targetPost: Post!
     
     @IBOutlet weak var contentTextField: UITextField!
+    @IBOutlet weak var selfSNSIDNameLabel: UILabel!
+    @IBOutlet weak var receiverNameLabel: UILabel!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         contentTextField.becomeFirstResponder()
+        selfSNSIDNameLabel.text = selfSNSID.name
+        receiverNameLabel.text = "replying to \(targetPost.speakerName)"
     }
     
 
@@ -43,13 +47,15 @@ class AddReplyViewController: UIViewController {
     
     @IBAction func replyDone(_ sender: UIBarButtonItem) {
         let content = contentTextField.text!
-        /** Create a new Reply on CoreData */
-        let newReply = Reply(to: belongingPost, content: content, selfSNSIDRef: , insertInto: coreDataContext)
         /** Save new child to Firebase */
-        let newChildReference = firebaseRoot.child(newReply.date.toString)
+        let newChildReference = firebaseRoot.child(Date().toString)
+        /** Create a new Reply on CoreData */
+        let newReply = Reply(towards: targetPost.ref, content: content, selfSNSIDRef: selfSNSID.ref, selfSNSIDName: selfSNSID.name, ref: newChildReference.url, insertInto: coreDataContext)
+        selfSNSID.addToPublishedReplies(newReply)
+
         newChildReference.setValue(newReply.toJSON)
         
-        coreDataContext.delete(newReply)
+//        coreDataContext.delete(newReply)
         appDelegate.saveContext()
         
         self.dismiss(animated: true, completion: nil)

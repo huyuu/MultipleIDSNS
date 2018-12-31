@@ -20,32 +20,38 @@ public class Account: NSManagedObject, Codable {
     
     
     /** Public all term initializer */
-    public convenience init(name: String, email: String, password: String, insertInto context: NSManagedObjectContext) {
+    public convenience init(name: String, email: String, password: String, snsids: Set<SNSID>? = nil, ref: String, insertInto context: NSManagedObjectContext) {
         self.init(entity: Account.entity(), insertInto: context)
         self.name = name
         self.email = email
         self.password = password
-        self.iDnumber = Int64(email.hashValue)
-        self.snsids = nil
+        self.ref = ref
+        self.snsids = snsids as NSSet?
     }
     
     
     /** From JSON data of snapshot */
-    public convenience init(fromJSON jsonData: [String: Any], insertInto context: NSManagedObjectContext) {
-        guard let email = jsonData["email"] as? String,
-            let password = jsonData["password"] as? String,
-            let name = jsonData["name"] as? String else {
+    public convenience init(fromJSON jsonData: JSONDATA, insertInto context: NSManagedObjectContext) {
+        guard let email = jsonData[CodingKeysOfAccount.email.rawValue] as? String,
+            let password = jsonData[CodingKeysOfAccount.password.rawValue] as? String,
+            let name = jsonData[CodingKeysOfAccount.name.rawValue] as? String,
+            let ref = jsonData[CodingKeysOfAccount.ref.rawValue] as? String else {
                 raiseFatalError("Some keys are not matched to the properties of Account.")
                 fatalError()
         }
-        self.init(name: name, email: email, password: password, insertInto: context)
-        // Check if there are snsids
-        if let snsids = jsonData["snsids"] as? [String: Any] {
+        // Container of snsids
+        var snsidsContainer: Set<SNSID>? = nil
+        // If any snsid exists
+        if let snsids = jsonData[CodingKeysOfAccount.snsids.rawValue] as? JSONDATA {
+            snsidsContainer = Set<SNSID>()
             for snsid in snsids {
-                let newSNSID = SNSID(fromJSON: [snsid.key: snsid.value], owner: self, insertInto: context)
-                self.addToSnsids(newSNSID)
+                if let snsidInfo = snsid.value as? JSONDATA {
+                    snsidsContainer!.insert(SNSID(fromJSON: snsidInfo, insertInto: context))
+                }
             }
         }
+        
+        self.init(name: name, email: email, password: password, snsids: snsidsContainer, ref: ref, insertInto: context)
     }
     
     
@@ -58,6 +64,7 @@ public class Account: NSManagedObject, Codable {
         case email
         case password
         case snsids
+        case ref
     }
     
     
@@ -77,7 +84,6 @@ public class Account: NSManagedObject, Codable {
         self.name = try container.decode(String.self, forKey: .name)
         self.email = try container.decode(String.self, forKey: .email)
         self.password = try container.decode(String.self, forKey: .password)
-        self.iDnumber = Int64(self.email.hashValue)
         self.snsids = try container.decodeIfPresent(Set<SNSID>.self, forKey: .snsids) as NSSet?
     }
     
@@ -100,29 +106,25 @@ public class Account: NSManagedObject, Codable {
     
     
     /** Create JSON data */
-//    var toJSON: Dictionary<String, Any> {
-//        if let snsids = self.snsids {
-//            return [
-//                "name": self.name,
-//                "email": self.email,
-//                "password": self.password,
-//                "snsids": (snsids.allObjects as! [SNSID]).map{ $0.toJSON }
-//            ]
-//        } else {
-//            return [
-//                "name": self.name,
-//                "email": self.email,
-//                "password": self.password,
-//            ]
-//        }
-//    }
-    
-    var toJSON: Dictionary<String, Any> {
-        return [
-            "name": self.name,
-            "email": self.email,
-            "password": self.password
+    var toJSON: JSONDATA {
+        var returnJSON: JSONDATA = [
+            CodingKeysOfAccount.name.rawValue: self.name,
+            CodingKeysOfAccount.email.rawValue: self.email,
+            CodingKeysOfAccount.password.rawValue: self.password,
+            CodingKeysOfAccount.ref.rawValue: self.ref
         ]
+        
+        // If any snsid exists
+        if let snsids = self.snsids {
+            var snsidsJSONContainer: JSONDATA = [:]
+            for snsid in (snsids as! Set<SNSID>) {
+                // Store every reply as [date: JSONDATA]
+                snsidsJSONContainer[snsid.name] = snsid.toJSON
+            }
+            returnJSON[CodingKeysOfAccount.snsids.rawValue] = snsidsJSONContainer
+        }
+        
+        return returnJSON
     }
 }
 

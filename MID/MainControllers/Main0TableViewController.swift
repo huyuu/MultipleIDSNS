@@ -67,12 +67,11 @@ class Main0TableViewController: UITableViewController {
         firebaseRoot = Database.database().reference(withPath: account.email)
         firebaseRoot.observe(.childAdded, with: { snapshot in
 //            print("Here!!!: \(snapshot.key):\(snapshot.value)")
-            if let snsids = snapshot.decodeToSNSIDs(owner: self.account, insertInto: self.coreDataContext) {
+            if let snsids = snapshot.decodeToSNSIDs(insertInto: self.coreDataContext) {
                 self.localStoredIDs = snsids
             }
             self.tableView.reloadData()
         })
-        
         print("Main0TableViewController will appear.")
     }
 
@@ -126,14 +125,16 @@ class Main0TableViewController: UITableViewController {
     
     // For debug only
     func addAccount() {
-        // Save new acount to CoreDate
-        let newAccount = Account(name: "Jiang Yuyang", email: "plr258", password: "empires2", insertInto: coreDataContext)
-        appDelegate.saveContext()
-        
+        let email = "plr258@gmail"
         // Save new account to Firebase
-//        firebaseRoot = Database.database().reference()
-//        let newAccountReference = firebaseRoot.child(newAccount.email)
-//        newAccountReference.setValue(newAccount.toJSON)
+        firebaseRoot = Database.database().reference()
+        let newAccountReference = firebaseRoot.child(email)
+        // Save new acount to CoreDate
+        let newAccount = Account(name: "Jiang Yuyang", email: email, password: "empires2", ref: newAccountReference.url, insertInto: coreDataContext)
+        newAccountReference.setValue(newAccount.toJSON)
+        
+//        coreDataContext.delete(newAccount)
+        appDelegate.saveContext()
     }
     
     func delectAccount(_ account: Account) {

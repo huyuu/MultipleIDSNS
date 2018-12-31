@@ -49,10 +49,11 @@ class AddPostViewController: UIViewController {
         /** Save new child to Firebase */
         let newChildReference = firebaseRoot.child(Date().toString)
         /** Create a new Post on CoreData */
-        let newPost = Post(of: speaker, content: content, ref: newChildReference.url, insertInto: coreDataContext)
+        let newPost = Post(speakerRef: speaker.ref, speakerName: speaker.name, content: content, replies: nil, ref: newChildReference.url, insertInto: coreDataContext)
         newChildReference.setValue(newPost.toJSON)
         
-        coreDataContext.delete(newPost)
+        speaker.addToMyPosts(newPost)
+//        coreDataContext.delete(newPost)
         appDelegate.saveContext()
         
         self.dismiss(animated: true, completion: nil)

@@ -13,44 +13,73 @@ import Firebase
 
 
 public class Post: NSManagedObject, Codable {
-    
-    /** Designed initiater from all items, and insert into the coreDataContext */
-    public convenience init(of speaker: SNSID, content: String, date: Date = Date(), ref: String, insertInto context: NSManagedObjectContext) {
-        self.init(entity: Post.entity(), insertInto: context)
-        self.content = content
-        self.date = date as NSDate
-        self.speaker = speaker
-        self.ref = ref
-        self.iDnumber = Int64(date.toString.hashValue)
-        speaker.addToMyPosts(self)
-    }
-    
-    
+    // MARK: - Initializers
     /** Designed initiater of the superClass */
     override public init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
         super.init(entity: entity, insertInto: context)
     }
+
+    
+    /** Designed initiater from all items, and insert into the coreDataContext */
+    public convenience init(speakerRef: String, speakerName: String, content: String, date: Date = Date(), replies: Set<Reply>? = nil, ref: String, insertInto context: NSManagedObjectContext) {
+        self.init(entity: Post.entity(), insertInto: context)
+        self.content = content
+        self.date = date as NSDate
+        self.speakerRef = speakerRef
+        self.speakerName = speakerName
+        self.ref = ref
+        // If there exists any reply
+        self.replies = replies as NSSet?
+    }
+    
     
     
     /**  For JSON data of snapshot */
-    public convenience init(fromJSON jsonData: JSONDATA, speaker: SNSID, ref: String, insertInto context: NSManagedObjectContext) {
-        guard let content = jsonData["content"] as? String,
-            let dateString = jsonData["date"] as? String ,
-            let date = dateString.toDate() else {
+    public convenience init(fromJSON jsonData: JSONDATA, insertInto context: NSManagedObjectContext) {
+        guard let content = jsonData[CodingKeysOfPost.content.rawValue] as? String,
+            let dateString = jsonData[CodingKeysOfPost.date.rawValue] as? String ,
+            let date = dateString.toDate(),
+            let speakerRef = jsonData[CodingKeysOfPost.speakerRef.rawValue] as? String,
+            let speakerName = jsonData[CodingKeysOfPost.speakerName.rawValue] as? String,
+            let ref = jsonData[CodingKeysOfPost.ref.rawValue] as? String else {
                 raiseFatalError("Some keys are not matched to the properties of Post.")
                 fatalError()
         }
-        self.init(of: speaker, content: content, date: date, ref: ref, insertInto: context)
         // If any reply exists
-        if let replies = jsonData["replies"] as? JSONDATA {
+        if let replies = jsonData[CodingKeysOfPost.replies.rawValue] as? JSONDATA {
+            var repliesContainer: Set<Reply> = []
             for reply in replies {
                 // Get replyInformation from reply. Mark that reply.key = reply.iDnumber; and reply.value = [String: Any] dictionary
                 if let replyInfo = reply.value as? JSONDATA {
-                    let newReply = Reply(fromJSON: replyInfo, towards: self, insertInto: context)
-                    self.addToReplies(newReply)
+                    repliesContainer.insert(Reply(fromJSON: replyInfo, insertInto: context))
                 }
             }
+            self.init(speakerRef: speakerRef, speakerName: speakerName, content: content, date: date, replies: repliesContainer, ref: ref, insertInto: context)
+        } else {
+            self.init(speakerRef: speakerRef, speakerName: speakerName, content: content, date: date, ref: ref, insertInto: context)
         }
+        
+    }
+    
+    
+    /** From reference */
+    public convenience init(fromReference ref: String, insertInto context: NSManagedObjectContext) {
+        // Get the reference object from Firebase
+        let firebaseRef = Database.database().reference(fromURL: ref)
+        // An empty JSONDATA container
+        var postInfo: JSONDATA = [:]
+        // Observe at ref level
+        firebaseRef.observe(.childAdded, with: { snapshot in
+            // Check if value exists
+            guard let value = snapshot.value else {
+                raiseFatalError("snapshot's value is nil.")
+                fatalError()
+            }
+            // Add JSONDATA into info
+            postInfo[snapshot.key] = value
+        })
+//        firebaseRef.removeAllObservers()
+        self.init(fromJSON: postInfo, insertInto: context)
     }
     
     
@@ -62,7 +91,9 @@ public class Post: NSManagedObject, Codable {
         case content
         case date
         case replies
-        case speaker
+        case speakerRef
+        case speakerName
+        case ref
     }
     
     
@@ -81,7 +112,8 @@ public class Post: NSManagedObject, Codable {
         let container = try decoder.container(keyedBy: CodingKeysOfPost.self)
         self.content = try container.decode(String.self, forKey: .content)
         self.date = try container.decode(Date.self, forKey: .date) as NSDate
-        self.speaker = try container.decode(SNSID.self, forKey: .speaker)
+        self.speakerRef = try container.decode(String.self, forKey: .speakerRef)
+        self.speakerName = try container.decode(String.self, forKey: .speakerName)
         self.replies = try container.decodeIfPresent(Set<Reply>.self, forKey: .replies) as NSSet?
     }
     
@@ -91,7 +123,8 @@ public class Post: NSManagedObject, Codable {
         var container = encoder.container(keyedBy: CodingKeysOfPost.self)
         try container.encode(self.content, forKey: .content)
         try container.encode(self.date as Date, forKey: .date)
-        try container.encode(self.speaker, forKey: .speaker)
+        try container.encode(self.speakerRef, forKey: .speakerRef)
+        try container.encode(self.speakerName, forKey: .speakerName)
         if let nssetReplies = self.replies { // At least one reply exists
             // Check if NSSet is convertible to Set<Reply>
             guard let setReplies = nssetReplies as? Set<Reply> else {
@@ -104,29 +137,44 @@ public class Post: NSManagedObject, Codable {
     
     
     /** Create JSON data */
-//    var toJSON: Dictionary<String, Any> {
-//        if let replies = self.replies {
-//            return [
-//                "content": self.content,
-//                "date": self.date,
-//                "speaker": self.speaker,
-//                "replies": (replies.allObjects as! [Reply]).map{ $0.toJSON }
-//            ]
-//        } else {
-//            return [
-//                "content": self.content,
-//                "date": self.date,
-//                "speaker": self.speaker,
-//            ]
-//        }
-//    }
-    
-    
-    var toJSON: Dictionary<String, Any> {
-        return [
-            "content": self.content,
-            "date": (self.date as Date).toString
+    var toJSON: JSONDATA {
+        var returnJSON: JSONDATA = [
+            CodingKeysOfPost.content.rawValue: self.content,
+            CodingKeysOfPost.date.rawValue: self.date.toString,
+            CodingKeysOfPost.speakerRef.rawValue: self.speakerRef,
+            CodingKeysOfPost.speakerName.rawValue: self.speakerName,
+            CodingKeysOfPost.ref.rawValue: self.ref
         ]
+        // If any reply exists
+        if let replies = self.replies {
+            var repliesJSONContainer: JSONDATA = [:]
+            for reply in (replies as! Set<Reply>) {
+                // Store every reply as [date: JSONDATA]
+                repliesJSONContainer[reply.date.toString] = reply.toJSON
+            }
+            returnJSON[CodingKeysOfPost.replies.rawValue] = repliesJSONContainer
+        }
+        
+        return returnJSON
+    }
+    
+    
+    
+    // MARK: - Custom Functions
+    
+    func getSpeakerInfo(for key: String, insertInto context: NSManagedObjectContext, tableView: UITableView) -> Any? {
+        // Get the reference object from Firebase
+        let firebaseRef = Database.database().reference(fromURL: self.speakerRef)
+        // An empty JSONDATA container
+        var snsidInfo: JSONDATA = [:]
+
+        let speaker = SNSID(fromJSON: snsidInfo, insertInto: context)
+        if let value = speaker.value(forKey: key) {
+            //            context.delete(speaker)
+            return value
+        } else {
+            return nil
+        }
     }
 }
 

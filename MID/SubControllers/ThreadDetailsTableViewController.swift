@@ -13,8 +13,13 @@ import Firebase
 class ThreadDetailsTableViewController: UITableViewController {
     
     let pageIndex = 1
+    // Prepare coreDataContext
+    private let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    private let coreDataContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     // The post been tabbed, should be set by the ViewController who calls the segue.
     var postTabbed: Post!
+    var selfSNSID: SNSID!
+    var localStoredReplies: [Reply]?
     /** For Firebase */
     var firebaseRoot: DatabaseReference!
     
@@ -22,11 +27,27 @@ class ThreadDetailsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        guard let _ = postTabbed else {
+            raiseFatalError("The optional variable 'postTabbed' in ThreadDetailsTableViewController is nil.")
+            fatalError()
+        }
+        
+        localStoredReplies = postTabbed.replies?.allObjects as! [Reply]?
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        firebaseRoot.observe(.childAdded, with: { snapshot in
+            if let replies = snapshot.decodeToReplies(insertInto: self.coreDataContext) {
+                self.localStoredReplies = replies
+            }
+            self.tableView.reloadData()
+        })
     }
     
     
@@ -39,16 +60,13 @@ class ThreadDetailsTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Default value, need to be changed.
-        return 2
+        return 2 + (localStoredReplies?.count ?? 0)
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Check whether postTabbed exists, which should always be true, otherwise raise fatal error and return an empty cell
-        guard let post = postTabbed else {
-            raiseFatalError("The optional variable 'postTabbed' in ThreadDetailsTableViewController is nil.")
-            return tableView.dequeueReusableCell(withIdentifier: "reusableCellOfPostDetail", for: indexPath)
-        }
+        guard let post = postTabbed else { fatalError() }
 
         // Check which row to present
         switch indexPath.row {
@@ -56,7 +74,7 @@ class ThreadDetailsTableViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "reusableCellOfPostDetail", for: indexPath)
             // Set speakerName
             let speakerNameLabel = cell.viewWithTag(200) as! UILabel
-            speakerNameLabel.text = post.speaker.name
+            speakerNameLabel.text = post.speakerName
             // Set content
             let contentLabel = cell.viewWithTag(201) as! UILabel
             contentLabel.text = post.content
@@ -73,14 +91,14 @@ class ThreadDetailsTableViewController: UITableViewController {
         default: // Show replies of the post
             let cell = tableView.dequeueReusableCell(withIdentifier: "reusableCellOfReply", for: indexPath)
             // Check if there is any reply to the post
-            guard let replies = post.replies?.allObjects as? [Reply] else {
+            guard let replies = localStoredReplies else {
                 return cell
             }
             
             let reply = replies[indexPath.row-2]
             // Set speakerName
             let speakerNameLabel = cell.viewWithTag(200) as! UILabel
-            speakerNameLabel.text = reply.belongingPost.speaker.name
+            speakerNameLabel.text = reply.selfSNSIDName
             // Set content
             let contentLabel = cell.viewWithTag(201) as! UILabel
             contentLabel.text = reply.content
@@ -129,15 +147,24 @@ class ThreadDetailsTableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        switch segue.identifier! {
+        case "showAddReplyView":
+            let destinationController = segue.destination as! AddReplyViewController
+            // Set the postTabbed of ThreadDetailsViewController
+            destinationController.targetPost = postTabbed
+            destinationController.selfSNSID = selfSNSID
+            destinationController.firebaseRoot = firebaseRoot.child(Post.CodingKeysOfPost.replies.rawValue)
+
+        default:
+            raiseFatalError("Segue preparing error, segue.identifier = \(segue.identifier)")
+        }
     }
-    */
+ 
 
     
     @IBAction func backToTimeLine(_ sender: UIBarButtonItem) {

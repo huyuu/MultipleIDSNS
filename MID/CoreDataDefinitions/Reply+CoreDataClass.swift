@@ -19,48 +19,52 @@ public class Reply: NSManagedObject, Codable {
     }
     
     
-    /** All terms initializer from real Post */
-    public convenience init(to belongingPost: Post, content: String, date: Date = Date(), selfSNSIDRef: String, insertInto context: NSManagedObjectContext) {
-        self.init(entity: Reply.entity(), insertInto: context)
-        self.content = content
-        self.date = date as NSDate
-        self.selfSNSID = nil
-        self.selfSNSIDRef = selfSNSIDRef
-        self.belongingPost = belongingPost
-        self.belongingPostRef = belongingPost.ref
-        belongingPost.addToReplies(self)
-    }
-    
-    
     /** All terms initializer from reference Post */
-    public convenience init(to belongingPostRef: String, content: String, date: Date = Date(), selfSNSIDRef: String, insertInto context: NSManagedObjectContext) {
+    public convenience init(towards targetPostRef: String, content: String, date: Date = Date(), selfSNSIDRef: String, selfSNSIDName: String, ref: String, insertInto context: NSManagedObjectContext) {
         self.init(entity: Reply.entity(), insertInto: context)
         self.content = content
         self.date = date as NSDate
-        self.selfSNSID = nil
+        self.selfSNSIDName = selfSNSIDName
         self.selfSNSIDRef = selfSNSIDRef
-        self.belongingPostRef = belongingPostRef
-        self.belongingPost = nil
+        self.targetPostRef = targetPostRef
+        self.ref = ref
     }
     
     
-    /** For JSON data of snapshot */
-    public convenience init(fromJSON jsonData: [String: Any], towards belongingPost: Post? = nil, insertInto context: NSManagedObjectContext) {
+    /** Translate JSON data to Reply type */
+    public convenience init(fromJSON jsonData: JSONDATA, insertInto context: NSManagedObjectContext) {
         guard let content = jsonData[CodingKeysOfReply.content.rawValue] as? String,
-            let date = jsonData[CodingKeysOfReply.date.rawValue] as? Date,
-            let belongingPostRef = jsonData[CodingKeysOfReply.belongingPostRef.rawValue] as? String,
-            let selfSNSIDRef = jsonData[CodingKeysOfReply.selfSNSIDRef.rawValue] as? String else {
+            let dateString = jsonData[CodingKeysOfReply.date.rawValue] as? String,
+            let date = dateString.toDate(),
+            let targetPostRef = jsonData[CodingKeysOfReply.targetPostRef.rawValue] as? String,
+            let selfSNSIDRef = jsonData[CodingKeysOfReply.selfSNSIDRef.rawValue] as? String,
+            let selfSNSIDName = jsonData[CodingKeysOfReply.selfSNSIDName.rawValue] as? String,
+            let ref = jsonData[CodingKeysOfReply.ref.rawValue] as? String else {
                 raiseFatalError("Some keys are not matched to the properties of Reply.")
                 fatalError()
         }
-        // Check whether real post exists
-        if let belongingPost = belongingPost {
-            // Use real post for initialization
-            self.init(to: belongingPost, content: content, date: date, selfSNSIDRef: selfSNSIDRef, insertInto: context)
-        } else {
-            // Use reference post for initialization
-            self.init(to: belongingPostRef, content: content, date: date, selfSNSIDRef: selfSNSIDRef, insertInto: context)
-        }
+        self.init(towards: targetPostRef, content: content, date: date, selfSNSIDRef: selfSNSIDRef, selfSNSIDName: selfSNSIDName, ref: ref, insertInto: context)
+    }
+    
+    
+    /** From reference url */
+    public convenience init(fromReference ref: String, insertInto context: NSManagedObjectContext) {
+        // Get the reference object from Firebase
+        let firebaseRef = Database.database().reference(fromURL: ref)
+        // An empty JSONDATA container
+        var replyInfo: JSONDATA = [:]
+        // Observe at ref level
+        firebaseRef.observe(.childAdded, with: { snapshot in
+            // Check if value exists
+            guard let value = snapshot.value else {
+                raiseFatalError("snapshot's value is nil.")
+                fatalError()
+            }
+            // Add JSONDATA into info
+            replyInfo[snapshot.key] = value
+        })
+//        firebaseRef.removeAllObservers()
+        self.init(fromJSON: replyInfo, insertInto: context)
     }
     
     
@@ -72,8 +76,10 @@ public class Reply: NSManagedObject, Codable {
         typealias RawValue = String
         case content
         case date
-        case belongingPostRef
+        case targetPostRef
         case selfSNSIDRef
+        case selfSNSIDName
+        case ref
     }
     
     
@@ -92,8 +98,10 @@ public class Reply: NSManagedObject, Codable {
         let container = try decoder.container(keyedBy: CodingKeysOfReply.self)
         self.content = try container.decode(String.self, forKey: .content)
         self.date = try container.decode(Date.self, forKey: .date) as NSDate
-        self.belongingPostRef = try container.decode(String.self, forKey: .belongingPostRef)
+        self.ref = try container.decode(String.self, forKey: .ref)
+        self.targetPostRef = try container.decode(String.self, forKey: .targetPostRef)
         self.selfSNSIDRef = try container.decode(String.self, forKey: .selfSNSIDRef)
+        self.selfSNSIDName = try container.decode(String.self, forKey: .selfSNSIDName)
     }
     
     
@@ -102,8 +110,10 @@ public class Reply: NSManagedObject, Codable {
         var container = encoder.container(keyedBy: CodingKeysOfReply.self)
         try container.encode(self.content, forKey: .content)
         try container.encode(self.date as Date, forKey: .date)
-        try container.encode(self.belongingPostRef, forKey: .belongingPostRef)
+        try container.encode(self.targetPostRef, forKey: .targetPostRef)
         try container.encode(self.selfSNSIDRef, forKey: .selfSNSIDRef)
+        try container.encode(self.selfSNSIDName, forKey: .selfSNSIDName)
+        try container.encode(self.ref, forKey: .ref)
     }
     
     
@@ -111,9 +121,25 @@ public class Reply: NSManagedObject, Codable {
     var toJSON: Dictionary<String, Any> {
         return [
             CodingKeysOfReply.content.rawValue: self.content,
-            CodingKeysOfReply.date.rawValue: self.date,
-            CodingKeysOfReply.belongingPostRef.rawValue: self.belongingPostRef,
-            CodingKeysOfReply.selfSNSIDRef.rawValue: self.selfSNSIDRef
+            CodingKeysOfReply.date.rawValue: self.date.toString,
+            CodingKeysOfReply.targetPostRef.rawValue: self.targetPostRef,
+            CodingKeysOfReply.selfSNSIDRef.rawValue: self.selfSNSIDRef,
+            CodingKeysOfReply.selfSNSIDName.rawValue: self.selfSNSIDName,
+            CodingKeysOfReply.ref.rawValue: self.ref
         ]
+    }
+    
+    
+    
+    // MARK: - Custom Functions
+    
+    func getSelfSNSIDInfo(for key: String, insertInto context: NSManagedObjectContext) -> Any? {
+        let speaker = SNSID(fromReference: self.selfSNSIDRef, insertInto: context)
+        if let value = speaker.value(forKey: key) {
+            //            context.delete(speaker)
+            return value
+        } else {
+            return nil
+        }
     }
 }

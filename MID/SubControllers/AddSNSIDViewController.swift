@@ -56,10 +56,10 @@ class AddSNSIDViewController: UIViewController {
         /** Save new child to Firebase */
         let newChildReference = firebaseRoot.child(name)
         /** Create a new SNSID on CoreData */
-        let newSNSID = SNSID(name: name, owner: owner, ref: newChildReference.url, insertInto: coreDataContext)
+        let newSNSID = SNSID(name: name, ownerRef: owner.ref, myPosts: nil, publishedReplies: nil, ref: newChildReference.url, insertInto: coreDataContext)
         newChildReference.setValue(newSNSID.toJSON)
         
-        coreDataContext.delete(newSNSID)
+//        coreDataContext.delete(newSNSID)
         appDelegate.saveContext()
         
         self.dismiss(animated: true, completion: nil)
