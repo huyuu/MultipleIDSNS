@@ -31,7 +31,7 @@ public class Account: NSManagedObject, Codable {
     
     
     /** From JSON data of snapshot */
-    public convenience init(fromJSON jsonData: JSONDATA, insertInto context: NSManagedObjectContext) {
+    public required convenience init(fromJSON jsonData: JSONDATA, insertInto context: NSManagedObjectContext) {
         guard let email = jsonData[CodingKeysOfAccount.email.rawValue] as? String,
             let password = jsonData[CodingKeysOfAccount.password.rawValue] as? String,
             let name = jsonData[CodingKeysOfAccount.name.rawValue] as? String,
@@ -129,3 +129,4 @@ public class Account: NSManagedObject, Codable {
 }
 
 
+extension Account: DecodableFromFIRReference {}

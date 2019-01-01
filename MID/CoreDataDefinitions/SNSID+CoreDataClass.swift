@@ -31,30 +31,30 @@ public class SNSID: NSManagedObject, Codable {
     
     
     /** From reference url */
-    public static func initFromReference(_ ref: String, insertInto context: NSManagedObjectContext,
-                                  completionHandler: @escaping (SNSID) -> ()) {
-        // Get the reference object from Firebase
-        let firebaseRef = Database.database().reference(fromURL: ref)
-        // Observe at ref level
-        firebaseRef.observeSingleEvent(of: .value, with: { (snapshot) in
-            // Check if value exists
-            guard let snsidInfo = snapshot.value as? JSONDATA else {
-                raiseFatalError("snapshot's value is nil.")
-                fatalError()
-            }
-            // Add Create new Reply from replyInfo
-            let newSNSID = SNSID(fromJSON: snsidInfo, insertInto: context)
-            // pass it to the completionHandler
-            completionHandler(newSNSID)
-        })
-    }
+//    public static func initFromReference(_ ref: String, insertInto context: NSManagedObjectContext,
+//                                  completionHandler: @escaping (SNSID) -> ()) {
+//        // Get the reference object from Firebase
+//        let firebaseRef = Database.database().reference(fromURL: ref)
+//        // Observe at ref level
+//        firebaseRef.observeSingleEvent(of: .value, with: { (snapshot) in
+//            // Check if value exists
+//            guard let snsidInfo = snapshot.value as? JSONDATA else {
+//                raiseFatalError("snapshot's value is nil.")
+//                fatalError()
+//            }
+//            // Add Create new Reply from replyInfo
+//            let newSNSID = SNSID(fromJSON: snsidInfo, insertInto: context)
+//            // pass it to the completionHandler
+//            completionHandler(newSNSID)
+//        })
+//    }
     
     
     /**
      From JSON data of a snapshot. Must contain **"name"** property (["posts": JSONDATA] for option).
      - parameter jsonData: a [String: Any]
     */
-    public convenience init(fromJSON jsonData: JSONDATA, insertInto context: NSManagedObjectContext) {
+    public required convenience init(fromJSON jsonData: JSONDATA, insertInto context: NSManagedObjectContext) {
         guard let name = jsonData[CodingKeysOfSNSID.name.rawValue] as? String,
             let ownerRef = jsonData[CodingKeysOfSNSID.ownerRef.rawValue] as? String,
             let ref = jsonData[CodingKeysOfSNSID.ref.rawValue] as? String else {
@@ -179,3 +179,6 @@ public class SNSID: NSManagedObject, Codable {
         return returnJSON
     }
 }
+
+
+extension SNSID: DecodableFromFIRReference {}

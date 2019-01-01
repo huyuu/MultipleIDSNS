@@ -35,7 +35,7 @@ public class Post: NSManagedObject, Codable {
     
     
     /**  For JSON data of snapshot */
-    public convenience init(fromJSON jsonData: JSONDATA, insertInto context: NSManagedObjectContext) {
+    public required convenience init(fromJSON jsonData: JSONDATA, insertInto context: NSManagedObjectContext) {
         guard let content = jsonData[CodingKeysOfPost.content.rawValue] as? String,
             let dateString = jsonData[CodingKeysOfPost.date.rawValue] as? String ,
             let date = dateString.toDate(),
@@ -63,23 +63,23 @@ public class Post: NSManagedObject, Codable {
     
     
     /** From reference url */
-    public func initFromReference(_ ref: String, insertInto context: NSManagedObjectContext,
-                                  completionHandler: @escaping (Post) -> ()) {
-        // Get the reference object from Firebase
-        let firebaseRef = Database.database().reference(fromURL: ref)
-        // Observe at ref level
-        firebaseRef.observeSingleEvent(of: .value, with: { (snapshot) in
-            // Check if value exists
-            guard let postInfo = snapshot.value as? JSONDATA else {
-                raiseFatalError("snapshot's value is nil.")
-                fatalError()
-            }
-            // Add Create new Reply from replyInfo
-            let newPost = Post(fromJSON: postInfo, insertInto: context)
-            // pass it to the completionHandler
-            completionHandler(newPost)
-        })
-    }
+//    public func initFromReference(_ ref: String, insertInto context: NSManagedObjectContext,
+//                                  completionHandler: @escaping (Post) -> ()) {
+//        // Get the reference object from Firebase
+//        let firebaseRef = Database.database().reference(fromURL: ref)
+//        // Observe at ref level
+//        firebaseRef.observeSingleEvent(of: .value, with: { (snapshot) in
+//            // Check if value exists
+//            guard let postInfo = snapshot.value as? JSONDATA else {
+//                raiseFatalError("snapshot's value is nil.")
+//                fatalError()
+//            }
+//            // Add Create new Reply from replyInfo
+//            let newPost = Post(fromJSON: postInfo, insertInto: context)
+//            // pass it to the completionHandler
+//            completionHandler(newPost)
+//        })
+//    }
     
     
     
@@ -177,3 +177,4 @@ public class Post: NSManagedObject, Codable {
 }
 
 
+extension Post: DecodableFromFIRReference {}
