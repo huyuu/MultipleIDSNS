@@ -31,23 +31,22 @@ public class SNSID: NSManagedObject, Codable {
     
     
     /** From reference url */
-    public convenience init(fromReference ref: String, insertInto context: NSManagedObjectContext) {
+    public static func initFromReference(_ ref: String, insertInto context: NSManagedObjectContext,
+                                  completionHandler: @escaping (SNSID) -> ()) {
         // Get the reference object from Firebase
         let firebaseRef = Database.database().reference(fromURL: ref)
-        // An empty JSONDATA container
-        var snsidInfo: JSONDATA = [:]
         // Observe at ref level
-        firebaseRef.observe(.childAdded, with: { (snapshot) in
-            print("Hello!!! \(snapshot.key), \(snapshot.value)")
+        firebaseRef.observeSingleEvent(of: .value, with: { (snapshot) in
             // Check if value exists
-            guard let value = snapshot.value else {
+            guard let snsidInfo = snapshot.value as? JSONDATA else {
                 raiseFatalError("snapshot's value is nil.")
                 fatalError()
             }
-            // Add JSONDATA into info
-            snsidInfo[snapshot.key] = value
+            // Add Create new Reply from replyInfo
+            let newSNSID = SNSID(fromJSON: snsidInfo, insertInto: context)
+            // pass it to the completionHandler
+            completionHandler(newSNSID)
         })
-        self.init(fromJSON: snsidInfo, insertInto: context)
     }
     
     

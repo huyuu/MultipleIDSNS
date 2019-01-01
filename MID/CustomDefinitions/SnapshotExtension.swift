@@ -77,8 +77,3 @@ public extension DataSnapshot {
 }
 
 
-public extension String {
-    public func addChild(_ path: String) -> String {
-        return "\(self)/\(path)"
-    }
-}

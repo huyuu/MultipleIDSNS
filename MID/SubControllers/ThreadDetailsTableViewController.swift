@@ -32,7 +32,16 @@ class ThreadDetailsTableViewController: UITableViewController {
             fatalError()
         }
         
-        localStoredReplies = postTabbed.replies?.allObjects as! [Reply]?
+        if selfSNSID == nil {
+            SNSID.initFromReference(postTabbed.speakerRef, insertInto: coreDataContext, completionHandler: { newSNSID in
+                self.selfSNSID = newSNSID
+                self.tableView.reloadData()
+            })
+        }
+        
+        /// Load replies from localStored post
+//        localStoredReplies = postTabbed.replies?.toArray()
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -42,8 +51,11 @@ class ThreadDetailsTableViewController: UITableViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
-        firebaseRoot.observe(.childAdded, with: { snapshot in
-            if let replies = snapshot.decodeToReplies(insertInto: self.coreDataContext) {
+        firebaseRoot.observe(.value, with: { snapshot in
+            /** We are now listening at /.../postDate. snapshot.key=post.date, snapshot.value=post.postInfo
+             Therefor, we search from snapshot'schild for key of "replies" and pass its value to JSON decoder of Reply
+            */
+            if let replies = snapshot.childSnapshot(forPath: Post.CodingKeysOfPost.replies.rawValue).decodeToReplies(insertInto: self.coreDataContext) {
                 self.localStoredReplies = replies
             }
             self.tableView.reloadData()
@@ -168,7 +180,9 @@ class ThreadDetailsTableViewController: UITableViewController {
 
     
     @IBAction func backToTimeLine(_ sender: UIBarButtonItem) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: {
+            self.firebaseRoot.removeAllObservers()
+        })
     }
     
 }

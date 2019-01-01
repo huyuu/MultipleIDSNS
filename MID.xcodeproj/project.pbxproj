@@ -12,9 +12,10 @@
 		2661289921D6697E00AE03A7 /* AddPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661289821D6697E00AE03A7 /* AddPostViewController.swift */; };
 		2661289D21D718A600AE03A7 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661289C21D718A600AE03A7 /* DateExtension.swift */; };
 		2661289F21D7222900AE03A7 /* SnapshotExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661289E21D7222900AE03A7 /* SnapshotExtension.swift */; };
-		266693EB21C3F23A008C8DFE /* JSONDataForConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266693EA21C3F23A008C8DFE /* JSONDataForConnection.swift */; };
+		266693EB21C3F23A008C8DFE /* CoreDataSupplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266693EA21C3F23A008C8DFE /* CoreDataSupplementation.swift */; };
 		266AF2FF21D447E000414418 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 266AF2FE21D447E000414418 /* GoogleService-Info.plist */; };
 		268602C121D842AB0032EDCB /* AddReplyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268602C021D842AB0032EDCB /* AddReplyViewController.swift */; };
+		268602FF21DAE4B00032EDCB /* ConcurrencyFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268602FE21DAE4B00032EDCB /* ConcurrencyFunctions.swift */; };
 		2693820E21CFD194007549F6 /* Reply+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2693820B21CFD193007549F6 /* Reply+CoreDataClass.swift */; };
 		2693820F21CFD194007549F6 /* Reply+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2693820C21CFD193007549F6 /* Reply+CoreDataProperties.swift */; };
 		26C0C05321BE888500667E87 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C0C05221BE888500667E87 /* AppDelegate.swift */; };
@@ -42,9 +43,10 @@
 		2661289821D6697E00AE03A7 /* AddPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPostViewController.swift; sourceTree = "<group>"; };
 		2661289C21D718A600AE03A7 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		2661289E21D7222900AE03A7 /* SnapshotExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotExtension.swift; sourceTree = "<group>"; };
-		266693EA21C3F23A008C8DFE /* JSONDataForConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDataForConnection.swift; sourceTree = "<group>"; };
+		266693EA21C3F23A008C8DFE /* CoreDataSupplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSupplementation.swift; sourceTree = "<group>"; };
 		266AF2FE21D447E000414418 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		268602C021D842AB0032EDCB /* AddReplyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddReplyViewController.swift; sourceTree = "<group>"; };
+		268602FE21DAE4B00032EDCB /* ConcurrencyFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrencyFunctions.swift; sourceTree = "<group>"; };
 		2693820B21CFD193007549F6 /* Reply+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reply+CoreDataClass.swift"; sourceTree = "<group>"; };
 		2693820C21CFD193007549F6 /* Reply+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reply+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		26C0C04F21BE888500667E87 /* MID.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MID.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -144,9 +146,10 @@
 		26C0C06C21BEAFB000667E87 /* CustomDefinitions */ = {
 			isa = PBXGroup;
 			children = (
-				266693EA21C3F23A008C8DFE /* JSONDataForConnection.swift */,
+				266693EA21C3F23A008C8DFE /* CoreDataSupplementation.swift */,
 				2661289C21D718A600AE03A7 /* DateExtension.swift */,
 				2661289E21D7222900AE03A7 /* SnapshotExtension.swift */,
+				268602FE21DAE4B00032EDCB /* ConcurrencyFunctions.swift */,
 			);
 			path = CustomDefinitions;
 			sourceTree = "<group>";
@@ -344,12 +347,13 @@
 				26C0C05521BE888500667E87 /* ViewController.swift in Sources */,
 				26C0C07621BF48CC00667E87 /* SNSID+CoreDataProperties.swift in Sources */,
 				268602C121D842AB0032EDCB /* AddReplyViewController.swift in Sources */,
-				266693EB21C3F23A008C8DFE /* JSONDataForConnection.swift in Sources */,
+				266693EB21C3F23A008C8DFE /* CoreDataSupplementation.swift in Sources */,
 				2693820E21CFD194007549F6 /* Reply+CoreDataClass.swift in Sources */,
 				26C0C07521BF48CC00667E87 /* SNSID+CoreDataClass.swift in Sources */,
 				26C0C07921BF553600667E87 /* Account+CoreDataClass.swift in Sources */,
 				26C0C05321BE888500667E87 /* AppDelegate.swift in Sources */,
 				26E5571C21C120E5000604DE /* Post+CoreDataProperties.swift in Sources */,
+				268602FF21DAE4B00032EDCB /* ConcurrencyFunctions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

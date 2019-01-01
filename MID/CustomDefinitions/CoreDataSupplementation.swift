@@ -44,7 +44,6 @@ public extension Int {
     }
 }
 
-
 public extension Int64 {
     public func toString() -> String {
         return String(self)
@@ -52,37 +51,26 @@ public extension Int64 {
 }
 
 
+public protocol DecodableFromFIRReference {
+    init(fromJSON: JSONDATA, insertInto: NSManagedObjectContext)
+}
 
-
-
-
-//public struct CodablePost: Codable {
-//    let speakerName: String
-//    let speakerID: Int64
-//    let content: String
-//    let date: Date
-//    var replies: [CodableReply]?
-//    
-//    // Initializer direct for CoreData type 'Post'
-//    init(_ post: Post) {
-//        self.speakerName = post.speakerName
-//        self.speakerID = post.speakerID
-//        self.content = post.content
-//        self.date = Date()
-//        self.replies = nil
-//    }
-//}
-//
-//
-//public struct CodableReply: Codable {
-//    let speakerName: String
-//    let speakerID: Int64
-//    let content: String
-//}
-//
-//
-//public struct CodableSNSID: Codable {
-//    let name: String
-//    let iDnumber: Int64
-//    let posts: [CodablePost]?
-//}
+public extension DecodableFromFIRReference {
+    public static func initFromReference(_ ref: String, insertInto context: NSManagedObjectContext,
+                                         completionHandler: @escaping (Reply) -> ()) {
+        /// Get the reference object from Firebase
+        let firebaseRef = Database.database().reference(fromURL: ref)
+        /// Observe at ref level
+        firebaseRef.observeSingleEvent(of: .value, with: { snapshot in
+            // Check if value exists
+            guard let replyInfo = snapshot.value as? JSONDATA else {
+                raiseFatalError("snapshot's value is nil.")
+                fatalError()
+            }
+            // Add Create new Reply from replyInfo
+            let newReply = Reply(fromJSON: replyInfo, insertInto: context)
+            // pass it to the completionHandler
+            completionHandler(newReply)
+        })
+    }
+}
