@@ -13,8 +13,8 @@ import Firebase
 class AddPostViewController: UIViewController {
 
     // Prepare coreDataContext
-    private let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    private let coreDataContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var appDelegate: AppDelegate!
+    var coreDataContext: NSManagedObjectContext!
     /** For FirebaseDatabase reference */
     public var firebaseRoot: DatabaseReference!
     /** For speaker. This property must be set by the previous controller */
@@ -53,8 +53,6 @@ class AddPostViewController: UIViewController {
         newChildReference.setValue(newPost.toJSON)
         
         speaker.addToMyPosts(newPost)
-//        coreDataContext.delete(newPost)
-        appDelegate.saveContext()
         
         self.dismiss(animated: true, completion: nil)
     }

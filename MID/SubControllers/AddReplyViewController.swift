@@ -14,8 +14,8 @@ import Firebase
 class AddReplyViewController: UIViewController {
     
     // Prepare coreDataContext
-    private let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    private let coreDataContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var appDelegate: AppDelegate!
+    var coreDataContext: NSManagedObjectContext!
     /** For FirebaseDatabase reference */
     public var firebaseRoot: DatabaseReference!
     /** For speaker. This property must be set by the previous controller */
@@ -23,7 +23,8 @@ class AddReplyViewController: UIViewController {
     /** For belongingPost. This property must be set by the previous controller */
     public var targetPost: Post!
     
-    @IBOutlet weak var contentTextField: UITextField!
+    
+    @IBOutlet weak var contentTextView: UITextView!
     @IBOutlet weak var selfSNSIDNameLabel: UILabel!
     @IBOutlet weak var receiverNameLabel: UILabel!
     
@@ -31,7 +32,7 @@ class AddReplyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        contentTextField.becomeFirstResponder()
+        contentTextView.becomeFirstResponder()
         selfSNSIDNameLabel.text = selfSNSID.name
         receiverNameLabel.text = "replying to \(targetPost.speakerName)"
     }
@@ -46,17 +47,17 @@ class AddReplyViewController: UIViewController {
     
     
     @IBAction func replyDone(_ sender: UIBarButtonItem) {
-        let content = contentTextField.text!
+        let content = contentTextView.text!
         /** Save new child to Firebase */
-        let newChildReference = firebaseRoot.child(Date().toString)
+        let now = Date()
+        let newChildReference = firebaseRoot.child(now.toString)
         /** Create a new Reply on CoreData */
-        let newReply = Reply(towards: targetPost.ref, content: content, selfSNSIDRef: selfSNSID.ref, selfSNSIDName: selfSNSID.name, ref: newChildReference.url, insertInto: coreDataContext)
+        let newReply = Reply(towards: targetPost.ref, content: content, date: now, selfSNSIDRef: selfSNSID.ref, selfSNSIDName: selfSNSID.name, ref: newChildReference.url, insertInto: coreDataContext)
         selfSNSID.addToPublishedReplies(newReply)
 
         newChildReference.setValue(newReply.toJSON)
         
-//        coreDataContext.delete(newReply)
-        appDelegate.saveContext()
+        selfSNSID.addToPublishedReplies(newReply)
         
         self.dismiss(animated: true, completion: nil)
     }

@@ -59,6 +59,7 @@ public extension Int64 {
 */
 public protocol DecodableFromFIRReference {
     init(fromJSON: JSONDATA, insertInto: NSManagedObjectContext)
+    var ref: String { get set }
 }
 
 public extension DecodableFromFIRReference {
@@ -67,7 +68,7 @@ public extension DecodableFromFIRReference {
      - parameter completionHandler: Get a new instance of type Self as parameter. ex: { SNSID in ... }
      - returns: Void. Please use the completion handler to update the UI.
     */
-    public static func initFromReference(_ ref: String, insertInto context: NSManagedObjectContext,
+    public static func initSelf(fromReference ref: String, insertInto context: NSManagedObjectContext,
                                          completionHandler: @escaping (Self) -> ()) {
         /// Get the reference object from Firebase
         let firebaseRef = Database.database().reference(fromURL: ref)
@@ -82,6 +83,38 @@ public extension DecodableFromFIRReference {
             let newInstance = Self(fromJSON: instanceInfo, insertInto: context)
             // pass it to the completionHandler
             completionHandler(newInstance)
+        })
+    }
+    
+    
+    /**
+     ***
+     Example:
+     ```
+     newAccount.initChildren(for: Account.CodingKeysOfAccount.snsids.rawValue, insertInto: self.coreDataContext,
+        completionHandler: { (snsids: [SNSID]?) in
+        self.localStoredIDs = snsids
+        self.tableView.reloadData()
+     })
+     ```
+    */
+    public func initChildren<T: DecodableFromFIRReference>(for key: String, insertInto context: NSManagedObjectContext,
+                                     completionHandler: @escaping ([T]?) -> ()) {
+        /// Get the reference object from Firebase
+        let firebaseRef = Database.database().reference(fromURL: self.ref)
+        /// Observe at ref level
+        firebaseRef.observeSingleEvent(of: .value, with: { snapshot in
+            // Check if value exists
+            guard let _ = snapshot.value as? JSONDATA else {
+                raiseFatalError("snapshot's value is nil.")
+                fatalError()
+            }
+            // Create new children
+            if let children: [T] = snapshot.childSnapshot(forPath: key).decodeTo(insertInto: context) {
+                completionHandler(children)
+            } else {
+                completionHandler(nil)
+            }
         })
     }
 }

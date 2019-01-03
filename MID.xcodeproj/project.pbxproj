@@ -11,7 +11,7 @@
 		263AE67C21CBD6D20046B2F4 /* AddSNSIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263AE67B21CBD6D20046B2F4 /* AddSNSIDViewController.swift */; };
 		2661289921D6697E00AE03A7 /* AddPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661289821D6697E00AE03A7 /* AddPostViewController.swift */; };
 		2661289D21D718A600AE03A7 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661289C21D718A600AE03A7 /* DateExtension.swift */; };
-		2661289F21D7222900AE03A7 /* SnapshotExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661289E21D7222900AE03A7 /* SnapshotExtension.swift */; };
+		2661289F21D7222900AE03A7 /* FirebaseExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661289E21D7222900AE03A7 /* FirebaseExtension.swift */; };
 		266693EB21C3F23A008C8DFE /* CoreDataSupplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266693EA21C3F23A008C8DFE /* CoreDataSupplementation.swift */; };
 		266AF2FF21D447E000414418 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 266AF2FE21D447E000414418 /* GoogleService-Info.plist */; };
 		268602C121D842AB0032EDCB /* AddReplyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268602C021D842AB0032EDCB /* AddReplyViewController.swift */; };
@@ -42,7 +42,7 @@
 		263AE67B21CBD6D20046B2F4 /* AddSNSIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSNSIDViewController.swift; sourceTree = "<group>"; };
 		2661289821D6697E00AE03A7 /* AddPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPostViewController.swift; sourceTree = "<group>"; };
 		2661289C21D718A600AE03A7 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
-		2661289E21D7222900AE03A7 /* SnapshotExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotExtension.swift; sourceTree = "<group>"; };
+		2661289E21D7222900AE03A7 /* FirebaseExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseExtension.swift; sourceTree = "<group>"; };
 		266693EA21C3F23A008C8DFE /* CoreDataSupplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSupplementation.swift; sourceTree = "<group>"; };
 		266AF2FE21D447E000414418 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		268602C021D842AB0032EDCB /* AddReplyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddReplyViewController.swift; sourceTree = "<group>"; };
@@ -148,7 +148,7 @@
 			children = (
 				266693EA21C3F23A008C8DFE /* CoreDataSupplementation.swift */,
 				2661289C21D718A600AE03A7 /* DateExtension.swift */,
-				2661289E21D7222900AE03A7 /* SnapshotExtension.swift */,
+				2661289E21D7222900AE03A7 /* FirebaseExtension.swift */,
 				268602FE21DAE4B00032EDCB /* ConcurrencyFunctions.swift */,
 			);
 			path = CustomDefinitions;
@@ -333,7 +333,7 @@
 			files = (
 				26C0C05B21BE888500667E87 /* MID.xcdatamodeld in Sources */,
 				2661289D21D718A600AE03A7 /* DateExtension.swift in Sources */,
-				2661289F21D7222900AE03A7 /* SnapshotExtension.swift in Sources */,
+				2661289F21D7222900AE03A7 /* FirebaseExtension.swift in Sources */,
 				263AE67C21CBD6D20046B2F4 /* AddSNSIDViewController.swift in Sources */,
 				260D706621CF63AC0024B1A0 /* ThreadDetailsTableViewController.swift in Sources */,
 				2661289921D6697E00AE03A7 /* AddPostViewController.swift in Sources */,

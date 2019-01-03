@@ -15,13 +15,13 @@ class Main1TableViewController: UITableViewController {
     
     let pageIndex = 1
     // Prepare coreDataContext
-    private let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    private let coreDataContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var appDelegate: AppDelegate!
+    var coreDataContext: NSManagedObjectContext!
     /** For tabbed SNSID */
     var tabbedSNSID: SNSID!
     /** For local stored posts */
     var localStoredPosts: [Post]?
-    /** For Firebase */
+    /** For Firebase, expected to be .../tabbedSNSIDName  */
     var firebaseRoot: DatabaseReference!
 
     
@@ -29,28 +29,18 @@ class Main1TableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("Main1TableViewController did load.")
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        // Fetch posts, which is [Post], from SNSID.posts which is a NSSet
+        localStoredPosts = tabbedSNSID.myPosts?.toArray()
     }
 
+    
     override func viewWillAppear(_ animated: Bool) {
-        print("Main1TableViewController will appear. Owner = \(tabbedSNSID.name)")
-        
-        // Fetch posts, which is [Post], from SNSID.posts which is a NSSet
-//        localStoredPosts = tabbedSNSID.posts?.allObjects as? [Post]
-        
-        // Fetch from Firebase
-        firebaseRoot.observe(.childAdded) { (snapshot) in
-//            print("Hello!!! \(snapshot.value)")
-            if let posts = snapshot.decodeToPosts(insertInto: self.coreDataContext) {
-                self.localStoredPosts = posts
-            }
+        // Fetch from Firebase if new post is published.
+        tabbedSNSID.initChildren(for: SNSID.CodingKeysOfSNSID.myPosts.rawValue, insertInto: coreDataContext,
+            completionHandler: { (newPosts: [Post]?) in
+            self.localStoredPosts = newPosts
             self.tableView.reloadData()
-        }
+        })
     }
     
     
@@ -73,22 +63,18 @@ class Main1TableViewController: UITableViewController {
         // Creatng reusable cells
         let cell = tableView.dequeueReusableCell(withIdentifier: "com.google.huyuu258.MID.reusableCellOfPosts", for: indexPath)
         
-        // Check if there is any locally stored post
-        guard let posts = localStoredPosts else {
-            return cell  // No post. Only for original user.
-        }
-        
+        // If localStorePosts is nil, tableView will present 0 row, meaning that localStoredPosts is never nil at this moment.
+        let posts = localStoredPosts!
         // Show the information of the post by UILabels
         let post = posts[indexPath.row]
-        // Speaker's name
+        
+        /// Speaker's name
         let speakerNameLabel = cell.viewWithTag(100) as! UILabel
-//        let speakerName = (post.getSpeakerInfo(for: "name", insertInto: coreDataContext) as? String) ?? ""
-        let speakerName = tabbedSNSID.name
-        speakerNameLabel.text = speakerName
-        // Content
+        speakerNameLabel.text = tabbedSNSID.name
+        /// Content
         let contentLabel = cell.viewWithTag(101) as! UILabel
         contentLabel.text = post.content
-        // Date
+        /// Date
         let dateLabel = cell.viewWithTag(102) as! UILabel
         dateLabel.text = post.date.toStringForPresentation
         
@@ -104,18 +90,6 @@ class Main1TableViewController: UITableViewController {
     
     
     // MARK: - Custom actions
-    
-    // For debug only
-//    func addPosts() {
-//        for i in 1...3 {
-//            let newPost = Post(entity: Post.entity(), insertInto: coreDataContext)
-//            newPost.speakerName = "user\(i)"
-//            newPost.speakerID = Int64(i)
-//            newPost.content = "I like the number \(i)"
-//            appDelegate.saveContext()
-//        }
-//    }
-
     
 //    func requestPostsFromServer(baseURL: String) {
 //        let defaultURLSession = URLSession(configuration: .default)
@@ -201,7 +175,7 @@ class Main1TableViewController: UITableViewController {
             
             // Delete from Firebase
             let toBeDeletePost = localStoredPosts![indexPath.row]
-            firebaseRoot.child(SNSID.CodingKeysOfSNSID.myPosts.rawValue).child(toBeDeletePost.date.toString).removeValue()
+            toBeDeletePost.ref.getFIRDatabaseReference.removeValue()
             
             localStoredPosts!.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
@@ -237,13 +211,17 @@ class Main1TableViewController: UITableViewController {
             let postTabbed = localStoredPosts![indexPathTabbed.row]
             destinationController.postTabbed = postTabbed
             destinationController.selfSNSID = tabbedSNSID
-            destinationController.firebaseRoot = firebaseRoot.child(SNSID.CodingKeysOfSNSID.myPosts.rawValue).child(postTabbed.date.toString)
+            destinationController.firebaseRoot = postTabbed.ref.getFIRDatabaseReference
+            destinationController.appDelegate = appDelegate
+            destinationController.coreDataContext = coreDataContext
             
         case "showAddPostView":
             let destinationController = segue.destination as! AddPostViewController
             // Pass speaker to AddSNSIDViewController
             destinationController.speaker = tabbedSNSID
             destinationController.firebaseRoot = firebaseRoot.child(SNSID.CodingKeysOfSNSID.myPosts.rawValue)
+            destinationController.appDelegate = appDelegate
+            destinationController.coreDataContext = coreDataContext
             
         default:
             raiseFatalError("Segue preparing error, segue.identifier = \(segue.identifier)")

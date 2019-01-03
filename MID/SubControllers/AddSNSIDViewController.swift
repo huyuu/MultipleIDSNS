@@ -8,18 +8,20 @@
 
 import UIKit
 import Firebase
+import CoreData
 
 class AddSNSIDViewController: UIViewController {
 
-    // Prepare coreDataContext
-    private let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    private let coreDataContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    /** For FirebaseDatabase reference */
+    /// Prepare coreDataContext
+    var coreDataContext: NSManagedObjectContext!
+    var appDelegate: AppDelegate!
+    /** For FirebaseDatabase reference, expected to be .../snsids */
     public var firebaseRoot: DatabaseReference!
     /** For main account information. This property must be set by the previous controller */
     public var owner: Account!
     /** For SNSID name input textField */
     @IBOutlet weak var nameTextField: UITextField!
+    
     
     
     // MARK: - Load the view
@@ -59,8 +61,7 @@ class AddSNSIDViewController: UIViewController {
         let newSNSID = SNSID(name: name, ownerRef: owner.ref, myPosts: nil, publishedReplies: nil, ref: newChildReference.url, insertInto: coreDataContext)
         newChildReference.setValue(newSNSID.toJSON)
         
-//        coreDataContext.delete(newSNSID)
-        appDelegate.saveContext()
+        owner.addToSnsids(newSNSID)
         
         self.dismiss(animated: true, completion: nil)
     }
