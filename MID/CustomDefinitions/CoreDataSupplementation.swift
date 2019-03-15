@@ -88,6 +88,7 @@ public extension DecodableFromFIRReference {
     
     
     /**
+     Return sa DecodableFromFIRReference type. _Note_ that returnValue must be declare as a explicity type.
      ***
      Example:
      ```

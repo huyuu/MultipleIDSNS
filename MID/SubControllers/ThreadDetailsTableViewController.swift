@@ -95,8 +95,8 @@ class ThreadDetailsTableViewController: UITableViewController {
 
             let reply = replies[indexPath.row.advanced(by: -2)]
             // Set speakerName
-            let speakerNameLabel = cell.viewWithTag(200) as! UILabel
-            speakerNameLabel.text = reply.selfSNSIDName
+            let targetNameLabel = cell.viewWithTag(200) as! UILabel
+            targetNameLabel.text = "@ \(post.speakerName)"
             // Set content
             let contentLabel = cell.viewWithTag(201) as! UILabel
             contentLabel.text = reply.content
@@ -109,6 +109,12 @@ class ThreadDetailsTableViewController: UITableViewController {
     }
  
 
+    
+    // MARK: - Table View System Functions
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
+    }
     
     /*
     // Override to support conditional editing of the table view.

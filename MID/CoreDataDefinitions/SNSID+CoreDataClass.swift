@@ -30,26 +30,6 @@ public class SNSID: NSManagedObject, Codable {
     }
     
     
-    /** From reference url */
-//    public static func initFromReference(_ ref: String, insertInto context: NSManagedObjectContext,
-//                                  completionHandler: @escaping (SNSID) -> ()) {
-//        // Get the reference object from Firebase
-//        let firebaseRef = Database.database().reference(fromURL: ref)
-//        // Observe at ref level
-//        firebaseRef.observeSingleEvent(of: .value, with: { (snapshot) in
-//            // Check if value exists
-//            guard let snsidInfo = snapshot.value as? JSONDATA else {
-//                raiseFatalError("snapshot's value is nil.")
-//                fatalError()
-//            }
-//            // Add Create new Reply from replyInfo
-//            let newSNSID = SNSID(fromJSON: snsidInfo, insertInto: context)
-//            // pass it to the completionHandler
-//            completionHandler(newSNSID)
-//        })
-//    }
-    
-    
     /**
      From JSON data of a snapshot. Must contain **"name"** property (["posts": JSONDATA] for option).
      - parameter jsonData: a [String: Any]
@@ -72,7 +52,6 @@ public class SNSID: NSManagedObject, Codable {
                 }
             }
         }
-        
         // Container of myPosts
         var myPostsContainer: Set<Post>? = nil
         // If any publishedReply exists

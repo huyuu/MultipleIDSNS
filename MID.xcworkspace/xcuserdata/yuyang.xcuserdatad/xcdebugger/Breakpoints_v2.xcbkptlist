@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MID/CoreDataDefinitions/Reply+CoreDataClass.swift"
-            timestampString = "568013487.9909379"
+            timestampString = "568180984.74519"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "37"
@@ -42,7 +42,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MID/SubControllers/ThreadDetailsTableViewController.swift"
-            timestampString = "568129608.784071"
+            timestampString = "568180984.745441"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "50"
@@ -58,7 +58,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MID/SubControllers/ThreadDetailsTableViewController.swift"
-            timestampString = "568129608.784866"
+            timestampString = "568180984.745571"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "43"
@@ -74,7 +74,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MID/SubControllers/ThreadDetailsTableViewController.swift"
-            timestampString = "568129608.785382"
+            timestampString = "568180984.745702"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "71"
@@ -111,6 +111,54 @@
                   startingLineNumber = "72"
                   endingLineNumber = "72"
                   offsetFromSymbolStart = "261">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MID/MainControllers/Main0TableViewController.swift"
+            timestampString = "574238251.317349"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "viewWillAppear(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MID.Main0TableViewController.viewWillAppear(Swift.Bool) -&gt; ()"
+                  moduleName = "MID"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yuyang/Applications/OneDrive/work/MID/MID/MainControllers/Main0TableViewController.swift"
+                  timestampString = "568472466.586617"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "70"
+                  endingLineNumber = "70"
+                  offsetFromSymbolStart = "333">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (MID.Account) -&gt; () in MID.Main0TableViewController.viewWillAppear(Swift.Bool) -&gt; ()"
+                  moduleName = "MID"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yuyang/Applications/OneDrive/work/MID/MID/MainControllers/Main0TableViewController.swift"
+                  timestampString = "568472466.592489"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "71"
+                  endingLineNumber = "71"
+                  offsetFromSymbolStart = "37">
                </Location>
             </Locations>
          </BreakpointContent>

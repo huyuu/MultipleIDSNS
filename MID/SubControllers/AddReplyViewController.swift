@@ -31,13 +31,24 @@ class AddReplyViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        contentTextView.becomeFirstResponder()
-        selfSNSIDNameLabel.text = selfSNSID.name
-        receiverNameLabel.text = "replying to \(targetPost.speakerName)"
+        self.initalizeView()
     }
     
+    
+    
+    // MARK: - Custom Actions
+    
+    private func initalizeView() {
+        // let contexntTextView become first responser, and set its text to default
+        contentTextView.becomeFirstResponder()
+        contentTextView.text! = ""
+        // Set self name to selfSNSIDName label
+        selfSNSIDNameLabel.text = selfSNSID.name
+        // present receiver name in the receiverName label
+        receiverNameLabel.text = "@ \(targetPost.speakerName)"
+    }
 
+    
 
     // MARK: - Navigation
     
