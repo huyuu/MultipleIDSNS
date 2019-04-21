@@ -12,11 +12,8 @@ import Firebase
 
 class AddPostViewController: UIViewController {
 
-    // Prepare coreDataContext
-    var appDelegate: AppDelegate!
-    var coreDataContext: NSManagedObjectContext!
-    /** For FirebaseDatabase reference */
-    public var firebaseRoot: DatabaseReference!
+    /** For FirebaseDatabase reference, expected to be ../postTank  */
+    public var firebaseRoot: DatabaseReference = Database.rootReference().child("postTank")
     /** For speaker. This property must be set by the previous controller */
     public var speaker: SNSID!
     /** Post content text input textField */
@@ -45,14 +42,19 @@ class AddPostViewController: UIViewController {
     
     
     @IBAction func postDone(_ sender: Any) {
-        let content = contentTextField.text!
+        let contents = contentTextField.text!
         /** Save new child to Firebase */
-        let newChildReference = firebaseRoot.child(Date().toString)
+        let now = Date()
+        let newChildReference = firebaseRoot.child("\(speaker.owner)&&\(speaker.name)&&\(now.toString)")
         /** Create a new Post on CoreData */
-        let newPost = Post(speakerRef: speaker.ref, speakerName: speaker.name, content: content, replies: nil, ref: newChildReference.url, insertInto: coreDataContext)
-        newChildReference.setValue(newPost.toJSON)
+        let newPost = Post(speaker: "\(speaker.owner)&&\(speaker.name)", speakerName: "\(speaker.name)", speakerRef: speaker.ref, date: now, contents: contents, replies: nil)
         
-        speaker.addToMyPosts(newPost)
+//        print(newPost.toJSON)
+        newChildReference.setValue(newPost.toJSON())
+        /// set new myPost to snsid
+        speaker.ref.getFIRDatabaseReference.child("myPosts").child("\(now.toString)").setValue(
+            ["date": now.toString, "ref": newChildReference.url]
+        )
         
         self.dismiss(animated: true, completion: nil)
     }

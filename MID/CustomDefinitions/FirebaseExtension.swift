@@ -76,25 +76,50 @@ public extension DataSnapshot {
 //    }
     
     
-    public func decodeTo<T: DecodableFromFIRReference>(insertInto context: NSManagedObjectContext) -> [T]? {
-        // Check if snapshot contains a set of replies
-        if let instancesSet = self.value as? JSONDATA {
-            // We choose an Array object here according to the return value
-            var newInstances: [T] = []
-            // key: date, value: replyInfo
-            for instance in instancesSet {
-                // Check if postInfo.value contains postInfo
-                if let instanceInfo = instance.value as? JSONDATA {
-                    let newInstance = T(fromJSON: instanceInfo, insertInto: context)
-                    newInstances.append(newInstance)
+    /**
+     Generate T from TList property. (example: get [SNSID] from snsids.)
+    */
+    public func decodeToChildren<T: DecodableFromFIRReference>(runQueue: DispatchQueue=DispatchQueue.global(),
+                                                               completionQueue: DispatchQueue,
+                                                               completionHandler: @escaping ([T]?) -> ()) {
+        let group = DispatchGroup()
+        // We choose an Array object here according to the return value
+        var newInstances: [T]? = []
+        
+        group.enter()
+        runQueue.async {
+            // Check if snapshot contains a set of replies
+            if let instancesSet = self.value as? JSONDATA {
+                // key: date, value: replyInfo
+                for instance in instancesSet {
+                    // Check if postInfo.value contains postInfo
+                    if let instanceInfo = instance.value as? JSONDATA {
+                        T.initSelf(fromReference: instanceInfo["ref"] as! String, completionHandler: { (newInstance) in
+                            newInstances!.append(newInstance)
+                            group.leave()
+                        })
+                    }
                 }
+            } else {
+                newInstances = nil
+                group.leave()
             }
-            return newInstances
-        } else {
-            return nil
         }
+        
+        group.notify(queue: completionQueue, execute: {
+            completionHandler(newInstances)
+        })
     }
 }
+
+
+
+extension Database {
+    public static func rootReference() -> DatabaseReference {
+        return Database.database().reference()
+    }
+}
+
 
 
 extension String {
@@ -104,3 +129,4 @@ extension String {
         return firebaseRef
     }
 }
+

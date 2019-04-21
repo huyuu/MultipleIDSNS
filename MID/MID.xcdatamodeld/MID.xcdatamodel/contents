@@ -1,39 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18D109" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Account" representedClassName=".Account" syncable="YES">
+    <entity name="StoredAccountInfos" representedClassName=".StoredAccountInfos" syncable="YES">
         <attribute name="email" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="password" attributeType="String" syncable="YES"/>
         <attribute name="ref" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="snsids" toMany="YES" deletionRule="Cascade" destinationEntity="SNSID" syncable="YES"/>
-    </entity>
-    <entity name="Post" representedClassName=".Post" syncable="YES">
-        <attribute name="content" attributeType="String" syncable="YES"/>
-        <attribute name="date" attributeType="Date" minDateTimeInterval="567488520" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="ref" attributeType="String" syncable="YES"/>
-        <attribute name="speakerName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="speakerRef" attributeType="String" syncable="YES"/>
-        <relationship name="replies" toMany="YES" deletionRule="Nullify" destinationEntity="Reply" syncable="YES"/>
-    </entity>
-    <entity name="Reply" representedClassName=".Reply" syncable="YES">
-        <attribute name="content" attributeType="String" syncable="YES"/>
-        <attribute name="date" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="ref" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="selfSNSIDName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="selfSNSIDRef" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="targetPostRef" attributeType="String" syncable="YES"/>
-    </entity>
-    <entity name="SNSID" representedClassName=".SNSID" syncable="YES">
-        <attribute name="name" attributeType="String" syncable="YES"/>
-        <attribute name="ownerRef" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="ref" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="myPosts" toMany="YES" deletionRule="Cascade" destinationEntity="Post" syncable="YES"/>
-        <relationship name="publishedReplies" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Reply" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Account" positionX="-54" positionY="0" width="128" height="120"/>
-        <element name="Post" positionX="-54" positionY="0" width="128" height="135"/>
-        <element name="Reply" positionX="-54" positionY="18" width="128" height="135"/>
-        <element name="SNSID" positionX="-63" positionY="-18" width="128" height="120"/>
+        <element name="StoredAccountInfos" positionX="-54" positionY="0" width="128" height="105"/>
     </elements>
 </model>

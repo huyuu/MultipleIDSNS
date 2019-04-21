@@ -13,12 +13,16 @@ import CoreData
 class AddSNSIDViewController: UIViewController {
 
     /// Prepare coreDataContext
-    var coreDataContext: NSManagedObjectContext!
-    var appDelegate: AppDelegate!
-    /** For FirebaseDatabase reference, expected to be .../snsids */
+//    var coreDataContext: NSManagedObjectContext!
+//    var appDelegate: AppDelegate!
+    /** For FirebaseDatabase reference, expected to be .../snsidTank */
     public var firebaseRoot: DatabaseReference!
     /** For main account information. This property must be set by the previous controller */
     public var owner: Account!
+    public var topicList: JSONDATA!
+    
+    
+    
     /** For SNSID name input textField */
     @IBOutlet weak var nameTextField: UITextField!
     
@@ -56,13 +60,25 @@ class AddSNSIDViewController: UIViewController {
         let name = nameTextField.text!
         
         /** Save new child to Firebase */
-        let newChildReference = firebaseRoot.child(name)
+        let newChildReference = firebaseRoot.child("\(owner.email)&&\(name)")
+        
         /** Create a new SNSID on CoreData */
-        let newSNSID = SNSID(name: name, ownerRef: owner.ref, myPosts: nil, publishedReplies: nil, ref: newChildReference.url, insertInto: coreDataContext)
-        newChildReference.setValue(newSNSID.toJSON)
+        let newSNSID = SNSID(name: name, owner: owner.name, ownerRef: owner.ref, myPosts: nil, myReplies: nil, follows: nil, followers: nil, topics: nil, myLikes: nil, focusingPosts: nil)
         
-        owner.addToSnsids(newSNSID)
-        
+        newChildReference.setValue(newSNSID.toJSON())
         self.dismiss(animated: true, completion: nil)
     }
+    
+    
+    
+    // MARK: - Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier! == "chooseTopics" {
+            let destinationController = segue.destination as! AddSNSIDViewController2
+            destinationController.superController = self
+        }
+    }
 }
+
+

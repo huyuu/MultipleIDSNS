@@ -13,15 +13,16 @@ import Firebase
 class ThreadDetailsTableViewController: UITableViewController {
     
     let pageIndex = 1
-    // Prepare coreDataContext
-    var appDelegate: AppDelegate!
-    var coreDataContext: NSManagedObjectContext!
     // The post been tabbed, should be set by the ViewController who calls the segue.
-    var postTabbed: Post!
-    var selfSNSID: SNSID!
-    var localStoredReplies: [Reply]?
-    /** For Firebase, expected to be .../postDate */
-    var firebaseRoot: DatabaseReference!
+    public var postTabbed: Post!
+    public var selfSNSID: SNSID!
+    private var replies: [Reply]? = nil {
+        willSet {
+            self.tableView.reloadData()
+        }
+    }
+    /** For Firebase, expected to be .../postDate(key) */
+    public var firebaseRoot: DatabaseReference!
     
 
     override func viewDidLoad() {
@@ -32,22 +33,26 @@ class ThreadDetailsTableViewController: UITableViewController {
             fatalError()
         }
         
-        /// Load replies from localStored post
-        localStoredReplies = postTabbed.replies?.toArray()
-        
-        firebaseRoot.observe(.value, with: { snapshot in
+//        firebaseRoot.observe(.value, with: { snapshot in
             /** We are now listening at /.../postDate. snapshot.key=post.date, snapshot.value=post.postInfo
              Therefor, we search from snapshot'schild for key of "replies" and pass its value to JSON decoder of Reply
              */
-            if let replies: [Reply] = snapshot.childSnapshot(forPath: Post.CodingKeysOfPost.replies.rawValue).decodeTo(insertInto: self.coreDataContext) {
-                self.localStoredReplies = replies
-                self.tableView.reloadData()
-            }
-        })
+//            if let replies: [Reply] = snapshot.childSnapshot(forPath: Post.CodingKeysOfPost.replies.rawValue).decodeTo(insertInto: self.coreDataContext) {
+//                self.replies = replies
+//                self.tableView.reloadData()
+//            }
+//        })
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
+        /// Load replies from localStored post
+        postTabbed.generateReplies(completionHandler: { (newReplies) in
+            if let _ = newReplies {
+                self.replies = newReplies!.sorted(by: { $0.date > $1.date })
+                self.tableView.reloadData()
+            }
+        })
     }
     
     
@@ -60,7 +65,7 @@ class ThreadDetailsTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Default value, need to be changed.
-        return 2 + (localStoredReplies?.count ?? 0)
+        return 2 + (replies?.count ?? 0)
     }
 
     
@@ -76,8 +81,8 @@ class ThreadDetailsTableViewController: UITableViewController {
             let speakerNameLabel = cell.viewWithTag(200) as! UILabel
             speakerNameLabel.text = post.speakerName
             // Set content
-            let contentLabel = cell.viewWithTag(201) as! UILabel
-            contentLabel.text = post.content
+            let contentsLabel = cell.viewWithTag(201) as! UILabel
+            contentsLabel.text = post.contents
             // Set time
             let dateLabel = cell.viewWithTag(202) as! UILabel
             dateLabel.text = post.date.toStringForPresentation
@@ -91,15 +96,15 @@ class ThreadDetailsTableViewController: UITableViewController {
         default: // Show replies of the post
             let cell = tableView.dequeueReusableCell(withIdentifier: "reusableCellOfReply", for: indexPath)
             // Check if there is any reply to the post
-            let replies = localStoredReplies!
+            let replies = self.replies!
 
             let reply = replies[indexPath.row.advanced(by: -2)]
             // Set speakerName
             let targetNameLabel = cell.viewWithTag(200) as! UILabel
             targetNameLabel.text = "@ \(post.speakerName)"
             // Set content
-            let contentLabel = cell.viewWithTag(201) as! UILabel
-            contentLabel.text = reply.content
+            let contentsLabel = cell.viewWithTag(201) as! UILabel
+            contentsLabel.text = reply.contents
             // Set time
             let dateLabel = cell.viewWithTag(202) as! UILabel
             dateLabel.text = reply.date.toStringForPresentation
@@ -162,9 +167,6 @@ class ThreadDetailsTableViewController: UITableViewController {
             // Set the postTabbed of ThreadDetailsViewController
             destinationController.targetPost = postTabbed
             destinationController.selfSNSID = selfSNSID
-            destinationController.firebaseRoot = firebaseRoot.child(Post.CodingKeysOfPost.replies.rawValue)
-            destinationController.appDelegate = appDelegate
-            destinationController.coreDataContext = coreDataContext
 
         default:
             raiseFatalError("Segue preparing error, segue.identifier = \(segue.identifier)")

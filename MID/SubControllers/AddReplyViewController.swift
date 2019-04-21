@@ -13,11 +13,8 @@ import Firebase
 
 class AddReplyViewController: UIViewController {
     
-    // Prepare coreDataContext
-    var appDelegate: AppDelegate!
-    var coreDataContext: NSManagedObjectContext!
-    /** For FirebaseDatabase reference */
-    public var firebaseRoot: DatabaseReference!
+    /** For FirebaseDatabase reference, expected to be ../replyTank  */
+    public var firebaseRoot = Database.rootReference().child("replyTank")
     /** For speaker. This property must be set by the previous controller */
     public var selfSNSID: SNSID!
     /** For belongingPost. This property must be set by the previous controller */
@@ -31,7 +28,7 @@ class AddReplyViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.initalizeView()
+//        self.initalizeView()
     }
     
     
@@ -58,17 +55,22 @@ class AddReplyViewController: UIViewController {
     
     
     @IBAction func replyDone(_ sender: UIBarButtonItem) {
-        let content = contentTextView.text!
+        let contents = contentTextView.text!
         /** Save new child to Firebase */
         let now = Date()
-        let newChildReference = firebaseRoot.child(now.toString)
+        let newChildReference = firebaseRoot.child("\(selfSNSID.owner)&&\(selfSNSID.name)&&\(now.toString)")
         /** Create a new Reply on CoreData */
-        let newReply = Reply(towards: targetPost.ref, content: content, date: now, selfSNSIDRef: selfSNSID.ref, selfSNSIDName: selfSNSID.name, ref: newChildReference.url, insertInto: coreDataContext)
-        selfSNSID.addToPublishedReplies(newReply)
+        let newReply = Reply(speaker: "\(selfSNSID.owner)&&\(selfSNSID.name)",
+            speakerName: selfSNSID.name,
+            toward: targetPost.ref,
+            contents: contents,
+            date: now)
 
-        newChildReference.setValue(newReply.toJSON)
-        
-        selfSNSID.addToPublishedReplies(newReply)
+        newChildReference.setValue(newReply.toJSON())
+        /// Set new reply to target post
+        targetPost.ref.getFIRDatabaseReference.child("replies").child("\(selfSNSID.owner)&&\(selfSNSID.name)&&\(now.toString)").setValue(
+            ["date": now.toString, "ref": newChildReference.url]
+        )
         
         self.dismiss(animated: true, completion: nil)
     }

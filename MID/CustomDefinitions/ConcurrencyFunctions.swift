@@ -27,3 +27,4 @@ public func asyncFunction(of function: @escaping (Any) -> Any, with parameters: 
         }
     }
 }
+

@@ -14,15 +14,15 @@ import Firebase
 class Main1TableViewController: UITableViewController {
     
     let pageIndex = 1
-    // Prepare coreDataContext
-    var appDelegate: AppDelegate!
-    var coreDataContext: NSManagedObjectContext!
     /** For tabbed SNSID */
-    var tabbedSNSID: SNSID!
-    /** For local stored posts */
-    var localStoredPosts: [Post]?
-    /** For Firebase, expected to be .../tabbedSNSIDName  */
-    var firebaseRoot: DatabaseReference!
+    public var snsid: SNSID!
+    /** For Firebase, expected to be .../tabbedSNSIDKey  */
+    public var firebaseRoot: DatabaseReference!
+    private var favorTimeLine: [Post]! {
+        willSet {
+            self.tableView.reloadData()
+        }
+    }
 
     
     // MARK: - Load the view
@@ -30,16 +30,16 @@ class Main1TableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Fetch posts, which is [Post], from SNSID.posts which is a NSSet
-        localStoredPosts = tabbedSNSID.myPosts?.toArray()
     }
 
     
     override func viewWillAppear(_ animated: Bool) {
-        // Fetch from Firebase if new post is published.
-        tabbedSNSID.initChildren(for: SNSID.CodingKeysOfSNSID.myPosts.rawValue, insertInto: coreDataContext,
-            completionHandler: { (newPosts: [Post]?) in
-            self.localStoredPosts = newPosts
-            self.tableView.reloadData()
+        /// Fetch data from proper timeline at once.
+        snsid.generateTimeLine(type: .favor, completionHandler: { (posts) in
+            if let _ = posts {
+                self.favorTimeLine = posts!.sorted(by: {$0.date > $1.date})
+                self.tableView.reloadData()
+            }
         })
     }
     
@@ -55,7 +55,7 @@ class Main1TableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // If there are presaved posts return the amount, otherwise 0 (only as a original setting for a new SNSID).
-        return localStoredPosts?.count ?? 0
+        return favorTimeLine?.count ?? 0
     }
     
     
@@ -64,16 +64,16 @@ class Main1TableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "com.google.huyuu258.MID.reusableCellOfPosts", for: indexPath)
         
         // If localStorePosts is nil, tableView will present 0 row, meaning that localStoredPosts is never nil at this moment.
-        let posts = localStoredPosts!
+        let posts = favorTimeLine!
         // Show the information of the post by UILabels
         let post = posts[indexPath.row]
         
         /// Speaker's name
         let speakerNameLabel = cell.viewWithTag(100) as! UILabel
-        speakerNameLabel.text = tabbedSNSID.name
+        speakerNameLabel.text = snsid.name
         /// Content
-        let contentLabel = cell.viewWithTag(101) as! UILabel
-        contentLabel.text = post.content
+        let contentsLabel = cell.viewWithTag(101) as! UILabel
+        contentsLabel.text = post.contents
         /// Date
         let dateLabel = cell.viewWithTag(102) as! UILabel
         dateLabel.text = post.date.toStringForPresentation
@@ -168,18 +168,6 @@ class Main1TableViewController: UITableViewController {
     
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-//            coreDataContext.delete(localStoredPosts![indexPath.row])
-//            appDelegate.saveContext()
-            
-            // Delete from Firebase
-            let toBeDeletePost = localStoredPosts![indexPath.row]
-            toBeDeletePost.ref.getFIRDatabaseReference.removeValue()
-            
-            localStoredPosts!.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        }
     }
     
 
@@ -208,20 +196,15 @@ class Main1TableViewController: UITableViewController {
             let destinationController = segue.destination as! ThreadDetailsTableViewController
             // Set the postTabbed of ThreadDetailsViewController
             let indexPathTabbed = tableView.indexPath(for: sender as! UITableViewCell)!
-            let postTabbed = localStoredPosts![indexPathTabbed.row]
+            let postTabbed = favorTimeLine![indexPathTabbed.row]
             destinationController.postTabbed = postTabbed
-            destinationController.selfSNSID = tabbedSNSID
+            destinationController.selfSNSID = snsid
             destinationController.firebaseRoot = postTabbed.ref.getFIRDatabaseReference
-            destinationController.appDelegate = appDelegate
-            destinationController.coreDataContext = coreDataContext
             
         case "showAddPostView":
             let destinationController = segue.destination as! AddPostViewController
             // Pass speaker to AddSNSIDViewController
-            destinationController.speaker = tabbedSNSID
-            destinationController.firebaseRoot = firebaseRoot.child(SNSID.CodingKeysOfSNSID.myPosts.rawValue)
-            destinationController.appDelegate = appDelegate
-            destinationController.coreDataContext = coreDataContext
+            destinationController.speaker = snsid
             
         default:
             raiseFatalError("Segue preparing error, segue.identifier = \(segue.identifier)")

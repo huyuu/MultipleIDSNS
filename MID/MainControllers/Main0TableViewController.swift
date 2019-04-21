@@ -19,8 +19,9 @@ class Main0TableViewController: UITableViewController {
     let coreDataContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     /** For local stored ID list using CoreData. One should always has at least one SNSID, so this var is never nil. */
-    var localStoredIDs: [SNSID]? = nil
+    var snsids: [SNSID]? = nil
     /** For account name */
+    var storedAccountInfos: StoredAccountInfos! = nil
     var account: Account! = nil
     /** For generate viewController */
     let pageIndex = 0
@@ -42,21 +43,18 @@ class Main0TableViewController: UITableViewController {
 //        self.addAccount()
         
         // Fetch account information from coreDataContext
-//        do {
-//            let accounts = try coreDataContext.fetch(Account.fetchRequest())  // One can only have one account.
-//            print(accounts.count)
-//            account = (accounts as! [Account])[0]
-//        } catch let error as NSError {
-//            raiseFatalError("Could not fetch data from CoreDataContext to localStoredIDs or account. \(error), \(error.userInfo)")
-//        }
+        do {
+            storedAccountInfos = try coreDataContext.fetch(StoredAccountInfos.fetchRequest())[0]  // One can only have one account.
+        } catch let error as NSError {
+            raiseFatalError("Could not fetch data from CoreDataContext to localStoredIDs or account. \(error), \(error.userInfo)")
+        }
+        print(storedAccountInfos.ref)
         
         // If any SNSID exists, fetch SNSIDs from account
 //                if let snsids = account.snsids {
 //                    localStoredIDs = snsids.allObjects as! [SNSID]
 //                    print(localStoredIDs!.count)
 //                }
-        
-        
         
     }
     
@@ -65,12 +63,16 @@ class Main0TableViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         // Fetch data from Firebase and reload Data
-        firebaseRoot = Database.database().reference(withPath: "plr258@gmail")
+        firebaseRoot = Database.rootReference()
         // Init account from reference url
-        Account.initSelf(fromReference: firebaseRoot.url, insertInto: coreDataContext, completionHandler: { newAccount in
+        Account.initSelf(fromReference: firebaseRoot.child("userTank").child(storedAccountInfos.email).url,
+                         completionQueue: DispatchQueue.main,
+                         completionHandler: { newAccount in
             self.account = newAccount
-
-            self.localStoredIDs = newAccount.snsids?.toArray()
+            newAccount.initChildren(for: "snsids", completionQueue: DispatchQueue.main, completionHandler: { (snsids: [SNSID]?) in
+                self.snsids = snsids
+                self.tableView.reloadData()
+            })
             self.tableView.reloadData()
         })
         print("Main0TableViewController will appear.")
@@ -96,7 +98,7 @@ class Main0TableViewController: UITableViewController {
             }
         // Secon section shows IDs
         case 1:
-            return localStoredIDs?.count ?? 0
+            return snsids?.count ?? 0
         // Do we have the third section? No!!
         default:
             return 0
@@ -118,7 +120,7 @@ class Main0TableViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "reusableCellOfSNSID", for: indexPath)
             // Show stored SNSID.name through IDNameLabel
             let iDNameLabel = cell.viewWithTag(11) as! UILabel
-            iDNameLabel.text = localStoredIDs![indexPath.row].name
+            iDNameLabel.text = snsids![indexPath.row].name
             
             return cell
         }
@@ -130,23 +132,19 @@ class Main0TableViewController: UITableViewController {
     
     // For debug only
     func addAccount() {
-        let email = "plr258@gmail"
-        // Save new account to Firebase
-        firebaseRoot = Database.database().reference()
-        let newAccountReference = firebaseRoot.child(email)
+        let email = "plr258@gmail_com"
         // Save new acount to CoreDate
-        let newAccount = Account(name: "Jiang Yuyang", email: email, password: "empires2", ref: newAccountReference.url, insertInto: coreDataContext)
-        newAccountReference.setValue(newAccount.toJSON)
-        
+        let newAccount = StoredAccountInfos(email: email, name: "Yuyang", password: "empires", insertInto: coreDataContext)
+
 //        coreDataContext.delete(newAccount)
         appDelegate.saveContext()
     }
     
-    func delectAccount(_ account: Account) {
-        // refer to https://www.raywenderlich.com/7104-beginning-core-data/lessons/4  6:00
-        coreDataContext.delete(account)
-        appDelegate.saveContext()
-    }
+//    func delectAccount(_ account: Account) {
+//        // refer to https://www.raywenderlich.com/7104-beginning-core-data/lessons/4  6:00
+//        coreDataContext.delete(account)
+//        appDelegate.saveContext()
+//    }
     
     
     
@@ -174,12 +172,12 @@ class Main0TableViewController: UITableViewController {
 //            appDelegate.saveContext()
             
             // Delete the item from Firebase
-            let toBeDeleteSNSID = localStoredIDs![indexPath.row]
+            let toBeDeleteSNSID = snsids![indexPath.row]
             toBeDeleteSNSID.ref.getFIRDatabaseReference.removeValue()
 //            firebaseRoot.child(Account.CodingKeysOfAccount.snsids.rawValue).child(toBeDeleteSNSID.name).removeValue()
             
             // Delete the row of tableView
-            localStoredIDs!.remove(at: indexPath.row)
+            snsids!.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
@@ -208,22 +206,17 @@ class Main0TableViewController: UITableViewController {
             let destinationController = segue.destination as! Main1TableViewController
             // Set the postTabbed of ThreadDetailsViewController
             let indexPathTabbed = tableView.indexPath(for: sender as! UITableViewCell)!
-            let tabbedSNSID = localStoredIDs![indexPathTabbed.row]
-            destinationController.tabbedSNSID = tabbedSNSID
-            // pass the coreDataContext
-            destinationController.appDelegate = appDelegate
-            destinationController.coreDataContext = coreDataContext
+            let tabbedSNSID = snsids![indexPathTabbed.row]
+            destinationController.snsid = tabbedSNSID
             // Pass account information to ThreadDetailsViewController
 //            destinationController.firebaseRoot = firebaseRoot.child(Account.CodingKeysOfAccount.snsids.rawValue).child(tabbedSNSID.name)
             destinationController.firebaseRoot = tabbedSNSID.ref.getFIRDatabaseReference
             
         case "addSNSID":
-            let destinationController = segue.destination as! AddSNSIDViewController
+            let destinationController = segue.destination as! AddSNSIDViewControllerNew
             // Pass account information to AddSNSIDViewController
             destinationController.owner = account
-            destinationController.firebaseRoot = firebaseRoot.child(Account.CodingKeysOfAccount.snsids.rawValue)
-            destinationController.appDelegate = appDelegate
-            destinationController.coreDataContext = coreDataContext
+            destinationController.firebaseRoot = firebaseRoot
             
         default:
             raiseFatalError("Segue preparing error, segue.identifier = \(segue.identifier)")
