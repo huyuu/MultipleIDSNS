@@ -79,14 +79,13 @@ public extension DataSnapshot {
     /**
      Generate T from TList property. (example: get [SNSID] from snsids.)
     */
-    public func decodeToChildren<T: DecodableFromFIRReference>(runQueue: DispatchQueue=DispatchQueue.global(),
+    func decodeToChildren<T: DecodableFromFIRReference>(runQueue: DispatchQueue=DispatchQueue.global(),
                                                                completionQueue: DispatchQueue,
-                                                               completionHandler: @escaping ([T]?) -> ()) {
-        let group = DispatchGroup()
+                                                               completionHandler: @escaping ([T]) -> ()) {
+//        let group = DispatchGroup()
         // We choose an Array object here according to the return value
-        var newInstances: [T]? = []
+        var newInstances: [T] = []
         
-        group.enter()
         runQueue.async {
             // Check if snapshot contains a set of replies
             if let instancesSet = self.value as? JSONDATA {
@@ -94,21 +93,25 @@ public extension DataSnapshot {
                 for instance in instancesSet {
                     // Check if postInfo.value contains postInfo
                     if let instanceInfo = instance.value as? JSONDATA {
+//                        group.enter()
                         T.initSelf(fromReference: instanceInfo["ref"] as! String, completionHandler: { (newInstance) in
-                            newInstances!.append(newInstance)
-                            group.leave()
+                            newInstances.append(newInstance)
+//                            group.leave()
+                            completionQueue.async {
+                                completionHandler(newInstances)
+                            }
                         })
                     }
                 }
             } else {
-                newInstances = nil
-                group.leave()
+                newInstances = []
+                completionQueue.async {
+                    completionHandler(newInstances)
+                }
             }
         }
         
-        group.notify(queue: completionQueue, execute: {
-            completionHandler(newInstances)
-        })
+        
     }
 }
 

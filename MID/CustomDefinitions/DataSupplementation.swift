@@ -125,7 +125,7 @@ public extension DecodableFromFIRReference {
     */
     public func initChildren<T: DecodableFromFIRReference>(for key: String,
                                                            completionQueue: DispatchQueue=DispatchQueue.main,
-                                                           completionHandler: @escaping ([T]?) -> ()) {
+                                                           completionHandler: @escaping ([T]) -> ()) {
         /// Get the reference object from Firebase
         let firebaseRef = Database.database().reference(fromURL: self.ref)
         /// Observe at ref level

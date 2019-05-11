@@ -36,10 +36,8 @@ class Main1TableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         /// Fetch data from proper timeline at once.
         snsid.generateTimeLine(type: .favor, completionHandler: { (posts) in
-            if let _ = posts {
-                self.favorTimeLine = posts!.sorted(by: {$0.date > $1.date})
-                self.tableView.reloadData()
-            }
+            self.favorTimeLine = posts.sorted(by: {$0.date > $1.date})
+            self.tableView.reloadData()
         })
     }
     

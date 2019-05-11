@@ -20,7 +20,7 @@ class Main0TableViewController: UITableViewController {
     
     /** For local stored ID list using CoreData. One should always has at least one SNSID, so this var is never nil. */
     var snsids: [SNSID]? = nil
-    /** For account name */
+    /** For account name etc. */
     var storedAccountInfos: StoredAccountInfos! = nil
     var account: Account! = nil
     /** For generate viewController */
@@ -69,9 +69,10 @@ class Main0TableViewController: UITableViewController {
                          completionQueue: DispatchQueue.main,
                          completionHandler: { newAccount in
             self.account = newAccount
-            newAccount.initChildren(for: "snsids", completionQueue: DispatchQueue.main, completionHandler: { (snsids: [SNSID]?) in
+            newAccount.initChildren(for: "snsids", completionQueue: DispatchQueue.main, completionHandler: { (snsids: [SNSID]) in
                 self.snsids = snsids
                 self.tableView.reloadData()
+                print("here!!!")
             })
             self.tableView.reloadData()
         })

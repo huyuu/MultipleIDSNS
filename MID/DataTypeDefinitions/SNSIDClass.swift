@@ -94,9 +94,9 @@ extension SNSID {
     public func generateTimeLine(type: TimeLineType,
                                  runQueue: DispatchQueue=DispatchQueue(label: "timeLine", qos: .default, attributes: .concurrent),
                                  completionQueue: DispatchQueue=DispatchQueue.main,
-                                 completionHandler: @escaping ([Post]?) -> () ) {
+                                 completionHandler: @escaping ([Post]) -> () ) {
         var postRefs: [String]? = []
-        var timeLine: [Post]? = []
+        var timeLine: [Post] = []
         
         runQueue.async {
             /// whether favor or faire timeLine is inferred
@@ -123,10 +123,11 @@ extension SNSID {
                                     let myPostRef = myPostInfo["ref"] as! String
                                     postRefs!.append(myPostRef)
                                     Post.initSelf(fromReference: myPostRef, completionHandler: { (post: Post) in
-                                        timeLine!.append(post)
+                                        timeLine.append(post)
                                         completionQueue.async {
-                                            completionHandler(timeLine!)
+                                            completionHandler(timeLine)
                                         }
+                                        return
                                     })
                                 }
                             }
@@ -134,12 +135,13 @@ extension SNSID {
                         })
                     }
                 } else { // If no follow
-                    timeLine = nil
-                    completionQueue.async {
-                        completionHandler(nil)
-                    }
                 }
             } else if type == TimeLineType.fair {
+            }
+            
+            // update for any case
+            completionQueue.async {
+                completionHandler(timeLine)
             }
         }
 
