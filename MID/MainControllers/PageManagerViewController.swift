@@ -73,8 +73,8 @@ extension PageManagerViewController: UIPageViewControllerDataSource {
             currentPageIndex = (viewController as! Main0TableViewController).pageIndex
             return nil  // Left swip is invalid
             
-        } else if viewController.isKind(of: Main1TableViewController.self) {
-            currentPageIndex = (viewController as! Main1TableViewController).pageIndex
+        } else if viewController.isKind(of: TimeLineTableViewController.self) {
+            currentPageIndex = (viewController as! TimeLineTableViewController).pageIndex
             return self.initiatePage(withIdentifier: "Main0Scene")
             
         }
@@ -107,7 +107,7 @@ extension PageManagerViewController: UIPageViewControllerDataSource {
             return self.initiatePage(withIdentifier: "Main1Scene")
             
         } else if viewController.isKind(of: Main0TableViewController.self) {
-            currentPageIndex = (viewController as! Main1TableViewController).pageIndex
+            currentPageIndex = (viewController as! TimeLineTableViewController).pageIndex
             return nil
             
         } else {

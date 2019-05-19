@@ -15,12 +15,14 @@ import UIKit
         willSet {
             /// if timeLine := [Post] exists
             if let timeLine = newValue.favorTimeLineOf(row: newValue.row) {
-                self.timeLine = timeLine
+                self.favorTimeLine = timeLine
+                // chance stands that collectionView hasn't been initialized yet.
                 self.collectionView?.reloadData()
             }
         }
     }
-    private var timeLine: [Post] = []
+    /// favorTimeLine of specific snsid, will be set when resources is asigned
+    private var favorTimeLine: [Post] = []
     
     
     override func awakeFromNib() {
@@ -44,7 +46,7 @@ import UIKit
 
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return timeLine.count
+        return favorTimeLine.count
     }
     
     
@@ -52,9 +54,15 @@ import UIKit
         let collectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: ResourcesForMainScrollView.reuseIdentifierForCollectionView, for: indexPath) as! MainCollectionViewCell
         
         self.customizeLayoutOfCollectionViewCell(collectionViewCell, of: collectionView)
-        self.showPostDetailThroughUI(collectionViewCell, indexPath: indexPath)
+        self.showPostDetailThroughUI(for: collectionViewCell, indexPath: indexPath)
         
         return collectionViewCell
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        resources.ownerController.performSegue(withIdentifier: ResourcesForMainScrollView.segueIdentifierForTimeLine, sender: resources.row!)
     }
 }
 
@@ -82,8 +90,10 @@ extension MainTableViewCell {
         // sizing
         let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         let widthOfTableView = self.frame.width
-        layout.itemSize = CGSize(width: widthOfTableView - self.resources.spaceToSide*2,
-                                 height: self.resources.heightForCell - self.resources.spaceToBottomTop*2)
+        layout.itemSize = CGSize(width: widthOfTableView - self.resources.spaceToSide*2 - collectionView.contentInset.left - collectionView.contentInset.right,
+                                 height: self.resources.heightForCell - self.resources.spaceToBottomTop*2 - collectionView.contentInset.bottom - collectionView.contentInset.top)
+        
+        // set auto layouts
         
         // constraints to superView, autoLayout is invalid here.
         layout.sectionInset = UIEdgeInsets(top: self.resources.spaceToBottomTop,
@@ -97,8 +107,8 @@ extension MainTableViewCell {
     
     
     /// resign proper properties to IBOutlets of collectionViewCell
-    private func showPostDetailThroughUI(_ cell: MainCollectionViewCell, indexPath: IndexPath) {
-        let post = timeLine[indexPath.row]
+    private func showPostDetailThroughUI(for cell: MainCollectionViewCell, indexPath: IndexPath) {
+        let post = favorTimeLine[indexPath.row]
         cell.speakerNameLabel.text = post.speakerName
         cell.dateLabel.text = post.date.toStringForPresentation
         cell.contentsLabel.text = post.contents

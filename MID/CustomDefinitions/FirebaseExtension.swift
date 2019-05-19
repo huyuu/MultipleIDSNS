@@ -125,6 +125,20 @@ extension Database {
 
 
 
+extension DatabaseReference {
+    public func addressNewPostReference(Of speaker: SNSID, at currentTime: Date) -> DatabaseReference {
+        let childPath = "\(speaker.owner)&&\(speaker.name)&&\(currentTime.toString)"
+        // if self is ../postTank
+        if self.url == Database.rootReference().child("postTank").url {
+            return self.child(childPath)
+        } else {
+            return Database.rootReference().child("postTank").child(childPath)
+        }
+    }
+}
+
+
+
 extension String {
     /// Generate FIRDatabaseReference from String.
     var getFIRDatabaseReference: DatabaseReference {

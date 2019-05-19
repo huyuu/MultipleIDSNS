@@ -10,29 +10,15 @@ import UIKit
 import CoreData
 import Firebase
 
-class ThreadDetailsTableViewController: UITableViewController {
+class PostDetailsTableViewController: UITableViewController {
     
-    let pageIndex = 1
-    // The post been tabbed, should be set by the ViewController who calls the segue.
-    public var postTabbed: Post!
-    public var selfSNSID: SNSID!
-    private var replies: [Reply]? = nil {
-        willSet {
-            self.tableView.reloadData()
-        }
-    }
-    /** For Firebase, expected to be .../postDate(key) */
-    public var firebaseRoot: DatabaseReference!
+    // should be set by delegate in navigation
+    public var resources: ResourcesForPostDetails!
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        guard let _ = postTabbed, let _ = selfSNSID else {
-            raiseFatalError("The optional variable 'postTabbed' in ThreadDetailsTableViewController is nil.")
-            fatalError()
-        }
-        
+        self.registerCells()
 //        firebaseRoot.observe(.value, with: { snapshot in
             /** We are now listening at /.../postDate. snapshot.key=post.date, snapshot.value=post.postInfo
              Therefor, we search from snapshot'schild for key of "replies" and pass its value to JSON decoder of Reply
@@ -47,9 +33,9 @@ class ThreadDetailsTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         /// Load replies from localStored post
-        postTabbed.generateReplies(completionHandler: { (newReplies) in
+        resources.post.generateReplies(completionHandler: { (newReplies) in
             if let _ = newReplies {
-                self.replies = newReplies!.sorted(by: { $0.date > $1.date })
+                self.resources.replies = newReplies!.sorted(by: { $0.date > $1.date })
                 self.tableView.reloadData()
             }
         })
@@ -60,33 +46,21 @@ class ThreadDetailsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 1 // Fixed
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Default value, need to be changed.
-        return 2 + (replies?.count ?? 0)
+        return 2 + (resources.replies?.count ?? 0)
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // Check whether postTabbed exists, which should always be true, otherwise raise fatal error and return an empty cell
-        let post = postTabbed!
-
         // Check which row to present
         switch indexPath.row {
         case 0: // Show the post
-            let cell = tableView.dequeueReusableCell(withIdentifier: "reusableCellOfPostDetail", for: indexPath)
-            // Set speakerName
-            let speakerNameLabel = cell.viewWithTag(200) as! UILabel
-            speakerNameLabel.text = post.speakerName
-            // Set content
-            let contentsLabel = cell.viewWithTag(201) as! UILabel
-            contentsLabel.text = post.contents
-            // Set time
-            let dateLabel = cell.viewWithTag(202) as! UILabel
-            dateLabel.text = post.date.toStringForPresentation
-            
+            let cell = tableView.dequeueReusableCell(withIdentifier: resources.reuseIdentifierForPostDetailsCell, for: indexPath) as! PostDetailsCell
+            self.showPostDetailsThroughUI(for: cell)
             return cell
             
         case 1: // Show buttons for action
@@ -95,19 +69,7 @@ class ThreadDetailsTableViewController: UITableViewController {
             
         default: // Show replies of the post
             let cell = tableView.dequeueReusableCell(withIdentifier: "reusableCellOfReply", for: indexPath)
-            // Check if there is any reply to the post
-            let replies = self.replies!
-
-            let reply = replies[indexPath.row.advanced(by: -2)]
-            // Set speakerName
-            let targetNameLabel = cell.viewWithTag(200) as! UILabel
-            targetNameLabel.text = "@ \(post.speakerName)"
-            // Set content
-            let contentsLabel = cell.viewWithTag(201) as! UILabel
-            contentsLabel.text = reply.contents
-            // Set time
-            let dateLabel = cell.viewWithTag(202) as! UILabel
-            dateLabel.text = reply.date.toStringForPresentation
+            self.showRepliesThroughUI(for: cell, indexPath: indexPath)
             
             return cell
         }
@@ -162,21 +124,55 @@ class ThreadDetailsTableViewController: UITableViewController {
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier! {
-        case "showAddReplyView":
+        case resources.segueIdentifierForAddReply:
             let destinationController = segue.destination as! AddReplyViewController
             // Set the postTabbed of ThreadDetailsViewController
-            destinationController.targetPost = postTabbed
-            destinationController.selfSNSID = selfSNSID
+            destinationController.resources = self.resources.translateToResourcesForAddReply()
 
         default:
-            raiseFatalError("Segue preparing error, segue.identifier = \(segue.identifier)")
+            raiseFatalError("Segue preparing error, segue.identifier = \(segue.identifier!)")
         }
     }
  
 
     
     @IBAction func backToTimeLine(_ sender: UIBarButtonItem) {
-        firebaseRoot.removeAllObservers()
+        resources.firebaseRoot.removeAllObservers()
         self.dismiss(animated: true, completion: nil)
+    }
+}
+
+
+
+// MARK: - Custom Helper Functions
+
+private extension PostDetailsTableViewController {
+    func registerCells() {
+        tableView.register(resources.nibForPostDetails, forCellReuseIdentifier: resources.reuseIdentifierForPostDetailsCell)
+    }
+    
+    
+    func showPostDetailsThroughUI(for cell: PostDetailsCell) {
+        cell.speakerNameLabel.text = resources.post.speakerName
+        cell.contentsLabel.text = resources.post.contents
+        cell.dateLabel.text = resources.post.date.toStringForPresentation
+    }
+    
+    
+    func showRepliesThroughUI(for cell: UITableViewCell, indexPath: IndexPath) {
+        // Check if there is any reply to the post
+        if let replies = resources.replies {
+            let reply = replies[indexPath.row.advanced(by: -2)]
+            
+            // Set speakerName
+            let targetNameLabel = cell.viewWithTag(200) as! UILabel
+            targetNameLabel.text = "@ \(resources.post.speakerName)"
+            // Set content
+            let contentsLabel = cell.viewWithTag(201) as! UILabel
+            contentsLabel.text = reply.contents
+            // Set time
+            let dateLabel = cell.viewWithTag(202) as! UILabel
+            dateLabel.text = reply.date.toStringForPresentation
+        }
     }
 }

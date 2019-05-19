@@ -23,6 +23,6 @@ import UIKit
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.layer.roundCornersAndAddShadow()
+        CALayer.roundCornersAndAddShadow(shadowLayer: self.layer, contentsLayer: self.contentView.layer)
     }
 }

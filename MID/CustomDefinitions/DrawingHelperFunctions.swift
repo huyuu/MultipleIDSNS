@@ -10,19 +10,23 @@ import Foundation
 import UIKit
 
 public extension CALayer {
-    func roundCornersAndAddShadow(borderWidth: CGFloat=1, contentsLayer: CALayer=CALayer()) {
-        let backgroundLayer = self
+    static func roundCornersAndAddShadow(shadowLayer: CALayer, contentsLayer: CALayer, borderWidth: CGFloat=1) {
+        contentsLayer.cornerRadius = 50.0
         
-        // round corners of the background layer
-        backgroundLayer.cornerRadius = 20
-        self.masksToBounds = true
+        contentsLayer.borderWidth = 1.0
+        contentsLayer.borderColor = UIColor.gray.cgColor
         
-        // set border line
-        self.borderColor = UIColor.gray.cgColor
-        self.borderWidth = borderWidth
+        contentsLayer.backgroundColor = UIColor.clear.cgColor
+        contentsLayer.masksToBounds = true
         
-        self.shadowOffset = CGSize(width: 2, height: 2)
-        self.shadowOpacity = 0.3
-        self.shadowRadius = 5.0
+        
+        shadowLayer.shadowColor = UIColor.black.cgColor
+        shadowLayer.shadowOffset = CGSize(width:4, height: 4)
+        shadowLayer.shadowRadius = 10
+        shadowLayer.shadowOpacity = 1
+        shadowLayer.masksToBounds = false
     }
+    
+    
+    
 }

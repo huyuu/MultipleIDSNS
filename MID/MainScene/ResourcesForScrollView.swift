@@ -11,7 +11,7 @@ import UIKit
 import Firebase
 
 
-public class ResourcesForMainScrollView {
+public class ResourcesForMainScrollView: ProjectResource {
     /**
      Prepare coreDataContext
      [Here](https://qiita.com/ktanaka117/items/e721b076ceffd182123f) is some useful source to be refered to :)
@@ -37,6 +37,7 @@ public class ResourcesForMainScrollView {
     var firebaseRoot: DatabaseReference! = nil
     static let reuseIdentifierForCollectionView = "ReusableCollectionViewCell"
     static let reuseIdentifierForTableView = "ReusableTableViewCell"
+    static let segueIdentifierForTimeLine = "showTimeLine"
     /// Ordered snsidList for representation
     var sortedSnsidNameList: [String] {
         return snsids.map{ $0.name }.sorted(by: <)
@@ -59,11 +60,12 @@ public class ResourcesForMainScrollView {
 //        }
 //        set {}
 //    }
-
-    
+    weak var ownerController: MainScrollViewController!
+   
     
     
     /// Main initializer
+    
     init() {
         do {
             self.storedAccountInfos = try coreDataContext.fetch(StoredAccountInfos.fetchRequest())[0]  // One can only have one account.
@@ -75,8 +77,9 @@ public class ResourcesForMainScrollView {
     
     
     /// Complete the initialization after viewDidLoad.
-    func completeInitialization(withCompletionHandler completionHandler: @escaping () -> ()) {
+    func completeInitialization(ownerController: MainScrollViewController, withCompletionHandler completionHandler: @escaping () -> ()) {
         self.firebaseRoot = Database.rootReference()
+        self.ownerController = ownerController
         self.asyncInitAccount(completionHandlerForUI: completionHandler)
     }
     
@@ -106,25 +109,54 @@ public class ResourcesForMainScrollView {
     public func favorTimeLineOf(row: Int?) -> [Post]? {
         // if row is set
         if let row = row {
-            let timeLine = self.timeLines[ "\(sortedSnsidNameList[row])" ]
-            // check get timeLine successful
-            guard let _ = timeLine else {
-                raiseWeakError("Error when gettinh timeLine from timeLines.")
-                return nil
+            if let timeLine = self.timeLines[ "\(sortedSnsidNameList[row])" ] {
+                return timeLine.sorted(by: { $0.date > $1.date })
             }
-            return timeLine
+            // check get timeLine successful
+//            guard let _ = timeLine else {
+//                raiseWeakError("Error when gettinh timeLine from timeLines.")
+//                return nil
+//            }
+        }
+        return nil
+    }
+    
+    
+    /// search for snsid using row of MainScrollTableView
+    public func snsidOf(row: Int?) -> SNSID? {
+        if let row = row {
+            let returnSnsid = self.snsids.first(where: { (snsid: SNSID) -> Bool in
+                return snsid.name == sortedSnsidNameList[row] ? true : false
+            })
+            return returnSnsid
+            
         } else {
             return nil
         }
     }
     
     
+    /// copy self with addition of row property
     public func copyWithRowForCell(row: Int) -> ResourcesForMainScrollView {
         let newValue = self
         newValue.row = row
         return newValue
     }
+    
+    
+
 }
 
 
 
+// MARK: - DataSourceForTimeLineScene
+
+extension ResourcesForMainScrollView: DataSourceForTimeLineScene {
+    func translateToResourcesForTimeLineScene(forRow row: Int, ownerController: TimeLineTableViewController) -> ResourcesForTimeLineScene {
+        let newResources = ResourcesForTimeLineScene(snsid: self.snsidOf(row: row)!,
+                                                     favorTimeLine: self.favorTimeLineOf(row: row)!,
+                                                     ownerController: ownerController)
+        
+        return newResources
+    }
+}

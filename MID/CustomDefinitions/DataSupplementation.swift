@@ -179,3 +179,7 @@ public enum TankType: String {
     case reply
     case topic
 }
+
+
+// A protocol which every resource type should be adopted to.
+public protocol ProjectResource {}

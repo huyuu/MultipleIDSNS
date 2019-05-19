@@ -20,6 +20,11 @@ public class Post: DecodableFromFIRReference {
         let firebaseRoot = Database.rootReference()
         return firebaseRoot.child("postTank").child("\(speaker)&&\(date.toString)").url
     }
+    public var identifier: String {
+        return "\(self.speaker)&&\(self.date)"
+    }
+    
+    
     
     /** Public all term init */
     public init(speaker: String, speakerName: String, speakerRef: String, date: Date, contents: String, replies: JSONDATA?) {
@@ -29,6 +34,26 @@ public class Post: DecodableFromFIRReference {
         self.date = date
         self.contents = contents
         self.replies = replies
+    }
+    
+    
+    public init(speaker: SNSID, date: Date, contents: String, replies: [Reply]?=nil) {
+        self.speaker = "\(speaker.owner)&&\(speaker.name)"
+        self.speakerName = "\(speaker.name)"
+        self.speakerRef = speaker.ref
+        self.date = date
+        self.contents = contents
+        
+        if let replies = replies {
+            var repliesContainer = JSONDATA()
+            for reply in replies {
+                repliesContainer[reply.identifier] = reply.toJSON()
+            }
+            self.replies = repliesContainer
+        } else {
+            self.replies = nil
+        }
+        
     }
     
     

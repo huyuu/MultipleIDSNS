@@ -204,14 +204,15 @@ class Main0TableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier! {
         case "showTimeLine":
-            let destinationController = segue.destination as! Main1TableViewController
+            break
+//            let destinationController = segue.destination as! Main1TableViewController
             // Set the postTabbed of ThreadDetailsViewController
-            let indexPathTabbed = tableView.indexPath(for: sender as! UITableViewCell)!
-            let tabbedSNSID = snsids![indexPathTabbed.row]
-            destinationController.snsid = tabbedSNSID
+//            let indexPathTabbed = tableView.indexPath(for: sender as! UITableViewCell)!
+//            let tabbedSNSID = snsids![indexPathTabbed.row]
+//            destinationController.snsid = tabbedSNSID
             // Pass account information to ThreadDetailsViewController
 //            destinationController.firebaseRoot = firebaseRoot.child(Account.CodingKeysOfAccount.snsids.rawValue).child(tabbedSNSID.name)
-            destinationController.firebaseRoot = tabbedSNSID.ref.getFIRDatabaseReference
+//            destinationController.firebaseRoot = tabbedSNSID.ref.getFIRDatabaseReference
             
         case "addSNSID":
             let destinationController = segue.destination as! AddSNSIDViewControllerNew

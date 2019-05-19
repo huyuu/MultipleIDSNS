@@ -18,7 +18,7 @@ class MainScrollViewController: UITableViewController {
         super.viewDidLoad()
         
         // Loading data
-        resources.completeInitialization(withCompletionHandler: {
+        resources.completeInitialization(ownerController: self, withCompletionHandler: {
             self.tableView.reloadData()
         })
         
@@ -38,7 +38,6 @@ class MainScrollViewController: UITableViewController {
 
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("dataSource.snsids.count = \(resources.snsids.count)")
         return resources.snsids.count
     }
 
@@ -54,6 +53,14 @@ class MainScrollViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return resources.heightForCell
+    }
+    
+    
+    // For row selected
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        self.performSegue(withIdentifier: ResourcesForMainScrollView.segueIdentifierForTimeLine,
+                          sender: tableView.cellForRow(at: indexPath))
     }
     
 
@@ -91,8 +98,28 @@ class MainScrollViewController: UITableViewController {
         return true
     }
     */
+    
+    
+    
+    // MARK: - Navigation
 
-
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier! {
+        case ResourcesForMainScrollView.segueIdentifierForTimeLine:
+            let destinationController = segue.destination as! TimeLineTableViewController
+            // Set the resource from self
+            if let cell = sender as? MainTableViewCell {
+                let row = tableView.indexPath(for: cell)!.row
+                destinationController.resources = self.resources.translateToResourcesForTimeLineScene(forRow: row, ownerController: destinationController)
+            } else if let row = sender as? Int {
+                destinationController.resources = self.resources.translateToResourcesForTimeLineScene(forRow: row, ownerController: destinationController)
+            }
+            
+            
+        default:
+            break
+        }
+    }
 }
 
 

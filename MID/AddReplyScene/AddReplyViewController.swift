@@ -13,13 +13,7 @@ import Firebase
 
 class AddReplyViewController: UIViewController {
     
-    /** For FirebaseDatabase reference, expected to be ../replyTank  */
-    public var firebaseRoot = Database.rootReference().child("replyTank")
-    /** For speaker. This property must be set by the previous controller */
-    public var selfSNSID: SNSID!
-    /** For belongingPost. This property must be set by the previous controller */
-    public var targetPost: Post!
-    
+    public var resources: ResourcesForAddReply!
     
     @IBOutlet weak var contentTextView: UITextView!
     @IBOutlet weak var selfSNSIDNameLabel: UILabel!
@@ -38,11 +32,11 @@ class AddReplyViewController: UIViewController {
     private func initalizeView() {
         // let contexntTextView become first responser, and set its text to default
         contentTextView.becomeFirstResponder()
-        contentTextView.text! = ""
+        contentTextView.text = ""
         // Set self name to selfSNSIDName label
-        selfSNSIDNameLabel.text = selfSNSID.name
+        selfSNSIDNameLabel.text = resources.selfSnsid.name
         // present receiver name in the receiverName label
-        receiverNameLabel.text = "@ \(targetPost.speakerName)"
+        receiverNameLabel.text = "@ \(resources.targetPost.speakerName)"
     }
 
     
@@ -58,17 +52,14 @@ class AddReplyViewController: UIViewController {
         let contents = contentTextView.text!
         /** Save new child to Firebase */
         let now = Date()
-        let newChildReference = firebaseRoot.child("\(selfSNSID.owner)&&\(selfSNSID.name)&&\(now.toString)")
+//        let newChildReference = firebaseRoot.child("\(selfSNSID.owner)&&\(selfSNSID.name)&&\(now.toString)")
         /** Create a new Reply on CoreData */
-        let newReply = Reply(speaker: "\(selfSNSID.owner)&&\(selfSNSID.name)",
-            speakerName: selfSNSID.name,
-            toward: targetPost.ref,
-            contents: contents,
-            date: now)
+        let newReply = Reply(selfSnsid: resources.selfSnsid, toward: resources.targetPost.ref, contents: contents, at: now)
+        let newChildReference = newReply.ref.getFIRDatabaseReference
 
         newChildReference.setValue(newReply.toJSON())
         /// Set new reply to target post
-        targetPost.ref.getFIRDatabaseReference.child("replies").child("\(selfSNSID.owner)&&\(selfSNSID.name)&&\(now.toString)").setValue(
+        resources.targetPost.ref.getFIRDatabaseReference.child("replies").child("\(resources.targetPost.identifier)").setValue(
             ["date": now.toString, "ref": newChildReference.url]
         )
         

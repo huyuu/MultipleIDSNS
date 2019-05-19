@@ -20,9 +20,13 @@ public class Reply: DecodableFromFIRReference {
     public let contents: String
     public let date: Date
     public var ref: String {
-        let firebaseRoot = Database.database().reference(withPath: "")
+        let firebaseRoot = Database.rootReference()
         return firebaseRoot.child("replyTank").child("\(speaker)&&\(date.toString)").url
     }
+    public var identifier: String {
+        return "\(self.speaker)&&\(self.date)"
+    }
+    
     
     /** Public all term init */
     public init(speaker: String, speakerName: String, toward: String, contents: String, date: Date) {
@@ -31,6 +35,15 @@ public class Reply: DecodableFromFIRReference {
         self.toward = toward
         self.contents = contents
         self.date = date
+    }
+    
+    
+    public init(selfSnsid: SNSID, toward: String, contents: String, at currentTime: Date) {
+        self.speaker = "\(selfSnsid.owner)&&\(selfSnsid.name)"
+        self.speakerName = selfSnsid.name
+        self.toward = toward
+        self.contents = contents
+        self.date = currentTime
     }
     
     
