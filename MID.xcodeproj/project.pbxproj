@@ -13,6 +13,7 @@
 		2625DBFE2240D1E4002DC051 /* TopicClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2625DBFD2240D1E4002DC051 /* TopicClass.swift */; };
 		2625DC0222424BC4002DC051 /* AddTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2625DC0122424BC4002DC051 /* AddTopicViewController.swift */; };
 		262F812E227E710B00F4B390 /* MainScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262F812D227E710B00F4B390 /* MainScrollViewController.swift */; };
+		26609089229A3F7700E4E39F /* MainCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26609088229A3F7700E4E39F /* MainCollectionViewLayout.swift */; };
 		2661289921D6697E00AE03A7 /* AddPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661289821D6697E00AE03A7 /* AddPostViewController.swift */; };
 		2661289D21D718A600AE03A7 /* PrimitiveTypesExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661289C21D718A600AE03A7 /* PrimitiveTypesExtension.swift */; };
 		2661289F21D7222900AE03A7 /* FirebaseExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661289E21D7222900AE03A7 /* FirebaseExtension.swift */; };
@@ -55,7 +56,6 @@
 		26E5571421C0AEF6000604DE /* TimeLineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5571321C0AEF6000604DE /* TimeLineTableViewController.swift */; };
 		26E5571721C11B9D000604DE /* PostPast+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5571521C11B9D000604DE /* PostPast+CoreDataClass.swift */; };
 		26E5571C21C120E5000604DE /* PostPast+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5571B21C120E5000604DE /* PostPast+CoreDataProperties.swift */; };
-		26F7D9772291351800761707 /* MainCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F7D9762291351800761707 /* MainCollectionViewLayout.swift */; };
 		26FD486B2286A72900D75260 /* MainCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 26FD486A2286A72900D75260 /* MainCollectionViewCell.xib */; };
 		DEA26E2989A1CCDDE1AEC9B7 /* Pods_MID.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EDF5163BC5EC3F48C209321 /* Pods_MID.framework */; };
 /* End PBXBuildFile section */
@@ -67,6 +67,7 @@
 		2625DBFD2240D1E4002DC051 /* TopicClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicClass.swift; sourceTree = "<group>"; };
 		2625DC0122424BC4002DC051 /* AddTopicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTopicViewController.swift; sourceTree = "<group>"; };
 		262F812D227E710B00F4B390 /* MainScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScrollViewController.swift; sourceTree = "<group>"; };
+		26609088229A3F7700E4E39F /* MainCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionViewLayout.swift; sourceTree = "<group>"; };
 		2661289821D6697E00AE03A7 /* AddPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPostViewController.swift; sourceTree = "<group>"; };
 		2661289C21D718A600AE03A7 /* PrimitiveTypesExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimitiveTypesExtension.swift; sourceTree = "<group>"; };
 		2661289E21D7222900AE03A7 /* FirebaseExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseExtension.swift; sourceTree = "<group>"; };
@@ -111,7 +112,6 @@
 		26E5571321C0AEF6000604DE /* TimeLineTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLineTableViewController.swift; sourceTree = "<group>"; };
 		26E5571521C11B9D000604DE /* PostPast+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PostPast+CoreDataClass.swift"; sourceTree = "<group>"; };
 		26E5571B21C120E5000604DE /* PostPast+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PostPast+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		26F7D9762291351800761707 /* MainCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionViewLayout.swift; sourceTree = "<group>"; };
 		26FD486A2286A72900D75260 /* MainCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainCollectionViewCell.xib; sourceTree = "<group>"; };
 		4EDF5163BC5EC3F48C209321 /* Pods_MID.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MID.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D959D41147408FBECC040F0 /* Pods-MID.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MID.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MID/Pods-MID.debug.xcconfig"; sourceTree = "<group>"; };
@@ -140,7 +140,7 @@
 				268FF2CE227E51FA0016C82A /* MainCollectionViewCell.swift */,
 				26FD486A2286A72900D75260 /* MainCollectionViewCell.xib */,
 				268FF2D2227E69250016C82A /* MainCollectionView.swift */,
-				26F7D9762291351800761707 /* MainCollectionViewLayout.swift */,
+				26609088229A3F7700E4E39F /* MainCollectionViewLayout.swift */,
 			);
 			path = MainScene;
 			sourceTree = "<group>";
@@ -453,7 +453,7 @@
 			files = (
 				269AAFEA223B76D60069EA06 /* AccountClass.swift in Sources */,
 				2661289D21D718A600AE03A7 /* PrimitiveTypesExtension.swift in Sources */,
-				26F7D9772291351800761707 /* MainCollectionViewLayout.swift in Sources */,
+				26609089229A3F7700E4E39F /* MainCollectionViewLayout.swift in Sources */,
 				2661289F21D7222900AE03A7 /* FirebaseExtension.swift in Sources */,
 				261D658B22754C2C00CD4E91 /* MainCollectionCollectionViewController.swift in Sources */,
 				260D706621CF63AC0024B1A0 /* PostDetailsTableViewController.swift in Sources */,

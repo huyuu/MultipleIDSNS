@@ -12,12 +12,19 @@ import Firebase
 
 
 public class ResourcesForMainScrollView: ProjectResource {
+    
+    // MARK: - CoreData
+    
     /**
      Prepare coreDataContext
      [Here](https://qiita.com/ktanaka117/items/e721b076ceffd182123f) is some useful source to be refered to :)
      */
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     let coreDataContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
+    
+    
+    // MARK: - Firebase
     
     /** For local stored ID list using CoreData. One should always has at least one SNSID, so this var is never nil. */
     var snsids: [SNSID] = []
@@ -29,43 +36,74 @@ public class ResourcesForMainScrollView: ProjectResource {
 //    }
     /** For account name etc. */
     var storedAccountInfos: StoredAccountInfos
+    /// Ordered snsidList for representation
+    var sortedSnsidNameList: [String] {
+        return snsids.map{ $0.name }.sorted(by: <)
+    }
     var account: Account! = nil
     /**
      A Firebase database reference.
      * Questions? refer to [this URL](https://www.raywenderlich.com/3-firebase-tutorial-getting-started)
      */
     var firebaseRoot: DatabaseReference! = nil
+    
+    
+    
+    // MARK: - ReuseIdentifiers and Nibs
+    
     static let reuseIdentifierForCollectionView = "ReusableCollectionViewCell"
     static let reuseIdentifierForTableView = "ReusableTableViewCell"
     static let segueIdentifierForTimeLine = "showTimeLine"
-    /// Ordered snsidList for representation
-    var sortedSnsidNameList: [String] {
-        return snsids.map{ $0.name }.sorted(by: <)
-    }
-    
-    // For cell configuration
-    let heightForCell: CGFloat = 200.0
-    let spaceToSide: CGFloat = 12.0
-    let spaceToBottomTop: CGFloat = 8.0
-    let minSpaceForItems: CGFloat = 10.0
-    
     let nibForTableViewCell = UINib(nibName: "\(MainTableViewCell.self)", bundle: nil)
+    
+    
+    
+    // MARK: - TableViewCell Configuration
+    
+    let heightForCell: CGFloat = 200.0
+//    let spaceToSide: CGFloat = 12.0
+//    let spaceToBottomTop: CGFloat = 8.0
+//    let minSpaceForItems: CGFloat = 10.0
+    
+    
+    
+    // MARK: - CollectionView Configuration
+    
+    // item size attributes
+    let leadingInset: CGFloat = 0
+    let trailingInset: CGFloat = 0
+    let topInset: CGFloat = 0
+    let bottomInset: CGFloat = 0
+    var minInterItemSpacing: CGFloat {
+        return self.heightForCell
+    }
+    let minLineSpacing: CGFloat = 5.0
+    
+    // item presentation attributes
+    let recessiveAlpha: CGFloat = 0.7
+    let dominantAlpha: CGFloat = 1.0
+    let recessiveScale: CGFloat = 0.7
+    let dominantScale: CGFloat = 1.0
+    
+    /// calculate item width and height
+    lazy var itemSize: CGSize = {
+        let width = self.ownerController.tableView.frame.width - (self.leadingInset + self.trailingInset)
+        let height = self.heightForCell - (self.bottomInset + self.topInset)
+        return CGSize(width: width, height: height)
+    }()
+    
+    
+    
+    // MARK: - Special Usage
     
     /// only holds value in tableView scene
     var row: Int?
-    /// one's favorTimeLine is set when row is not nil
-//    var favorTimeLineForSpecificSnsid: [Post]? {
-//        get {
-//            return favorTimeLineOf(row: row, timeLines: self.timeLines)
-//        }
-//        set {}
-//    }
     weak var ownerController: MainScrollViewController!
-   
     
+    
+    // MARK: - Functions
     
     /// Main initializer
-    
     init() {
         do {
             self.storedAccountInfos = try coreDataContext.fetch(StoredAccountInfos.fetchRequest())[0]  // One can only have one account.
@@ -112,11 +150,6 @@ public class ResourcesForMainScrollView: ProjectResource {
             if let timeLine = self.timeLines[ "\(sortedSnsidNameList[row])" ] {
                 return timeLine.sorted(by: { $0.date > $1.date })
             }
-            // check get timeLine successful
-//            guard let _ = timeLine else {
-//                raiseWeakError("Error when gettinh timeLine from timeLines.")
-//                return nil
-//            }
         }
         return nil
     }
@@ -142,9 +175,6 @@ public class ResourcesForMainScrollView: ProjectResource {
         newValue.row = row
         return newValue
     }
-    
-    
-
 }
 
 

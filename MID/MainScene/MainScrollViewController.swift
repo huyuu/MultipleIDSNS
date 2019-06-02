@@ -45,6 +45,7 @@ class MainScrollViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let tableViewCell = tableView.dequeueReusableCell(withIdentifier: ResourcesForMainScrollView.reuseIdentifierForTableView, for: indexPath) as! MainTableViewCell
         
+        
         tableViewCell.resources = self.resources.copyWithRowForCell(row: indexPath.row)
         
         return tableViewCell
