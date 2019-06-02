@@ -22,17 +22,13 @@ class MainCollectionViewLayout: UICollectionViewFlowLayout {
     override func prepare() {
         super.prepare()
         
-        guard let resources = self.resources else { return }
         
-        
+        self.collectionView!.decelerationRate = .fast
+        let collectionViewSize = collectionView!.bounds.size
+        let xInset = (collectionViewSize.width - self.itemSize.width) / 2
+        self.sectionInset = UIEdgeInsets(top: 0, left: xInset, bottom: 0, right: xInset)
     }
     
-    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        let width = resources.ownerController.tableView.frame.width - (resources.leadingInset + resources.trailingInset) - (collectionView.contentInset.left + collectionView.contentInset.right)
-//        let height = resources.heightForCell - (resources.bottomInset + resources.topInset) - (collectionView.contentInset.bottom + collectionView.contentInset.top)
-//        return resources.calculatedItemSize
-//    }
     
     
 //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -47,7 +43,7 @@ class MainCollectionViewLayout: UICollectionViewFlowLayout {
         guard let itemsAttributes = super.layoutAttributesForElements(in: rect) else { return nil }
         
         return itemsAttributes.map({ (itemAttributes) -> UICollectionViewLayoutAttributes in
-//            self.scaleItems(itemAttributes, using: resources)
+            self.scaleItems(itemAttributes, using: resources)
             return itemAttributes
         })
     }
@@ -55,6 +51,20 @@ class MainCollectionViewLayout: UICollectionViewFlowLayout {
     
     override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         return true
+    }
+    
+    
+    override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
+        
+        let layoutAttributes = self.layoutAttributesForElements(in: collectionView!.bounds)!
+        let viewCenter = collectionView!.bounds.width / 2
+        let proposedContentOffsetCenterOrigin = proposedContentOffset.x + viewCenter
+        
+        let closetItem = layoutAttributes.sorted { (first, second) -> Bool in
+            return abs( first.center.x-proposedContentOffsetCenterOrigin ) < abs( second.center.x-proposedContentOffsetCenterOrigin )
+            }.first!
+        let targetContentOffset = CGPoint(x: floor(closetItem.center.x - viewCenter), y: proposedContentOffset.y)
+        return targetContentOffset
     }
 }
 
@@ -68,7 +78,7 @@ extension MainCollectionViewLayout {
         let frameHalfWidth = collectionView!.frame.size.width / 2
         let lengthFromItemCenterToEdge = itemAttributes.center.x - collectionView!.contentOffset.x
         
-        let maxAcceptableInterItemSpacing = self.itemSize.width + self.minimumInteritemSpacing
+        let maxAcceptableInterItemSpacing = self.itemSize.width + self.minimumLineSpacing
         let distanceToCenter = abs( frameHalfWidth - lengthFromItemCenterToEdge )
         let actualInsetFromCenter = min( distanceToCenter, maxAcceptableInterItemSpacing )
         
@@ -83,16 +93,8 @@ extension MainCollectionViewLayout {
     }
     
     
+    /// set recessive item size
     private func setRecessiveItemSize(using resources: ResourcesForMainScrollView) {
-        // calculate item width and height
-//        let calculatedItemWidth = tableViewWidth  - (resources.leadingInset + resources.trailingInset) - (collectionView!.contentInset.left + collectionView!.contentInset.right)
-//        let calculatedItemHeight = resources.heightForCell - (resources.bottomInset + resources.topInset) - (collectionView!.contentInset.bottom + collectionView!.contentInset.top)
-        
-        // set dominant item size
-//        let dominantItemSize = CGSize(width: calculatedItemWidth, height: calculatedItemHeight)
-//        self.itemSize = dominantItemSize
-        
-        // set recessive item size
         let recessiveWidth = self.itemSize.width * resources.recessiveScale
         let recessiveItemSize = CGSize(width: recessiveWidth, height: self.itemSize.height)
         self.estimatedItemSize = recessiveItemSize
@@ -105,19 +107,21 @@ extension MainCollectionViewLayout {
         self.minimumInteritemSpacing = resources.minInterItemSpacing
         self.minimumLineSpacing = resources.minLineSpacing
         // set itemSizes
-        self.itemSize = self.itemSize
+        self.itemSize = self.calculateItemSize(using: resources)
         self.setRecessiveItemSize(using: resources)
         
-        print("itemSize: \(self.itemSize)")
+//        print("collectionViewFrame: \(collectionView!.frame.size)")
+//        print("collectionViewBounds: \(collectionView!.bounds.size)")
+//        print("sizeForCell: \(resources.widthForCell), \(resources.heightForCell)")
 
-        self.collectionView?.reloadData()
+        self.collectionView!.reloadData()
     }
     
     
     private func calculateItemSize(using resources: ResourcesForMainScrollView) -> CGSize {
         /// calculate item width and height
-        let width = collectionView!.frame.width - (collectionView!.contentInset.left + collectionView!.contentInset.right)
-        let height = collectionView!.frame.height - (collectionView!.contentInset.top + collectionView!.contentInset.bottom)
+        let width = collectionView!.frame.width - (collectionView!.contentInset.left + collectionView!.contentInset.right) - (resources.trailingInset + resources.leadingInset)
+        let height = collectionView!.frame.height - (collectionView!.contentInset.top + collectionView!.contentInset.bottom) - (resources.topInset + resources.bottomInset)
         
         return CGSize(width: width, height: height)
     }

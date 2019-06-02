@@ -19,7 +19,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="299" height="200"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="XDz-B5-1Ea" userLabel="Whole Contents Stack View">
+                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" alignment="top" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="XDz-B5-1Ea" userLabel="Whole Contents Stack View">
                         <rect key="frame" x="12" y="20" width="275" height="160"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="30C-wS-jmN">
@@ -31,7 +31,7 @@
                                 </constraints>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="jm9-qe-Mob" userLabel="Labels Stack View">
-                                <rect key="frame" x="54" y="0.0" width="221" height="50"/>
+                                <rect key="frame" x="62" y="0.0" width="197" height="50"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="18K-UF-7X2" userLabel="Title Stack View">
                                         <rect key="frame" x="0.0" y="0.0" width="195" height="17"/>
@@ -64,10 +64,9 @@
                 </subviews>
             </view>
             <constraints>
-                <constraint firstItem="XDz-B5-1Ea" firstAttribute="top" secondItem="LSp-Mf-qoN" secondAttribute="top" constant="20" id="Imj-jG-XEo"/>
-                <constraint firstAttribute="trailing" secondItem="XDz-B5-1Ea" secondAttribute="trailing" constant="12" id="QHu-Pb-vCC"/>
-                <constraint firstAttribute="bottom" secondItem="XDz-B5-1Ea" secondAttribute="bottom" constant="20" id="XFt-Er-ck6"/>
-                <constraint firstItem="XDz-B5-1Ea" firstAttribute="leading" secondItem="LSp-Mf-qoN" secondAttribute="leading" constant="12" id="rxR-l1-CHF"/>
+                <constraint firstAttribute="trailing" secondItem="XDz-B5-1Ea" secondAttribute="trailing" constant="20" id="9HL-rS-GM7"/>
+                <constraint firstItem="XDz-B5-1Ea" firstAttribute="leading" secondItem="LSp-Mf-qoN" secondAttribute="leading" constant="20" id="Lfh-ey-Ejd"/>
+                <constraint firstItem="XDz-B5-1Ea" firstAttribute="top" secondItem="LSp-Mf-qoN" secondAttribute="top" constant="20" id="lbl-Lu-u2D"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="OO4-1z-A4Y"/>
             <size key="customSize" width="77" height="112"/>

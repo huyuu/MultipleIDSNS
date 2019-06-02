@@ -30,6 +30,13 @@ import UIKit
     }
     
     
+    override func prepareForReuse() {
+        speakerNameLabel.text = ""
+        dateLabel.text = ""
+        contentsLabel.text = ""
+    }
+    
+    
     // MARK: - Custom Helper Functions
     
     private func configure() {

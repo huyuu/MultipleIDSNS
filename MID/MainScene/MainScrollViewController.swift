@@ -46,7 +46,8 @@ class MainScrollViewController: UITableViewController {
         let tableViewCell = tableView.dequeueReusableCell(withIdentifier: ResourcesForMainScrollView.reuseIdentifierForTableView, for: indexPath) as! MainTableViewCell
         
         
-        tableViewCell.resources = self.resources.copyWithRowForCell(row: indexPath.row)
+        tableViewCell.resources = self.resources.prepareResourcesForCell(row: indexPath.row, cell: tableViewCell)
+        print("tableViewCellSize: \(tableViewCell.frame.size)")
         
         return tableViewCell
     }

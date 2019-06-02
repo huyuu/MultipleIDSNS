@@ -125,7 +125,6 @@ extension MainTableViewCell {
         // sizing
         
         let layout = collectionView.collectionViewLayout as! MainCollectionViewLayout
-        print("tableViewCellSize: \(cell.frame.size)")
 //        let widthOfTableView = self.frame.width
         // set size
 //        layout.itemSize = CGSize(width: widthOfTableView - (resources.leadingInset+resources.trailingInset) - collectionView.contentInset.left - collectionView.contentInset.right,

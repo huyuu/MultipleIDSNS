@@ -60,6 +60,7 @@ public class ResourcesForMainScrollView: ProjectResource {
     
     // MARK: - TableViewCell Configuration
     
+    var widthForCell: CGFloat! = nil
     let heightForCell: CGFloat = 200.0
 //    let spaceToSide: CGFloat = 12.0
 //    let spaceToBottomTop: CGFloat = 8.0
@@ -72,25 +73,18 @@ public class ResourcesForMainScrollView: ProjectResource {
     // item size attributes
     let leadingInset: CGFloat = 0
     let trailingInset: CGFloat = 0
-    let topInset: CGFloat = 0
-    let bottomInset: CGFloat = 0
+    let topInset: CGFloat = 10
+    let bottomInset: CGFloat = 10
     var minInterItemSpacing: CGFloat {
         return self.heightForCell
     }
-    let minLineSpacing: CGFloat = 5.0
+    let minLineSpacing: CGFloat = 10.0
     
     // item presentation attributes
-    let recessiveAlpha: CGFloat = 0.7
+    let recessiveAlpha: CGFloat = 0.6
     let dominantAlpha: CGFloat = 1.0
-    let recessiveScale: CGFloat = 0.7
+    let recessiveScale: CGFloat = 0.6
     let dominantScale: CGFloat = 1.0
-    
-    /// calculate item width and height
-    lazy var itemSize: CGSize = {
-        let width = self.ownerController.tableView.frame.width - (self.leadingInset + self.trailingInset)
-        let height = self.heightForCell - (self.bottomInset + self.topInset)
-        return CGSize(width: width, height: height)
-    }()
     
     
     
@@ -170,10 +164,10 @@ public class ResourcesForMainScrollView: ProjectResource {
     
     
     /// copy self with addition of row property
-    public func copyWithRowForCell(row: Int) -> ResourcesForMainScrollView {
-        let newValue = self
-        newValue.row = row
-        return newValue
+    internal func prepareResourcesForCell(row: Int, cell: MainTableViewCell) -> ResourcesForMainScrollView {
+        self.row = row
+        self.widthForCell = cell.contentView.frame.width
+        return self
     }
 }
 
