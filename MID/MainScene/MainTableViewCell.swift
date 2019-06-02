@@ -105,21 +105,6 @@ extension MainTableViewCell {
     }
     
     
-//    private func setAdditionalAutoLayouts() {
-//        let mainTableView = resources.ownerController.tableView!
-//        self.collectionView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
-//        self.collectionView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-//        self.collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-//        self.collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-//        self.collectionView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-//        self.collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-//        
-//        mainTableView.setNeedsUpdateConstraints()
-//        mainTableView.layoutIfNeeded()
-//        mainTableView.reloadData()
-//    }
-    
-    
     /// set size of collectionViewCell
     private func customizeLayoutOfCollectionViewCell(for cell: MainCollectionViewCell, of collectionView: UICollectionView) {
         // sizing

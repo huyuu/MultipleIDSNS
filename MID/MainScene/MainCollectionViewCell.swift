@@ -8,25 +8,33 @@
 
 import UIKit
 
-@IBDesignable class MainCollectionViewCell: UICollectionViewCell {
+@IBDesignable
+class MainCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var speakerNameLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var contentsLabel: UILabel!
+    @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var wholeContentsStackView: UIStackView!
+    @IBOutlet weak var wholeContentsView: UIView!
+    
     
     public var resources: ResourcesForMainScrollView!
     
     
     override func awakeFromNib() {
         super.awakeFromNib()
-//        self.configure()
     }
 
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        CALayer.roundCornersAndAddShadow(shadowLayer: self.layer, contentsLayer: self.contentView.layer)
+        
+        // add shadow and border to contentView
+        CALayer.roundCornersAndAddShadow(shadowLayer: self.layer, contentsLayer: self.contentView.layer, borderWidth: 0.01, shadowOpacity: 0.2, shadowOffset: 7.0)
+        
+        iconImageView.layer.cornerRadius = 5
+        iconImageView.layer.masksToBounds = true
     }
     
     
@@ -38,16 +46,6 @@ import UIKit
     
     
     // MARK: - Custom Helper Functions
-    
-    private func configure() {
-        guard let resources = self.resources else { return }
-        
-        // set autoLayouts
-//        wholeContentsStackView.heightAnchor.constraint(equalToConstant: resources.itemSize.height - (resources.topInset + resources.bottomInset) ).isActive = true
-        self.setNeedsUpdateConstraints()
-        self.layoutIfNeeded()
-    }
-    
     
     internal func prepareResources(using resources: ResourcesForMainScrollView) {
         self.resources = resources

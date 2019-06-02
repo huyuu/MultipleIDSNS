@@ -24,16 +24,7 @@ class MainCollectionViewLayout: UICollectionViewFlowLayout {
         
         
         self.collectionView!.decelerationRate = .fast
-        let collectionViewSize = collectionView!.bounds.size
-        let xInset = (collectionViewSize.width - self.itemSize.width) / 2
-        self.sectionInset = UIEdgeInsets(top: 0, left: xInset, bottom: 0, right: xInset)
     }
-    
-    
-    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-//        return UIEdgeInsets(top: resources.topInset, left: resources.leadingInset, bottom: resources.bottomInset, right: resources.trailingInset)
-//    }
     
     
     // do custom actions on item attributes
@@ -108,7 +99,14 @@ extension MainCollectionViewLayout {
         self.minimumLineSpacing = resources.minLineSpacing
         // set itemSizes
         self.itemSize = self.calculateItemSize(using: resources)
+        print("itemSize: \(itemSize)")
         self.setRecessiveItemSize(using: resources)
+        
+        // set sectionInset
+        let collectionViewSize = collectionView!.bounds.size
+        let xInset = (collectionViewSize.width - self.itemSize.width)/2 + 16*4
+        print("xInset: \(xInset)")
+        self.sectionInset = UIEdgeInsets(top: 0, left: xInset, bottom: 0, right: xInset)
         
 //        print("collectionViewFrame: \(collectionView!.frame.size)")
 //        print("collectionViewBounds: \(collectionView!.bounds.size)")

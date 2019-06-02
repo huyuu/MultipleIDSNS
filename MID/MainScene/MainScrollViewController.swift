@@ -45,9 +45,7 @@ class MainScrollViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let tableViewCell = tableView.dequeueReusableCell(withIdentifier: ResourcesForMainScrollView.reuseIdentifierForTableView, for: indexPath) as! MainTableViewCell
         
-        
         tableViewCell.resources = self.resources.prepareResourcesForCell(row: indexPath.row, cell: tableViewCell)
-        print("tableViewCellSize: \(tableViewCell.frame.size)")
         
         return tableViewCell
     }

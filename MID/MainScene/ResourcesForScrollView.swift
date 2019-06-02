@@ -71,14 +71,15 @@ public class ResourcesForMainScrollView: ProjectResource {
     // MARK: - CollectionView Configuration
     
     // item size attributes
-    let leadingInset: CGFloat = 0
-    let trailingInset: CGFloat = 0
-    let topInset: CGFloat = 10
-    let bottomInset: CGFloat = 10
+    let leadingInset: CGFloat = 12
+    let trailingInset: CGFloat = 12
+    let topInset: CGFloat = 20
+    let bottomInset: CGFloat = 20
     var minInterItemSpacing: CGFloat {
-        return self.heightForCell
+//        return self.heightForCell
+        return 5
     }
-    let minLineSpacing: CGFloat = 10.0
+    let minLineSpacing: CGFloat = 5
     
     // item presentation attributes
     let recessiveAlpha: CGFloat = 0.6

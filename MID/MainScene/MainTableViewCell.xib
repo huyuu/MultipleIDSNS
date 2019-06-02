@@ -35,12 +35,10 @@
                     </collectionView>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="gqw-G6-gCs" secondAttribute="bottom" id="7Ll-15-Ap7"/>
-                    <constraint firstItem="gqw-G6-gCs" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="BaE-Fj-ybM"/>
-                    <constraint firstItem="gqw-G6-gCs" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="Gbd-IL-Gtl"/>
-                    <constraint firstItem="gqw-G6-gCs" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Ptm-xZ-J13"/>
-                    <constraint firstAttribute="trailing" secondItem="gqw-G6-gCs" secondAttribute="trailing" id="e5c-sf-vUO"/>
-                    <constraint firstItem="gqw-G6-gCs" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="xR5-9h-c0D"/>
+                    <constraint firstAttribute="trailing" secondItem="gqw-G6-gCs" secondAttribute="trailing" id="H7z-aI-kUg"/>
+                    <constraint firstAttribute="bottom" secondItem="gqw-G6-gCs" secondAttribute="bottom" id="cT1-Tq-cu3"/>
+                    <constraint firstItem="gqw-G6-gCs" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="pKj-vF-Qda"/>
+                    <constraint firstItem="gqw-G6-gCs" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="vGc-lL-yng"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>

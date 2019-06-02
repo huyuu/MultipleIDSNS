@@ -55,6 +55,7 @@
                                         <constraint firstItem="NqY-nt-dIz" firstAttribute="leading" secondItem="1NT-GQ-M4b" secondAttribute="leading" id="zfh-hg-U42"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -383,6 +384,9 @@
                                         <constraint firstItem="36w-9o-wd3" firstAttribute="leading" secondItem="6bp-Ms-c3G" secondAttribute="leading" constant="20" symbolic="YES" id="wHm-QZ-4tr"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="iconImageView" destination="1pe-QW-Xrx" id="S4f-hb-zc8"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>

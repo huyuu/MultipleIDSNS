@@ -11,6 +11,7 @@ import UIKit
 @IBDesignable
 class TimeLineTableViewCell: UITableViewCell {
     
+    @IBOutlet weak var iconImageView: UIImageView!
     
     
     override func awakeFromNib() {
@@ -24,4 +25,10 @@ class TimeLineTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        iconImageView.layer.cornerRadius = 5
+        iconImageView.layer.masksToBounds = true
+    }
 }
