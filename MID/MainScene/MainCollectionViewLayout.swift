@@ -21,8 +21,6 @@ class MainCollectionViewLayout: UICollectionViewFlowLayout {
     /// Calculations for attributes previously
     override func prepare() {
         super.prepare()
-        
-        
         self.collectionView!.decelerationRate = .fast
     }
     
@@ -46,16 +44,7 @@ class MainCollectionViewLayout: UICollectionViewFlowLayout {
     
     
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
-        
-        let layoutAttributes = self.layoutAttributesForElements(in: collectionView!.bounds)!
-        let viewCenter = collectionView!.bounds.width / 2
-        let proposedContentOffsetCenterOrigin = proposedContentOffset.x + viewCenter
-        
-        let closetItem = layoutAttributes.sorted { (first, second) -> Bool in
-            return abs( first.center.x-proposedContentOffsetCenterOrigin ) < abs( second.center.x-proposedContentOffsetCenterOrigin )
-            }.first!
-        let targetContentOffset = CGPoint(x: floor(closetItem.center.x - viewCenter), y: proposedContentOffset.y)
-        return targetContentOffset
+        return self.setInitialContentOffset(proposedContentOffset: proposedContentOffset)
     }
 }
 
@@ -81,6 +70,7 @@ extension MainCollectionViewLayout {
         // adopt all changes to itemAttributes
         itemAttributes.alpha = adjustedAlpha
         itemAttributes.transform3D = CATransform3DScale(CATransform3DIdentity, adjustedScale, adjustedScale, 1.0)
+        itemAttributes.zIndex = Int(approachingRate * 10)
     }
     
     
@@ -120,7 +110,20 @@ extension MainCollectionViewLayout {
         /// calculate item width and height
         let width = collectionView!.frame.width - (collectionView!.contentInset.left + collectionView!.contentInset.right) - (resources.trailingInset + resources.leadingInset)
         let height = collectionView!.frame.height - (collectionView!.contentInset.top + collectionView!.contentInset.bottom) - (resources.topInset + resources.bottomInset)
-        
         return CGSize(width: width, height: height)
+    }
+    
+    
+    private func setInitialContentOffset(proposedContentOffset: CGPoint) -> CGPoint {
+        let layoutAttributes = self.layoutAttributesForElements(in: collectionView!.bounds)!
+        let viewCenter = collectionView!.bounds.width / 2
+        let proposedContentOffsetCenterOrigin = proposedContentOffset.x + viewCenter
+        
+        let closetItem = layoutAttributes.sorted { (first, second) -> Bool in
+            return abs( first.center.x-proposedContentOffsetCenterOrigin ) < abs( second.center.x-proposedContentOffsetCenterOrigin )
+            }.first!
+        let targetContentOffset = CGPoint(x: floor(closetItem.center.x - viewCenter), y: proposedContentOffset.y)
+        
+        return targetContentOffset
     }
 }

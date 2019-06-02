@@ -13,17 +13,17 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="" id="LSp-Mf-qoN" customClass="MainCollectionViewCell" customModule="MID" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="138" height="200"/>
+            <rect key="frame" x="0.0" y="0.0" width="258" height="200"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                <rect key="frame" x="0.0" y="0.0" width="138" height="200"/>
+                <rect key="frame" x="0.0" y="0.0" width="258" height="200"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ilg-Wg-BPW">
-                        <rect key="frame" x="0.0" y="0.0" width="138" height="200"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ilg-Wg-BPW">
+                        <rect key="frame" x="0.0" y="0.0" width="258" height="200"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="XDz-B5-1Ea" userLabel="Whole Contents Stack View">
-                                <rect key="frame" x="20" y="20" width="259" height="50"/>
+                                <rect key="frame" x="20" y="20" width="218" height="50"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="30C-wS-jmN">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -34,19 +34,19 @@
                                         </constraints>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="jm9-qe-Mob" userLabel="Labels Stack View">
-                                        <rect key="frame" x="62" y="0.0" width="197" height="50"/>
+                                        <rect key="frame" x="62" y="0.0" width="156" height="50"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="18K-UF-7X2" userLabel="Title Stack View">
-                                                <rect key="frame" x="0.0" y="0.0" width="195" height="17"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="156" height="17"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="speakerNameLabel" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bmc-4I-BpP">
-                                                        <rect key="frame" x="0.0" y="0.0" width="124" height="17"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="85" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" text="dateLabel" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iHb-wW-T1j">
-                                                        <rect key="frame" x="131" y="0.0" width="64" height="17"/>
+                                                        <rect key="frame" x="92" y="0.0" width="64" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -75,13 +75,13 @@
                 </subviews>
             </view>
             <constraints>
-                <constraint firstItem="Ilg-Wg-BPW" firstAttribute="leading" secondItem="LSp-Mf-qoN" secondAttribute="leading" id="EIi-pd-LQM"/>
-                <constraint firstAttribute="trailing" secondItem="Ilg-Wg-BPW" secondAttribute="trailing" id="RDV-1B-ofF"/>
                 <constraint firstItem="Ilg-Wg-BPW" firstAttribute="top" secondItem="LSp-Mf-qoN" secondAttribute="top" id="W6H-A9-uLG"/>
+                <constraint firstItem="Ilg-Wg-BPW" firstAttribute="leading" secondItem="LSp-Mf-qoN" secondAttribute="leading" id="al7-ox-Ipa"/>
                 <constraint firstAttribute="bottom" secondItem="Ilg-Wg-BPW" secondAttribute="bottom" id="bSY-rN-BiI"/>
+                <constraint firstAttribute="trailing" secondItem="Ilg-Wg-BPW" secondAttribute="trailing" id="e34-Sx-S3Q"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="OO4-1z-A4Y"/>
-            <size key="customSize" width="-84" height="112"/>
+            <size key="customSize" width="-66" height="112"/>
             <connections>
                 <outlet property="contentsLabel" destination="ac0-K7-1bI" id="TmN-9b-894"/>
                 <outlet property="dateLabel" destination="iHb-wW-T1j" id="apk-WK-1PR"/>
@@ -90,7 +90,7 @@
                 <outlet property="wholeContentsStackView" destination="XDz-B5-1Ea" id="mTl-4y-BCt"/>
                 <outlet property="wholeContentsView" destination="Ilg-Wg-BPW" id="7Z1-fc-XTW"/>
             </connections>
-            <point key="canvasLocation" x="-359.4202898550725" y="-128.57142857142856"/>
+            <point key="canvasLocation" x="-236.23188405797103" y="-128.57142857142856"/>
         </collectionViewCell>
     </objects>
 </document>

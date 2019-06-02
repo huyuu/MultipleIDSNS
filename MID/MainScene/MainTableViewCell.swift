@@ -11,6 +11,7 @@ import UIKit
 @IBDesignable class MainTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource {
     
     @IBOutlet weak var collectionView: UICollectionView!
+    
     public var resources: ResourcesForMainScrollView! {
         willSet {
             /// if timeLine := [Post] exists
@@ -48,11 +49,9 @@ import UIKit
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
-
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        print("posts: \(favorTimeLine.count)")
         return favorTimeLine.count
     }
     
@@ -91,9 +90,6 @@ extension MainTableViewCell {
         // set collectionView attributes
         self.collectionView.isPrefetchingEnabled = true
         
-        // set additional autoLayouts
-        
-        
         self.collectionView.reloadData()
     }
     
@@ -107,16 +103,11 @@ extension MainTableViewCell {
     
     /// set size of collectionViewCell
     private func customizeLayoutOfCollectionViewCell(for cell: MainCollectionViewCell, of collectionView: UICollectionView) {
-        // sizing
-        
         let layout = collectionView.collectionViewLayout as! MainCollectionViewLayout
-//        let widthOfTableView = self.frame.width
-        // set size
-//        layout.itemSize = CGSize(width: widthOfTableView - (resources.leadingInset+resources.trailingInset) - collectionView.contentInset.left - collectionView.contentInset.right,
-//                                 height: resources.heightForCell - (resources.bottomInset+resources.topInset) - collectionView.contentInset.bottom - collectionView.contentInset.top)
-//
         // set additional auto layouts
-//        cell.heightAnchor.constraint(equalToConstant: resources.itemSize.height).isActive = true
+        cell.widthAnchor.constraint(equalToConstant: layout.itemSize.width).isActive = true
+        cell.setNeedsUpdateConstraints()
+        cell.layoutIfNeeded()
         
         
 //        layout.sectionInset = UIEdgeInsets(top: resources.topInset,
@@ -135,12 +126,6 @@ extension MainTableViewCell {
         cell.dateLabel.text = post.date.toStringForPresentation
         cell.contentsLabel.text = post.contents
     }
-    
-    
-//    private func calculateCollectionViewCellSize(using resources: ResourcesForMainScrollView) -> CGSize {
-//        let layout = self.collectionView.collectionViewLayout as! MainCollectionViewLayout
-//        let width = resources.ownerController.tableView.frame.width - ()
-//    }
 }
 
 

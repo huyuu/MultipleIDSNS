@@ -25,7 +25,7 @@ class MainCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
     }
-
+    
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -33,6 +33,7 @@ class MainCollectionViewCell: UICollectionViewCell {
         // add shadow and border to contentView
         CALayer.roundCornersAndAddShadow(shadowLayer: self.layer, contentsLayer: self.contentView.layer, borderWidth: 0.01, shadowOpacity: 0.2, shadowOffset: 7.0)
         
+        // set iconImageView cornerRadius
         iconImageView.layer.cornerRadius = 5
         iconImageView.layer.masksToBounds = true
     }

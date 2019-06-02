@@ -62,9 +62,6 @@ public class ResourcesForMainScrollView: ProjectResource {
     
     var widthForCell: CGFloat! = nil
     let heightForCell: CGFloat = 200.0
-//    let spaceToSide: CGFloat = 12.0
-//    let spaceToBottomTop: CGFloat = 8.0
-//    let minSpaceForItems: CGFloat = 10.0
     
     
     
@@ -77,14 +74,14 @@ public class ResourcesForMainScrollView: ProjectResource {
     let bottomInset: CGFloat = 20
     var minInterItemSpacing: CGFloat {
 //        return self.heightForCell
-        return 5
+        return 0
     }
-    let minLineSpacing: CGFloat = 5
+    let minLineSpacing: CGFloat = 0
     
     // item presentation attributes
-    let recessiveAlpha: CGFloat = 0.6
+    let recessiveAlpha: CGFloat = 0.2
     let dominantAlpha: CGFloat = 1.0
-    let recessiveScale: CGFloat = 0.6
+    let recessiveScale: CGFloat = 0.2
     let dominantScale: CGFloat = 1.0
     
     
@@ -94,6 +91,7 @@ public class ResourcesForMainScrollView: ProjectResource {
     /// only holds value in tableView scene
     var row: Int?
     weak var ownerController: MainScrollViewController!
+    
     
     
     // MARK: - Functions
