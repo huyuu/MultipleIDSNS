@@ -31,7 +31,7 @@ class MainCollectionViewCell: UICollectionViewCell {
         super.layoutSubviews()
         
         // add shadow and border to contentView
-        CALayer.roundCornersAndAddShadow(shadowLayer: self.layer, contentsLayer: self.contentView.layer, borderWidth: 0.01, shadowOpacity: 0.2, shadowOffset: 7.0)
+        CALayer.roundCornersAndAddShadow(shadowLayer: self.layer, contentsLayer: self.contentView.layer, of: .MainScrollViewCell, shadowColor: )
         
         // set iconImageView cornerRadius
         iconImageView.layer.cornerRadius = 5

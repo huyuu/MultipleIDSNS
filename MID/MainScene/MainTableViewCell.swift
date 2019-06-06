@@ -104,18 +104,18 @@ extension MainTableViewCell {
     /// set size of collectionViewCell
     private func customizeLayoutOfCollectionViewCell(for cell: MainCollectionViewCell, of collectionView: UICollectionView) {
         let layout = collectionView.collectionViewLayout as! MainCollectionViewLayout
+        
         // set additional auto layouts
         cell.widthAnchor.constraint(equalToConstant: layout.itemSize.width).isActive = true
         cell.setNeedsUpdateConstraints()
         cell.layoutIfNeeded()
         
-        
+        // set resources for cell self
+        cell.prepareResources(using: resources)
 //        layout.sectionInset = UIEdgeInsets(top: resources.topInset,
 //                                           left: resources.leadingInset,
 //                                           bottom: resources.topInset,
 //                                           right: resources.bottomInset)
-        
-        cell.prepareResources(using: resources)
     }
     
     

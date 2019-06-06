@@ -145,6 +145,16 @@
 			path = MainScene;
 			sourceTree = "<group>";
 		};
+		2633167722A9CD2C00C0F5E8 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				269AAFE8223B76670069EA06 /* DataTypeDefinitions */,
+				26C0C06C21BEAFB000667E87 /* CustomDefinitions */,
+				26C0C06F21BEB73300667E87 /* ErrorHandling */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		263AE67A21CBD6740046B2F4 /* SubControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -231,13 +241,11 @@
 				2699EA69228FEC2D0029FA37 /* AddPostScene */,
 				26AC60922288000C00E59947 /* TimeLineScene */,
 				262EA37A227DC98F00EA5C4E /* MainScene */,
-				269AAFE8223B76670069EA06 /* DataTypeDefinitions */,
+				2633167722A9CD2C00C0F5E8 /* Models */,
 				26C0C05221BE888500667E87 /* AppDelegate.swift */,
 				26C0C05621BE888500667E87 /* Main.storyboard */,
 				263AE67A21CBD6740046B2F4 /* SubControllers */,
-				26C0C06C21BEAFB000667E87 /* CustomDefinitions */,
 				26C0C06B21BEAF8200667E87 /* MainControllers */,
-				26C0C06F21BEB73300667E87 /* ErrorHandling */,
 				26C0C05E21BE888600667E87 /* LaunchScreen.storyboard */,
 				26C0C05C21BE888600667E87 /* Assets.xcassets */,
 				26C0C07221BF489500667E87 /* CoreDataDefinitions */,
