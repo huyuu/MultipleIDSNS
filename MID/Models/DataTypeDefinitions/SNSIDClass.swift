@@ -20,6 +20,7 @@ public class SNSID: DecodableFromFIRReference {
     public var topics: JSONDATA
     public var myLikes: JSONDATA?
     public var focusingPosts: JSONDATA?
+    public var settings: JSONDATA
     public var ref: String {
         let firebaseRoot = Database.rootReference()
         return firebaseRoot.child("snsidTank").child("\(owner)&&\(name)").url
@@ -27,7 +28,7 @@ public class SNSID: DecodableFromFIRReference {
     
     /** Public all term init */
     public init(name: String, owner: String, ownerRef: String, myPosts: JSONDATA?, myReplies: JSONDATA?, follows: JSONDATA?,
-                followers: JSONDATA?, topics: JSONDATA, myLikes: JSONDATA?, focusingPosts: JSONDATA?) {
+                followers: JSONDATA?, topics: JSONDATA, myLikes: JSONDATA?, focusingPosts: JSONDATA?, settings: JSONDATA) {
         self.name = name
         self.owner = owner
         self.ownerRef = ownerRef
@@ -38,6 +39,7 @@ public class SNSID: DecodableFromFIRReference {
         self.topics = topics
         self.myLikes = myLikes
         self.focusingPosts = focusingPosts
+        self.settings = settings
     }
     
     
@@ -52,11 +54,13 @@ public class SNSID: DecodableFromFIRReference {
             let followers = jsonData["followers"] as? JSONDATA?,
             let topics = jsonData["topics"] as? JSONDATA,
             let myLikes = jsonData["myLikes"] as? JSONDATA?,
-            let focusingPosts = jsonData["focusingPosts"] as? JSONDATA? else {
+            let focusingPosts = jsonData["focusingPosts"] as? JSONDATA?,
+            let settings = jsonData["settings"] as? JSONDATA,
+            let _ = settings["themeColor"] as? String else {
                 raiseFatalError("KeyError When decoding to SNSID")
                 fatalError()
         }
-        self.init(name: name, owner: owner, ownerRef: ownerRef, myPosts: myPosts, myReplies: myReplies, follows: follows, followers: followers, topics: topics, myLikes: myLikes, focusingPosts: focusingPosts)
+        self.init(name: name, owner: owner, ownerRef: ownerRef, myPosts: myPosts, myReplies: myReplies, follows: follows, followers: followers, topics: topics, myLikes: myLikes, focusingPosts: focusingPosts, settings: settings)
     }
 }
 
@@ -74,7 +78,8 @@ extension SNSID: EncodableToFIRReference {
             "followers": self.followers?.expanded(),
             "topics": self.topics.expanded(),
             "myLikes": self.myLikes?.expanded(),
-            "focusingPosts": self.focusingPosts?.expanded()
+            "focusingPosts": self.focusingPosts?.expanded(),
+            "settings": self.settings.expanded()
         ]
         return returnJSON
     }

@@ -14,10 +14,14 @@ import UIKit
 extension CALayer {
     
     /// Public func for rounding corers and  adding shadow. The caller should select a cell type.
-    public static func roundCornersAndAddShadow(shadowLayer: CALayer, contentsLayer: CALayer, of cellType: CellType, shadowColor: UIColor=UIColor.black) {
+    public static func roundCornersAndAddShadow(shadowLayer: CALayer, contentsLayer: CALayer, of cellType: ShadowType, shadowColor: UIColor=UIColor.black) {
         switch cellType {
         case .MainScrollViewCell:
             self.roundCornersAndAddShadow(shadowLayer: shadowLayer, contentsLayer: contentsLayer, cornerRadius: 50.0, borderWidth: 0.01, shadowOpacity: 0.2, shadowOffset: 7.0, shadowRadius: 5.0, shadowColor: shadowColor)
+            
+            
+        case .SearchResultCell:
+            self.roundCornersAndAddShadow(shadowLayer: shadowLayer, contentsLayer: contentsLayer, cornerRadius: 20.0, borderWidth: 0.01, shadowOpacity: 0, shadowOffset: 0, shadowRadius: 0, shadowColor: UIColor.clear)
         }
     }
     
@@ -45,6 +49,25 @@ extension CALayer {
 
 // MARK: - Shadow Type Enum Definition
 
-public enum CellType {
+public enum ShadowType {
     case MainScrollViewCell
+    case SearchResultCell
+}
+
+
+
+// MARK: - UIColor Extension
+
+extension UIColor {
+    public convenience init?(_ hexString: String) {
+        guard let red = Int( "0x\(hexString.prefix(2))" ),
+            let green = Int( "0x\(hexString.prefix(2))" ),
+            let blue = Int( "0x\(hexString.prefix(2))" ) else { return nil }
+        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
+    }
+    
+    
+    public static let defaultBlueColor: UIColor = {
+        return UIColor(red: 0, green: 122.0/255.0, blue: 1, alpha: 1)
+    }()
 }

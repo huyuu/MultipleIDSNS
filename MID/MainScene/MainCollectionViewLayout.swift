@@ -44,7 +44,7 @@ class MainCollectionViewLayout: UICollectionViewFlowLayout {
     
     
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
-        return self.setInitialContentOffset(proposedContentOffset: proposedContentOffset)
+        return self.clipsToCell(proposedContentOffset: proposedContentOffset)
     }
 }
 
@@ -114,7 +114,7 @@ extension MainCollectionViewLayout {
     }
     
     
-    private func setInitialContentOffset(proposedContentOffset: CGPoint) -> CGPoint {
+    private func clipsToCell(proposedContentOffset: CGPoint) -> CGPoint {
         let layoutAttributes = self.layoutAttributesForElements(in: collectionView!.bounds)!
         let viewCenter = collectionView!.bounds.width / 2
         let proposedContentOffsetCenterOrigin = proposedContentOffset.x + viewCenter

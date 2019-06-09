@@ -59,17 +59,22 @@ public class Post: DecodableFromFIRReference {
     
     /** Required init for DecodableFromFIRReference */
     public required convenience init(fromJSON jsonData: JSONDATA) {
+        
         guard let speaker = jsonData["speaker"] as? String,
         let speakerName = jsonData["speakerName"] as? String,
         let speakerRef = jsonData["speakerRef"] as? String,
-        let date = (jsonData["date"] as? String)?.toDate(),
-        let contents = jsonData["contents"] as? String,
-        let replies = jsonData["replies"] as? JSONDATA? else {
+        let dateString = jsonData["date"] as? String,
+        let contents = jsonData["contents"] as? String else {
              raiseFatalError("KeyError when decoding to Post class.")
             fatalError()
         }
         
-        self.init(speaker: speaker, speakerName: speakerName, speakerRef: speakerRef, date: date, contents: contents, replies: replies)
+        if let replies = jsonData["replies"] as? JSONDATA {
+            self.init(speaker: speaker, speakerName: speakerName, speakerRef: speakerRef, date: dateString.toDate()!, contents: contents, replies: replies)
+        } else {
+            self.init(speaker: speaker, speakerName: speakerName, speakerRef: speakerRef, date: dateString.toDate()!, contents: contents, replies: nil)
+        }
+        
     }
 }
 

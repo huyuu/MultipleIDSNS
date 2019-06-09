@@ -54,6 +54,7 @@ public class ResourcesForMainScrollView: ProjectResource {
     static let reuseIdentifierForCollectionView = "ReusableCollectionViewCell"
     static let reuseIdentifierForTableView = "ReusableTableViewCell"
     static let segueIdentifierForTimeLine = "showTimeLine"
+    static let segueIdentifierForAddSnsid = "addSnsid"
     let nibForTableViewCell = UINib(nibName: "\(MainTableViewCell.self)", bundle: nil)
     
     
@@ -99,6 +100,7 @@ public class ResourcesForMainScrollView: ProjectResource {
     /// Main initializer
     init() {
         do {
+//            addAccount()
             self.storedAccountInfos = try coreDataContext.fetch(StoredAccountInfos.fetchRequest())[0]  // One can only have one account.
         } catch let error as NSError {
             raiseFatalError("Could not fetch data from CoreDataContext to localStoredIDs or account. \(error), \(error.userInfo)")
@@ -168,11 +170,14 @@ public class ResourcesForMainScrollView: ProjectResource {
         self.widthForCell = cell.contentView.frame.width
         return self
     }
+    
+    
+    
 }
 
 
 
-// MARK: - DataSourceForTimeLineScene
+// MARK: - DataSource Translation
 
 extension ResourcesForMainScrollView: DataSourceForTimeLineScene {
     func translateToResourcesForTimeLineScene(forRow row: Int, ownerController: TimeLineTableViewController) -> ResourcesForTimeLineScene {
@@ -182,4 +187,23 @@ extension ResourcesForMainScrollView: DataSourceForTimeLineScene {
         
         return newResources
     }
+}
+
+
+extension ResourcesForMainScrollView: DataSourceForAddSnsidScene {
+    func translateToResourcesForAddSnsidScene() -> ResourcesForAddSnsidScene {
+        let newResources = ResourcesForAddSnsidScene(owner: self.account, snsids: self.snsids)
+        return newResources
+    }
+}
+
+/// For debug only
+fileprivate func addAccount() {
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    let coreDataContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let email = "plr258@gmail_com"
+    // Save new acount to CoreDate
+    let newAccount = StoredAccountInfos(email: email, name: "Yuyang", password: "empires", insertInto: coreDataContext)
+    
+    appDelegate.saveContext()
 }

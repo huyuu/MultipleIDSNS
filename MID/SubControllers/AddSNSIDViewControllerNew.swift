@@ -160,15 +160,15 @@ class AddSNSIDViewControllerNew: UITableViewController {
     // MARK: - Custom Functions
     
     @IBAction func doneButtonTabbed(_ sender: UIBarButtonItem) {
-        
-        /** Save new child to Firebase */
-        let newChildReference = snsidTankRef.child("\(owner.email)&&\(name)")
-        
-        /** Create a new SNSID on CoreData */
-        let newSNSID = SNSID(name: name, owner: owner.name, ownerRef: owner.ref, myPosts: nil, myReplies: nil, follows: nil, followers: nil, topics: topicDict, myLikes: nil, focusingPosts: nil)
-        
-        newChildReference.setValue(newSNSID.toJSON())
-        self.dismiss(animated: true, completion: nil)
+//        
+//        /** Save new child to Firebase */
+//        let newChildReference = snsidTankRef.child("\(owner.email)&&\(name)")
+//        
+//        /** Create a new SNSID on CoreData */
+//        let newSNSID = SNSID(name: name, owner: owner.name, ownerRef: owner.ref, myPosts: nil, myReplies: nil, follows: nil, followers: nil, topics: topicDict, myLikes: nil, focusingPosts: nil)
+//        
+//        newChildReference.setValue(newSNSID.toJSON())
+//        self.dismiss(animated: true, completion: nil)
     }
     
     

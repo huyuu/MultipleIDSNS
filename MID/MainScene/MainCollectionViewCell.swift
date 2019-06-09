@@ -19,7 +19,10 @@ class MainCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var wholeContentsView: UIView!
     
     
-    public var resources: ResourcesForMainScrollView!
+    public var resources: ResourcesForMainScrollView! {
+        willSet { self.setShadowColor(resources: newValue) }
+    }
+    private var shadowColor: UIColor! = UIColor.black
     
     
     override func awakeFromNib() {
@@ -31,7 +34,7 @@ class MainCollectionViewCell: UICollectionViewCell {
         super.layoutSubviews()
         
         // add shadow and border to contentView
-        CALayer.roundCornersAndAddShadow(shadowLayer: self.layer, contentsLayer: self.contentView.layer, of: .MainScrollViewCell, shadowColor: )
+        CALayer.roundCornersAndAddShadow(shadowLayer: self.layer, contentsLayer: self.contentView.layer, of: .MainScrollViewCell, shadowColor: self.shadowColor)
         
         // set iconImageView cornerRadius
         iconImageView.layer.cornerRadius = 5
@@ -50,5 +53,13 @@ class MainCollectionViewCell: UICollectionViewCell {
     
     internal func prepareResources(using resources: ResourcesForMainScrollView) {
         self.resources = resources
+    }
+    
+    
+    private func setShadowColor(resources: ResourcesForMainScrollView) {
+        let currentSnsid = resources.snsidOf(row: resources.row!)!
+        guard let shadowColorString = currentSnsid.settings["themeColor"] as? String,
+            let shadowColor = UIColor(shadowColorString) else { return }
+        self.shadowColor = shadowColor
     }
 }

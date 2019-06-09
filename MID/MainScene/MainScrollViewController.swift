@@ -11,18 +11,20 @@ import UIKit
 class MainScrollViewController: UITableViewController {
     
     /// For dataSource
-    private var resources = ResourcesForMainScrollView()
+    private var resources: ResourcesForMainScrollView!
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Loading data
+        resources = ResourcesForMainScrollView()
         resources.completeInitialization(ownerController: self, withCompletionHandler: {
             self.tableView.reloadData()
         })
         
         self.registerTableViewCell()
+        self.tableView.separatorStyle = .none
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
@@ -116,6 +118,11 @@ class MainScrollViewController: UITableViewController {
             }
             
             
+        case ResourcesForMainScrollView.segueIdentifierForAddSnsid:
+            let destinationController = segue.destination as! NewNameTableViewController
+            destinationController.resources = self.resources.translateToResourcesForAddSnsidScene()
+            
+            
         default:
             break
         }
@@ -131,4 +138,7 @@ private extension MainScrollViewController {
     func registerTableViewCell() {
         self.tableView.register(self.resources.nibForTableViewCell, forCellReuseIdentifier: ResourcesForMainScrollView.reuseIdentifierForTableView)
     }
+    
+    
+    
 }

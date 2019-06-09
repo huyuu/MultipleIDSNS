@@ -54,6 +54,7 @@ public extension String {
     /** Create a Date instance from a customDateFormat formatted String */
     public func toDate() -> Date? {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = Date.customDateFormatForTransmission
         
         return formatter.date(from: self)
