@@ -29,6 +29,15 @@ class SearchTopicTableViewController: UITableViewController {
         return resources.numberOfSearchTopicCells
     }
     
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        guard indexPath.row == resources.doneButtonCellRowIndex else { return UITableView.automaticDimension }
+        let cellAttributes = resources.totalSearchTopicCells[indexPath.row]
+        guard case .doneButton = cellAttributes.type else { return UITableView.automaticDimension }
+        
+        return resources.getHeightForDoneButtonCell()
+    }
+    
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cells = resources.totalSearchTopicCells
@@ -103,6 +112,11 @@ extension SearchTopicTableViewController {
         case let .searchResult(topicTitle):
             let topicLabel = cell.viewWithTag(11) as! SearchResultLabel
             topicLabel.attributedText = self.paintText(of: topicTitle)!
+            
+            
+        case .doneButton:
+            let doneButton = cell.viewWithTag(11) as! RoundedNextButton
+            
         }
     }
     

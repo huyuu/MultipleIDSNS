@@ -48,7 +48,7 @@ class ChosenTopicButton: UIButton {
         let endPoint2 = CGPoint(x: edges.left, y: patternLayer.frame.height - edges.bottom)
         path.move(to: startPoint2)
         path.addLine(to: endPoint2)
-        
+
         patternLayer.path = path.cgPath
         self.layer.addSublayer(patternLayer)
     }

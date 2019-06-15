@@ -616,15 +616,36 @@
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="doneButtonCellForSearchTopic" rowHeight="95" id="ek1-OF-a5T">
+                                <rect key="frame" x="0.0" y="594" width="414" height="95"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ek1-OF-a5T" id="SyC-eu-1Zd">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="95"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ww5-pM-1Jx" userLabel="Done Button" customClass="RoundedNextButton" customModule="MID" customModuleProvider="target">
+                                            <rect key="frame" x="157" y="-25" width="100" height="100"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="100" id="Lx5-dt-Rf1"/>
+                                                <constraint firstAttribute="height" constant="100" id="mA7-o0-6gc"/>
+                                                <constraint firstAttribute="width" secondItem="ww5-pM-1Jx" secondAttribute="height" multiplier="1:1" id="mSe-RF-h1i"/>
+                                            </constraints>
+                                        </button>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="ww5-pM-1Jx" firstAttribute="centerX" secondItem="SyC-eu-1Zd" secondAttribute="centerX" id="BAh-em-uff"/>
+                                        <constraint firstItem="ww5-pM-1Jx" firstAttribute="top" secondItem="SyC-eu-1Zd" secondAttribute="top" priority="999" constant="60" id="QO2-0l-Fkc"/>
+                                        <constraint firstAttribute="bottom" secondItem="ww5-pM-1Jx" secondAttribute="bottom" constant="20" id="x2A-4i-yDI"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="5NW-ba-V1p" id="efh-LI-NP1"/>
                             <outlet property="delegate" destination="5NW-ba-V1p" id="7by-EO-Qe3"/>
                         </connections>
                     </tableView>
-                    <toolbarItems>
-                        <barButtonItem title="Item" id="Pyd-8b-ens"/>
-                    </toolbarItems>
+                    <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <segue destination="Mu9-0K-Pey" kind="show" identifier="chooseThemeColor" id="ENx-Cb-5WC"/>

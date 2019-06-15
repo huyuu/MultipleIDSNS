@@ -22,6 +22,8 @@ extension CALayer {
             
         case .SearchResultCell:
             self.roundCornersAndAddShadow(shadowLayer: shadowLayer, contentsLayer: contentsLayer, cornerRadius: 20.0, borderWidth: 0.01, shadowOpacity: 0, shadowOffset: 0, shadowRadius: 0, shadowColor: UIColor.clear)
+            
+            
         }
     }
     
@@ -52,6 +54,30 @@ extension CALayer {
 public enum ShadowType {
     case MainScrollViewCell
     case SearchResultCell
+}
+
+
+
+// MARK: CAShapeLayer Extension
+
+extension CAShapeLayer {
+    /**
+     Draw a Next Pattern
+     - parameter insetsBy: input the insets of the pattern. Note that only the top and bottom value will be used.
+    */
+    public static func drawNextPattern(in frame: CGRect, insetsBy insets: UIEdgeInsets=UIEdgeInsets(top: 3, left: 0, bottom: 3, right: 0), controlDistanceFromVerticalCenter: CGFloat=3.0) -> CGPath {
+        
+        let path = UIBezierPath()
+        let center = CGPoint(x: frame.width / 2, y: frame.height / 2)
+        let startPoint = CGPoint(x: center.x, y: insets.top)
+        let middlePoint = CGPoint(x: center.x + controlDistanceFromVerticalCenter, y: center.y)
+        let endPoint = CGPoint(x: center.x , y: frame.height - insets.bottom)
+        
+        path.move(to: startPoint)
+        path.addLine(to: middlePoint)
+        path.addLine(to: endPoint)
+        return path.cgPath
+    }
 }
 
 

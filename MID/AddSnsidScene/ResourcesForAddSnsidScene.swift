@@ -56,11 +56,16 @@ class ResourcesForAddSnsidScene: ProjectResource {
             return SearchTopicCellAttributes(of: .searchResult(topicTitle: topic.title))
         })
     }
+    var searchTopicDoneCell = [SearchTopicCellAttributes.init(of: .doneButton)]
+    /// use this property to determine rows for display
     var totalSearchTopicCells: [SearchTopicCellAttributes] {
         var newValue = [SearchTopicCellAttributes]()
         newValue.append(contentsOf: staticSearchTopicCells)
         newValue.append(contentsOf: chosenTopicsCell)
         newValue.append(contentsOf: searchResultCells)
+        if shouldNavigateToChooseThemeColorScene {
+            newValue.append(contentsOf: searchTopicDoneCell)
+        }
         return newValue
     }
     /// this is the only property should be set
@@ -68,9 +73,19 @@ class ResourcesForAddSnsidScene: ProjectResource {
     let edgesOfSearchResultCell = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
     let cornerRadiusOfSearchResultCell: CGFloat = 20.0
     let borderWidthOfSearchResultCell: CGFloat = 2.0
-    /// use this property to judge
+    /// use this property to judge whether topics are acceptible
     var topicsAreAcceptibale: Bool {
+        return chosenTopicTitles.count > 0 ? true : false
+    }
+    /// use this property to judge whether should navigate to next scene
+    var shouldNavigateToChooseThemeColorScene: Bool {
+        guard topicsAreAcceptibale else { return false }
+        // if user is still choosing topics, return false
+        guard searchResultCells.count == 0 else { return false }
         return true
+    }
+    var doneButtonCellRowIndex: Int {
+        return totalSearchTopicCells.count - 1
     }
     
     
@@ -161,6 +176,21 @@ class ResourcesForAddSnsidScene: ProjectResource {
     internal static func indicatorColor(accordingTo isValid: Bool) -> UIColor {
         return isValid  ? #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1) : #colorLiteral(red: 0.8275103109, green: 0.03921728841, blue: 0.09085532289, alpha: 1)
     }
+    
+    
+    internal func getHeightForDoneButtonCell() -> CGFloat {
+        let count = self.chosenTopicTitles.count
+        let itemsPerRow = Int(self.itemsPerRow)
+        let inititalInset: CGFloat = 400.0
+        
+        if count <= itemsPerRow {
+            return inititalInset
+        } else if itemsPerRow * 2 < count {
+            return inititalInset + (heightForItem + minLineSpacing) * 2
+        } else {
+            return inititalInset + (heightForItem + minLineSpacing)
+        }
+    }
 }
 
 
@@ -194,6 +224,7 @@ enum SearchTopicCellAttributesType {
     case searchBar(placeHolderString: String)
     case chosenTopics(_ topicTitles: [String])
     case searchResult(topicTitle: String)
+    case doneButton
 }
 
 
@@ -210,6 +241,8 @@ struct SearchTopicCellAttributes {
             return "chosenTopics\(commonString)"
         case .searchResult(_):
             return "searchResult\(commonString)"
+        case .doneButton:
+            return "doneButton\(commonString)"
         }
     }()
     

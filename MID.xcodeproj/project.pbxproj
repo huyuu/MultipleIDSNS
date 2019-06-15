@@ -21,6 +21,7 @@
 		2633167C22A9F30900C0F5E8 /* ResourcesForAddSnsidScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2633167B22A9F30900C0F5E8 /* ResourcesForAddSnsidScene.swift */; };
 		2633167E22A9FC6400C0F5E8 /* AddSnsidFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2633167D22A9FC6400C0F5E8 /* AddSnsidFlowLayout.swift */; };
 		263F523322ABA76300B2E325 /* InvalidNameDescriptionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263F523222ABA76300B2E325 /* InvalidNameDescriptionLabel.swift */; };
+		265BC30722B48DB80037EEBB /* RoundedNextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265BC30622B48DB80037EEBB /* RoundedNextButton.swift */; };
 		26609089229A3F7700E4E39F /* MainCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26609088229A3F7700E4E39F /* MainCollectionViewLayout.swift */; };
 		2661289921D6697E00AE03A7 /* AddPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661289821D6697E00AE03A7 /* AddPostViewController.swift */; };
 		2661289D21D718A600AE03A7 /* PrimitiveTypesExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661289C21D718A600AE03A7 /* PrimitiveTypesExtension.swift */; };
@@ -86,6 +87,7 @@
 		2633167B22A9F30900C0F5E8 /* ResourcesForAddSnsidScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourcesForAddSnsidScene.swift; sourceTree = "<group>"; };
 		2633167D22A9FC6400C0F5E8 /* AddSnsidFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSnsidFlowLayout.swift; sourceTree = "<group>"; };
 		263F523222ABA76300B2E325 /* InvalidNameDescriptionLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvalidNameDescriptionLabel.swift; sourceTree = "<group>"; };
+		265BC30622B48DB80037EEBB /* RoundedNextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedNextButton.swift; sourceTree = "<group>"; };
 		26609088229A3F7700E4E39F /* MainCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionViewLayout.swift; sourceTree = "<group>"; };
 		2661289821D6697E00AE03A7 /* AddPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPostViewController.swift; sourceTree = "<group>"; };
 		2661289C21D718A600AE03A7 /* PrimitiveTypesExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimitiveTypesExtension.swift; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 				261DFD8D22AB5854000B6733 /* SearchTopicTableViewController.swift */,
 				26D37E0D22AC08D500D65811 /* ChosenTopicButton.swift */,
 				26D37E0B22AC063D00D65811 /* SearchResultLabel.swift */,
+				265BC30622B48DB80037EEBB /* RoundedNextButton.swift */,
 			);
 			path = SearchTopic;
 			sourceTree = "<group>";
@@ -552,6 +555,7 @@
 				26C0C07121BEB79000667E87 /* WeakErrorHandler.swift in Sources */,
 				262F812E227E710B00F4B390 /* MainScrollViewController.swift in Sources */,
 				2633167C22A9F30900C0F5E8 /* ResourcesForAddSnsidScene.swift in Sources */,
+				265BC30722B48DB80037EEBB /* RoundedNextButton.swift in Sources */,
 				268FF2D0227E51FA0016C82A /* MainCollectionViewCell.swift in Sources */,
 				269AAFEF223B78190069EA06 /* StoredAccountInfos+CoreDataClass.swift in Sources */,
 				261DFD8C22AB49B1000B6733 /* AvailabilityIndicatorView.swift in Sources */,
