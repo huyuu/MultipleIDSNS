@@ -29,6 +29,9 @@
 		266693EB21C3F23A008C8DFE /* DataSupplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266693EA21C3F23A008C8DFE /* DataSupplementation.swift */; };
 		266AF2FF21D447E000414418 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 266AF2FE21D447E000414418 /* GoogleService-Info.plist */; };
 		2670ABCD2286CAB800A540DB /* DrawingHelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2670ABCC2286CAB800A540DB /* DrawingHelperFunctions.swift */; };
+		26740CF122B5B36F0037B63D /* ColorContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26740CF022B5B36F0037B63D /* ColorContainerView.swift */; };
+		26740CF322B5BA200037B63D /* ColorUnitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26740CF222B5BA200037B63D /* ColorUnitButton.swift */; };
+		26740CF522B6046B0037B63D /* ColorPlateScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26740CF422B6046B0037B63D /* ColorPlateScrollView.swift */; };
 		2679A4EC22910B5B00F57BF8 /* TimeLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2679A4EB22910B5B00F57BF8 /* TimeLineTableViewCell.swift */; };
 		268602C121D842AB0032EDCB /* AddReplyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268602C021D842AB0032EDCB /* AddReplyViewController.swift */; };
 		268602FF21DAE4B00032EDCB /* ConcurrencyFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268602FE21DAE4B00032EDCB /* ConcurrencyFunctions.swift */; };
@@ -95,6 +98,9 @@
 		266693EA21C3F23A008C8DFE /* DataSupplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSupplementation.swift; sourceTree = "<group>"; };
 		266AF2FE21D447E000414418 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2670ABCC2286CAB800A540DB /* DrawingHelperFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingHelperFunctions.swift; sourceTree = "<group>"; };
+		26740CF022B5B36F0037B63D /* ColorContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorContainerView.swift; sourceTree = "<group>"; };
+		26740CF222B5BA200037B63D /* ColorUnitButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUnitButton.swift; sourceTree = "<group>"; };
+		26740CF422B6046B0037B63D /* ColorPlateScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPlateScrollView.swift; sourceTree = "<group>"; };
 		2679A4EB22910B5B00F57BF8 /* TimeLineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineTableViewCell.swift; sourceTree = "<group>"; };
 		268602C021D842AB0032EDCB /* AddReplyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddReplyViewController.swift; sourceTree = "<group>"; };
 		268602FE21DAE4B00032EDCB /* ConcurrencyFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrencyFunctions.swift; sourceTree = "<group>"; };
@@ -179,6 +185,9 @@
 			isa = PBXGroup;
 			children = (
 				261DFD8122AB2582000B6733 /* ChooseThemeColorViewController.swift */,
+				26740CF422B6046B0037B63D /* ColorPlateScrollView.swift */,
+				26740CF022B5B36F0037B63D /* ColorContainerView.swift */,
+				26740CF222B5BA200037B63D /* ColorUnitButton.swift */,
 			);
 			path = ChooseThemeColor;
 			sourceTree = "<group>";
@@ -529,10 +538,12 @@
 			files = (
 				269AAFEA223B76D60069EA06 /* AccountClass.swift in Sources */,
 				261DFD8222AB2582000B6733 /* ChooseThemeColorViewController.swift in Sources */,
+				26740CF522B6046B0037B63D /* ColorPlateScrollView.swift in Sources */,
 				2661289D21D718A600AE03A7 /* PrimitiveTypesExtension.swift in Sources */,
 				26609089229A3F7700E4E39F /* MainCollectionViewLayout.swift in Sources */,
 				2661289F21D7222900AE03A7 /* FirebaseExtension.swift in Sources */,
 				261DFD8A22AB3B36000B6733 /* NewNameTableViewController.swift in Sources */,
+				26740CF322B5BA200037B63D /* ColorUnitButton.swift in Sources */,
 				261D658B22754C2C00CD4E91 /* MainCollectionCollectionViewController.swift in Sources */,
 				260D706621CF63AC0024B1A0 /* PostDetailsTableViewController.swift in Sources */,
 				26AC60942288004A00E59947 /* ResourcesForTimeLineScene.swift in Sources */,
@@ -540,6 +551,7 @@
 				2699EA6E228FFF710029FA37 /* PostDetailsCell.swift in Sources */,
 				26E5571721C11B9D000604DE /* PostPast+CoreDataClass.swift in Sources */,
 				2625DBFC22409315002DC051 /* AddSNSIDViewControllerNew.swift in Sources */,
+				26740CF122B5B36F0037B63D /* ColorContainerView.swift in Sources */,
 				268FF2CC227E518B0016C82A /* MainTableViewCell.swift in Sources */,
 				26E5571421C0AEF6000604DE /* TimeLineTableViewController.swift in Sources */,
 				26C0C07A21BF553600667E87 /* Account+CoreDataProperties.swift in Sources */,

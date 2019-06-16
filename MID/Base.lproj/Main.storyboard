@@ -616,25 +616,25 @@
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="doneButtonCellForSearchTopic" rowHeight="95" id="ek1-OF-a5T">
-                                <rect key="frame" x="0.0" y="594" width="414" height="95"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="doneButtonCellForSearchTopic" rowHeight="113" id="ek1-OF-a5T">
+                                <rect key="frame" x="0.0" y="594" width="414" height="113"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ek1-OF-a5T" id="SyC-eu-1Zd">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="95"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ek1-OF-a5T" id="SyC-eu-1Zd">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="113"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ww5-pM-1Jx" userLabel="Done Button" customClass="RoundedNextButton" customModule="MID" customModuleProvider="target">
-                                            <rect key="frame" x="157" y="-25" width="100" height="100"/>
+                                        <button opaque="NO" tag="11" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ww5-pM-1Jx" userLabel="Done Button" customClass="RoundedNextButton" customModule="MID" customModuleProvider="target">
+                                            <rect key="frame" x="164.5" y="106" width="85" height="100"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="100" id="Lx5-dt-Rf1"/>
-                                                <constraint firstAttribute="height" constant="100" id="mA7-o0-6gc"/>
+                                                <constraint firstAttribute="width" constant="85" id="Lx5-dt-Rf1" userLabel="width = 85"/>
+                                                <constraint firstAttribute="height" constant="85" id="mA7-o0-6gc" userLabel="height = 85"/>
                                                 <constraint firstAttribute="width" secondItem="ww5-pM-1Jx" secondAttribute="height" multiplier="1:1" id="mSe-RF-h1i"/>
                                             </constraints>
                                         </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="ww5-pM-1Jx" firstAttribute="centerX" secondItem="SyC-eu-1Zd" secondAttribute="centerX" id="BAh-em-uff"/>
-                                        <constraint firstItem="ww5-pM-1Jx" firstAttribute="top" secondItem="SyC-eu-1Zd" secondAttribute="top" priority="999" constant="60" id="QO2-0l-Fkc"/>
+                                        <constraint firstItem="ww5-pM-1Jx" firstAttribute="top" relation="greaterThanOrEqual" secondItem="SyC-eu-1Zd" secondAttribute="top" constant="60" id="QO2-0l-Fkc"/>
                                         <constraint firstAttribute="bottom" secondItem="ww5-pM-1Jx" secondAttribute="bottom" constant="20" id="x2A-4i-yDI"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -663,38 +663,63 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="43" translatesAutoresizingMaskIntoConstraints="NO" id="leN-5T-05K">
-                                <rect key="frame" x="40" y="148" width="334" height="625"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="top" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="leN-5T-05K">
+                                <rect key="frame" x="40" y="148" width="334" height="500"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J2b-5v-0cb">
-                                        <rect key="frame" x="0.0" y="0.0" width="82.5" height="73"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" horizontalCompressionResistancePriority="999" verticalCompressionResistancePriority="1000" text="Theme Color" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J2b-5v-0cb">
+                                        <rect key="frame" x="0.0" y="0.0" width="194" height="123"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="fsA-qa-ktS">
-                                        <rect key="frame" x="0.0" y="116" width="314" height="436"/>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="999" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fsA-qa-ktS" customClass="ColorPlateScrollView" customModule="MID" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="166" width="334" height="334"/>
+                                        <subviews>
+                                            <view contentMode="center" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cHW-W1-aP7" customClass="ColorContainerView" customModule="MID" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
+                                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="1000" id="C86-Kk-bia"/>
+                                                    <constraint firstAttribute="width" constant="1000" id="GfU-TC-wUb"/>
+                                                    <constraint firstAttribute="width" secondItem="cHW-W1-aP7" secondAttribute="height" multiplier="1:1" id="dfi-YN-ZIL"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="lessThanOrEqual" secondItem="fsA-qa-ktS" secondAttribute="height" multiplier="1:1" id="vFb-tg-Sru"/>
+                                        </constraints>
                                     </scrollView>
-                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3G1-Gx-9pT">
-                                        <rect key="frame" x="0.0" y="595" width="334" height="30"/>
-                                        <state key="normal" title="Button"/>
-                                    </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="3G1-Gx-9pT" firstAttribute="width" secondItem="leN-5T-05K" secondAttribute="width" id="x0L-26-1g5"/>
+                                    <constraint firstItem="fsA-qa-ktS" firstAttribute="width" secondItem="leN-5T-05K" secondAttribute="width" id="Hum-Cf-Huq"/>
                                 </constraints>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3G1-Gx-9pT" customClass="RoundedNextButton" customModule="MID" customModuleProvider="target">
+                                <rect key="frame" x="164.5" y="688" width="85" height="85"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="3G1-Gx-9pT" secondAttribute="height" multiplier="1:1" id="PA3-j7-bZB" userLabel="aspect = 1:1"/>
+                                    <constraint firstAttribute="height" constant="85" id="Ybx-A8-KZi"/>
+                                    <constraint firstAttribute="width" constant="85" id="ZVi-V9-nNh"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="doneButtonDidTabbed:" destination="Mu9-0K-Pey" eventType="touchUpInside" id="eeL-Rv-Ehc"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="leN-5T-05K" firstAttribute="leading" secondItem="P5U-Dw-qFY" secondAttribute="leading" constant="40" id="3M5-LQ-veq"/>
-                            <constraint firstItem="leN-5T-05K" firstAttribute="top" secondItem="P5U-Dw-qFY" secondAttribute="top" constant="60" id="EQ9-3Q-RR7"/>
+                            <constraint firstItem="leN-5T-05K" firstAttribute="top" secondItem="P5U-Dw-qFY" secondAttribute="top" constant="40" id="EQ9-3Q-RR7"/>
                             <constraint firstItem="P5U-Dw-qFY" firstAttribute="trailing" secondItem="leN-5T-05K" secondAttribute="trailing" constant="40" id="NZM-XI-b4t"/>
-                            <constraint firstItem="P5U-Dw-qFY" firstAttribute="bottom" secondItem="leN-5T-05K" secondAttribute="bottom" constant="40" id="Wvk-A8-S2n"/>
+                            <constraint firstItem="3G1-Gx-9pT" firstAttribute="centerX" secondItem="kH5-8K-wPs" secondAttribute="centerX" id="Nxu-lC-der"/>
+                            <constraint firstItem="3G1-Gx-9pT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="leN-5T-05K" secondAttribute="bottom" constant="20" id="Vlm-UJ-srm"/>
+                            <constraint firstItem="P5U-Dw-qFY" firstAttribute="bottom" secondItem="3G1-Gx-9pT" secondAttribute="bottom" constant="40" id="fsr-5w-fcb"/>
+                            <constraint firstItem="leN-5T-05K" firstAttribute="width" secondItem="P5U-Dw-qFY" secondAttribute="width" constant="-80" id="sDU-Aj-yAR"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="P5U-Dw-qFY"/>
                     </view>
                     <connections>
+                        <outlet property="colorContainerView" destination="cHW-W1-aP7" id="FuW-zk-5kz"/>
                         <outlet property="colorPlateScrollView" destination="fsA-qa-ktS" id="W5e-wx-aOk"/>
                         <outlet property="doneButton" destination="3G1-Gx-9pT" id="1CU-dJ-cO2"/>
                         <outlet property="titleLabel" destination="J2b-5v-0cb" id="BZw-cc-mbP"/>

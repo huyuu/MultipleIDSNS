@@ -60,3 +60,50 @@ public extension String {
         return formatter.date(from: self)
     }
 }
+
+
+
+public extension CGPoint {
+    func distance(from point: CGPoint, normalizedBy maxDistance: CGFloat=1.0) -> CGFloat {
+        let X = self.x-point.x
+        let Y = self.y-point.y
+        return sqrt( X*X + Y*Y ) / maxDistance
+    }
+    
+    
+    func angle(from point: CGPoint, normalizedBy maxAngle: CGFloat=1.0) -> CGFloat {
+        let vector = self.vector(from: point)
+        var angle = atan2(vector.y, vector.x)
+        if angle < 0 { angle += 2*CGFloat.pi }
+        
+        return angle / maxAngle
+    }
+    
+    
+    static func *(left: CGPoint, right: CGPoint) -> CGFloat {
+        let x = left.x * right.x
+        let y = left.y * right.y
+        return x+y
+    }
+    
+    
+    static func *(left: CGPoint, right: CGFloat) -> CGPoint {
+        let x = left.x * right
+        let y = left.y * right
+        return CGPoint(x: x, y: y)
+    }
+    
+    
+    static func *(left: CGFloat, right: CGPoint) -> CGPoint {
+        let x = left * right.x
+        let y = left * right.y
+        return CGPoint(x: x, y: y)
+    }
+    
+    
+    func vector(from origin: CGPoint) -> CGPoint {
+        let x = self.x - origin.x
+        let y = self.y - origin.y
+        return CGPoint(x: x, y: y)
+    }
+}

@@ -78,6 +78,19 @@ extension CAShapeLayer {
         path.addLine(to: endPoint)
         return path.cgPath
     }
+    
+    
+    public static func drawNextPattern(in frame: CGRect) -> UIBezierPath {
+        let path = UIBezierPath()
+        let startPoint = CGPoint(x: frame.width/3, y: frame.height/3)
+        let endPoint = CGPoint(x: frame.width/3, y: frame.height*2/3)
+        let middlePoint = CGPoint(x: frame.width*2/3, y: frame.height/2)
+        
+        path.move(to: startPoint)
+        path.addLine(to: middlePoint)
+        path.addLine(to: endPoint)
+        return path
+    }
 }
 
 
@@ -96,4 +109,55 @@ extension UIColor {
     public static let defaultBlueColor: UIColor = {
         return UIColor(red: 0, green: 122.0/255.0, blue: 1, alpha: 1)
     }()
+    
+    
+    public var rgbComponents: (red: CGFloat, blue: CGFloat, green: CGFloat) {
+        var red: CGFloat = 0.0
+        var blue: CGFloat = 0.0
+        var green: CGFloat = 0.0
+        var alpha: CGFloat = 0.0
+        
+        self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        return (red: red, blue: blue, green: green)
+    }
+    
+    
+    public var redComponent: CGFloat {
+        return rgbComponents.red
+    }
+    
+    
+    public var blueComponent: CGFloat {
+        return rgbComponents.blue
+    }
+    
+    
+    public var greenComponent: CGFloat {
+        return rgbComponents.green
+    }
+    
+    
+    public var hueComponents: (hue: CGFloat, saturation: CGFloat, brightness: CGFloat) {
+        var hue: CGFloat = 0.0
+        var saturation: CGFloat = 0.0
+        var brightness: CGFloat = 0.0
+        var alpha: CGFloat = 0.0
+        self.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        return (hue: hue, saturation: saturation, brightness: brightness)
+    }
+    
+    
+    public var hueComponent: CGFloat {
+        return hueComponents.hue
+    }
+    
+    
+    public var saturationComponent: CGFloat {
+        return hueComponents.saturation
+    }
+    
+    
+    public var brightnessComponent: CGFloat {
+        return hueComponents.brightness
+    }
 }

@@ -19,6 +19,7 @@ class ResourcesForAddSnsidScene: ProjectResource {
     var existingNames: [String]
     let segueIdToSearchTopic = "searchTopic"
     let segueIdToChooseThemeColor = "chooseThemeColor"
+    let segueIdToNewTopic = "newTopic"
     var existingTopics: [Topic]! = nil
     
     
@@ -108,10 +109,17 @@ class ResourcesForAddSnsidScene: ProjectResource {
     let cornerRadiusOfChosenTopicCell: CGFloat = 10.0
     let borderWidthOfChosenTopicCell: CGFloat = 2.0
     
+//    var chosenTopic: Topic {
+//        return self.chosenTopicTitles.map({ (topicTitle) -> Topic in
+//            Topic(title: topicTitle, adherents: )
+//        })
+//    }
+    
     
     
     // MARK: - Choose Theme Color
     
+    var themeColor: UIColor = UIColor.defaultBlueColor
     
     
     
@@ -181,14 +189,14 @@ class ResourcesForAddSnsidScene: ProjectResource {
     internal func getHeightForDoneButtonCell() -> CGFloat {
         let count = self.chosenTopicTitles.count
         let itemsPerRow = Int(self.itemsPerRow)
-        let inititalInset: CGFloat = 400.0
+        let inititalInset: CGFloat = 200.0
         
         if count <= itemsPerRow {
             return inititalInset
         } else if itemsPerRow * 2 < count {
-            return inititalInset + (heightForItem + minLineSpacing) * 2
+            return inititalInset - (heightForItem + minLineSpacing) * 2
         } else {
-            return inititalInset + (heightForItem + minLineSpacing)
+            return inititalInset - (heightForItem + minLineSpacing)
         }
     }
 }

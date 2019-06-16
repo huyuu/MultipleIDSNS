@@ -51,13 +51,18 @@ class SearchTopicTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        // if cell is searchResult
-        if indexPath.row >= (resources.staticSearchTopicCells.count + resources.chosenTopicsCell.count) {
+        switch resources.totalSearchTopicCells[indexPath.row].type {
+        case .searchResult(_):
             // choose topic
             self.didChooseTopic(at: indexPath)
             // reload tableView
             self.tableView.reloadData()
+            
+        case .doneButton:
+            self.doneButtonTabbed()
+            
+        default:
+            break
         }
     }
     
@@ -66,9 +71,18 @@ class SearchTopicTableViewController: UITableViewController {
     // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard resources.segueIdToChooseThemeColor == segue.identifier! else { fatalError() }
-        let destinationController = segue.destination as! ChooseThemeColorViewController
-        destinationController.resources = self.resources
+        switch segue.identifier! {
+        case resources.segueIdToChooseThemeColor:
+            let destinationController = segue.destination as! ChooseThemeColorViewController
+            destinationController.resources = self.resources
+            
+            
+        case resources.segueIdToNewTopic:
+            break
+            
+        default:
+            break
+        }
     }
 }
 
@@ -117,6 +131,7 @@ extension SearchTopicTableViewController {
         case .doneButton:
             let doneButton = cell.viewWithTag(11) as! RoundedNextButton
             
+            doneButton.addTarget(self, action: #selector(doneButtonTabbed), for: .touchUpInside)
         }
     }
     
@@ -181,6 +196,11 @@ extension SearchTopicTableViewController {
         }
         // shouldn't happend
         return nil
+    }
+    
+    
+    @objc private func doneButtonTabbed() {
+        self.performSegue(withIdentifier: resources.segueIdToChooseThemeColor, sender: nil)
     }
 }
 

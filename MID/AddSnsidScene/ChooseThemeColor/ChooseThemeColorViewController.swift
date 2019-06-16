@@ -8,31 +8,68 @@
 
 import UIKit
 
+@IBDesignable
 class ChooseThemeColorViewController: UIViewController {
 
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var colorPlateScrollView: UIScrollView!
-    @IBOutlet weak var doneButton: UIButton!
-    
+    @IBOutlet weak var colorPlateScrollView: ColorPlateScrollView!
+    @IBOutlet weak var doneButton: RoundedNextButton!
+    @IBOutlet weak var colorContainerView: ColorContainerView!
     
     internal var resources: ResourcesForAddSnsidScene!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        self.prepareForViewDidLoad()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    @IBAction func doneButtonDidTabbed(_ sender: Any) {
+        guard let resources = self.resources else { return }
+        
+//        SNSID(name: resources.newName,
+//              owner: resources.owner.name,
+//              ownerRef: resources.owner.ref,
+//              myPosts: nil,
+//              myReplies: nil,
+//              follows: nil,
+//              followers: nil,
+//              topics: <#T##JSONDATA#>, myLikes: <#T##JSONDATA?#>, focusingPosts: <#T##JSONDATA?#>, settings: <#T##JSONDATA#>)
     }
-    */
+}
 
+
+
+// MARK: Custom Helper Functions
+
+extension ChooseThemeColorViewController {
+    private func prepareForViewDidLoad() {
+        // set navigation items
+        self.navigationItem.title = resources.navigationItemTitle
+        self.navigationItem.rightBarButtonItem = nil
+        self.navigationItem.leftBarButtonItem?.title = "Back"
+        // set color plate
+        colorPlateScrollView.delegate = self
+        colorPlateScrollView.contentSize = colorContainerView.frame.size
+        colorPlateScrollView.contentOffset = CGPoint(x: colorContainerView.frame.width/2, y: colorContainerView.frame.height/2)
+        
+        colorContainerView.completeInit(themeColor: UIColor.defaultBlueColor, delegate: self)
+        
+        doneButton.isEnabled = false
+    }
+    
+    
+    internal func didSelectColor() {
+        doneButton.isEnabled = true
+        doneButton.isColorSelected = true
+        doneButton.fillColor = resources.themeColor
+        doneButton.setNeedsDisplay()
+    }
+}
+
+
+
+extension ChooseThemeColorViewController: UIScrollViewDelegate {
+    
 }
