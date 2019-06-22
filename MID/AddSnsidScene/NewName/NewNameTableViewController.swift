@@ -13,12 +13,16 @@ class NewNameTableViewController: UITableViewController {
     
     internal var resources: ResourcesForAddSnsidScene!
     private var indicatorLayer: CALayer!
+    private var doneButton: RoundedNextButton!
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.prepareForViewDidLoad()
     }
+    
+    
+    
 
     // MARK: - Table view data source
 
@@ -32,7 +36,8 @@ class NewNameTableViewController: UITableViewController {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: resources.newNameCells[indexPath.row].reuseId, for: indexPath)
+        var cells = resources.totalNewNameCells
+        let cell = tableView.dequeueReusableCell(withIdentifier: cells[indexPath.row].reuseId, for: indexPath)
 
         self.updateUI(of: cell, for: indexPath)
 
@@ -72,7 +77,7 @@ extension NewNameTableViewController {
     
     
     private func updateUI(of cell: UITableViewCell, for indexPath: IndexPath) {
-        let cellAttributes = resources.newNameCells[indexPath.row]
+        let cellAttributes = resources.totalNewNameCells[indexPath.row]
         switch cellAttributes.type {
         case .title:
             let titleLabel = cell.viewWithTag(11) as! UILabel
@@ -81,22 +86,24 @@ extension NewNameTableViewController {
             
         case .name:
             let userInputTextField = cell.viewWithTag(11) as! UITextField
-            let availableIndicator = AvailabilityIndicatorView(frame: CGRect(x: 0, y: 0, width: userInputTextField.bounds.height - UITextField.insetForSideView, height: userInputTextField.bounds.height - UITextField.insetForSideView))
+//            let availableIndicator = AvailabilityIndicatorView(frame: CGRect(x: 0, y: 0, width: userInputTextField.bounds.height - UITextField.insetForSideView, height: userInputTextField.bounds.height - UITextField.insetForSideView))
             
             // prepare for user input
             userInputTextField.delegate = self
             userInputTextField.placeholder = cellAttributes.content!
             userInputTextField.layer.borderWidth = resources.textFieldBorderWidth
-            userInputTextField.rightView = availableIndicator
-            userInputTextField.rightViewMode = .always
             userInputTextField.borderStyle = .none
             userInputTextField.layer.borderWidth = 0
             userInputTextField.becomeFirstResponder()
-            // change layout of availability indicator
-            availableIndicator.layoutAccording(to: resources.nameIsAvailable)
             // set cell style
             self.indicatorLayer = cell.layer
             self.updateLayerForIndication(self.indicatorLayer)
+            
+            
+        case .errorDescription:
+            let errorDescriptionLabel = cell.viewWithTag(11) as! UILabel
+            // set error description string
+            errorDescriptionLabel.text = cellAttributes.content!
         }
     }
     
@@ -105,6 +112,25 @@ extension NewNameTableViewController {
         layer.cornerRadius = resources.cornerRadiusOfNewNameCell
         layer.borderWidth = resources.borderWidthOfNewNameCell
         layer.borderColor = ResourcesForAddSnsidScene.indicatorColor(accordingTo: self.resources.nameIsAvailable).cgColor
+        // trigger On/Off of the doneButton
+        self.doneButton.isEnabled = resources.nameIsAvailable
+    }
+    
+    
+    private func addDoneButtonToView() {
+        let doneButton = RoundedNextButton(frame: RoundedNextButton.intrinsicFrame)
+        doneButton.addTarget(self, action: #selector(doneButtonTabbed(_:)), for: .touchUpInside)
+        self.tableView.addSubview(doneButton)
+        self.doneButton = doneButton
+    }
+    
+    
+    @objc func doneButtonTabbed(_ sender: RoundedNextButton) {
+        if resources.nameIsAvailable {
+            // store new name
+            resources.newName = resources.userInputForNewName
+            self.performSegue(withIdentifier: resources.segueIdToSearchTopic, sender: nil)
+        }
     }
 }
 
@@ -122,27 +148,17 @@ extension NewNameTableViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         // add string and check the availability
         resources.userInputForNewName = textField.textForStorage(newChar: string)
-        // update indicator view
-        let indicator = textField.rightView! as! AvailabilityIndicatorView
-        indicator.layoutAccording(to: resources.nameIsAvailable)
+        // update UI for indication
         self.updateLayerForIndication(self.indicatorLayer)
-        
         return true
     }
     
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        // reload tableView to show the error description string
+        self.tableView.reloadData()
         return true
-    }
-    
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if resources.nameIsAvailable {
-            // store new name
-            resources.newName = resources.userInputForNewName
-            self.performSegue(withIdentifier: resources.segueIdToSearchTopic, sender: nil)
-        }
     }
 }
 

@@ -69,6 +69,12 @@ extension ChooseThemeColorViewController {
         self.resources.themeColor = color
         // update doneButton Apperance
         doneButton.updateApperanceWithColor(color)
+        // update colorUnitButton Appearance
+        if let index = resources.previouslyChoosenButtonIndex {
+            colorContainerView.colorButtons[index].isSelected = false
+        }
+        colorUnitButton.isSelected = !(colorUnitButton.isSelected)
+        resources.previouslyChoosenButtonIndex = colorUnitButton.index
         // change contentOffset when selected
         let frameCenter = colorPlateScrollView.center
         let buttonCenter = colorUnitButton.center + colorPlateScrollView.frame.origin
@@ -80,6 +86,7 @@ extension ChooseThemeColorViewController {
 
 extension ChooseThemeColorViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        colorContainerView.adjustApperanceDuringScrolling(containerFrame: scrollView.frame)
+//        self.colorContainerView.adjustApperanceDuringScrolling(containerFrame: scrollView.frame)
+//        scrollView.layoutIfNeeded()
     }
 }

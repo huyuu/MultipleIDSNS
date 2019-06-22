@@ -28,7 +28,6 @@ class ColorPlateScrollView: UIScrollView {
     }
     
     
-    
     // MARK: Custom Helper Functions
     
     private func prepare() {

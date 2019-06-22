@@ -17,6 +17,14 @@ class RoundedNextButton: UIButton {
             self.setNeedsDisplay()
         }
     }
+    static let intrinsicFrame: CGRect = {
+        let intrinsicSize = CGSize(width: 70, height: 70)
+        let screenRect = UIScreen.main.bounds
+        let centerOfButton = CGPoint(x: screenRect.midX, y: screenRect.maxY - 20.0)
+        let originOfButton = centerOfButton - CGPoint(x: intrinsicSize.width/2, y: intrinsicSize.height/2)
+        
+        return CGRect(origin: originOfButton, size: intrinsicSize)
+    }()
     
     
     override func draw(_ rect: CGRect) {

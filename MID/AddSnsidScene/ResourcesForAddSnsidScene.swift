@@ -26,14 +26,22 @@ class ResourcesForAddSnsidScene: ProjectResource {
     
     // MARK: - New Name TableView Configuration
     
-    var newNameCells = [ NewNameCellAttributes(of: .title, content: "New Name"),
+    private var staticNewNameCells = [ NewNameCellAttributes(of: .title, content: "New Name"),
                          NewNameCellAttributes(of: .name, content: "Enter the name") ]
-    var numberOfNewNameCells: Int { return newNameCells.count }
+    private var errorDescriptionCells = [ NewNameCellAttributes(of: .errorDescription, content: "Name already exists.") ]
+    var totalNewNameCells: [NewNameCellAttributes] {
+        var newValue: [NewNameCellAttributes] = []
+        newValue.append(contentsOf: staticNewNameCells)
+        if !nameIsAvailable { newValue.append(contentsOf: errorDescriptionCells) }
+        return newValue
+    }
+    var numberOfNewNameCells: Int { return totalNewNameCells.count }
     var nameIsAvailable: Bool {
         guard userInputForNewName != "" else { return false }
         let isAvailable = !( existingNames.map({ $0.lowercased() }).contains(userInputForNewName.lowercased()) )
         return isAvailable
     }
+    /// is the only property should be set
     var userInputForNewName: String = ""
     let textFieldBorderWidth: CGFloat = 1.5
     let borderWidthOfNewNameCell: CGFloat = 4.0
@@ -120,10 +128,12 @@ class ResourcesForAddSnsidScene: ProjectResource {
     // MARK: - Choose Theme Color
     
     var themeColor: UIColor = UIColor.placeHolderForThemeColor
-    let pieces: Int = 5
+    let pieces: Int = 6
     var colorUnitPositions: [ColorUnitPositionInfo]!
-    let requiredAmountOfColorUnits = 3000
+    let requiredAmountOfColorUnits = 4000
+    let determineDistanceAdjustingCoefficient: CGFloat = 0.8
     weak var colorContainerView: ColorContainerView!
+    var previouslyChoosenButtonIndex: Int!
     
     
     
@@ -201,7 +211,7 @@ class ResourcesForAddSnsidScene: ProjectResource {
         let containerCenter = CGPoint(x: viewFrame.origin.x + viewFrame.width/2, y: viewFrame.origin.y + viewFrame.height/2)
         let pointsPerFrame = Int( requiredAmountOfColorUnits/(pieces*pieces) )
         /// determine whether a point is isolated
-        let determineDistance = elementSize.width / 2
+        let determineDistance = elementSize.width * self.determineDistanceAdjustingCoefficient
         // preparation for concurrent operations
         let runQueue = DispatchQueue(label: "colorUnitPositions", qos: .default, attributes: .concurrent)
         let group = DispatchGroup()
@@ -271,6 +281,7 @@ class ResourcesForAddSnsidScene: ProjectResource {
 enum NewNameCellAttributesType: String {
     case title
     case name
+    case errorDescription
 }
 
 

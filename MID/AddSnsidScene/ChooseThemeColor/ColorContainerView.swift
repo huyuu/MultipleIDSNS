@@ -63,14 +63,15 @@ class ColorContainerView: UIView {
     private func generateColoredButtons(from positions: [ColorUnitPositionInfo]) -> [ColorUnitButton] {
         let themeColor = delegate.resources.themeColor
         let blackOutDistance: CGFloat = min( self.frame.width, self.frame.height )
-//        let originInset = delegate.colorPlateScrollView.frame.origin
+        var index = 0
         
         let colorButtons = positions.map { (positionInfo) -> ColorUnitButton in
             let colorUnit = ColorUnit(position: positionInfo, themeColor: themeColor, blackOutDistance: blackOutDistance)
-            let button = colorUnit.translateToButton()
+            let button = colorUnit.translateToButton(withIndex: index)
             // handle touch up
             button.addTarget(self, action: #selector(didSelectColor(_:)), for: .touchUpInside)
             self.addSubview(button)
+            index += 1
             return button
         }
         return colorButtons
@@ -87,6 +88,7 @@ class ColorContainerView: UIView {
         self.colorButtons.forEach { (button) in
             button.scale(accordingTo: containerFrame)
         }
+        self.layoutSubviews()
     }
 }
 
@@ -119,8 +121,10 @@ fileprivate struct ColorUnit {
     }
     
     
-    func translateToButton() -> ColorUnitButton {
-        return ColorUnitButton(fillWith: self.fillColor, frame: CGRect(x: self.origin.x, y: self.origin.y, width: ColorUnitButton.intrinsicSize.width, height: ColorUnitButton.intrinsicSize.height))
+    func translateToButton(withIndex index: Int) -> ColorUnitButton {
+        return ColorUnitButton(fillWith: self.fillColor,
+                               frame: CGRect(x: self.origin.x, y: self.origin.y, width: ColorUnitButton.intrinsicSize.width, height: ColorUnitButton.intrinsicSize.height),
+                               withIndex: index)
     }
 }
 
