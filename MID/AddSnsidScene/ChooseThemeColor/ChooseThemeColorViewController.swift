@@ -49,27 +49,37 @@ extension ChooseThemeColorViewController {
         self.navigationItem.title = resources.navigationItemTitle
         self.navigationItem.rightBarButtonItem = nil
         self.navigationItem.leftBarButtonItem?.title = "Back"
-        // set color plate
+        // set color plate scroll view
         colorPlateScrollView.delegate = self
         colorPlateScrollView.contentSize = colorContainerView.frame.size
-        colorPlateScrollView.contentOffset = CGPoint(x: colorContainerView.frame.width/2, y: colorContainerView.frame.height/2)
-        
-        colorContainerView.completeInit(themeColor: UIColor.defaultBlueColor, delegate: self)
-        
-        doneButton.isEnabled = false
+        colorPlateScrollView.contentOffset =
+            CGPoint(x: colorContainerView.frame.width/2 - colorPlateScrollView.frame.width/2,
+                    y: colorContainerView.frame.height/2 - colorPlateScrollView.frame.height/2)
+        colorPlateScrollView.decelerationRate = .fast
+        // set contentView
+        colorContainerView.completeInit(delegate: self)
+        // if a themeColor is chosen, set to true
+        doneButton.isEnabled = resources.themeColor == UIColor.placeHolderForThemeColor ? false : true
     }
     
     
-    internal func didSelectColor() {
-        doneButton.isEnabled = true
-        doneButton.isColorSelected = true
-        doneButton.fillColor = resources.themeColor
-        doneButton.setNeedsDisplay()
+    internal func didSelectColor(_ colorUnitButton: ColorUnitButton) {
+        let color = colorUnitButton.fillColor
+        // update database
+        self.resources.themeColor = color
+        // update doneButton Apperance
+        doneButton.updateApperanceWithColor(color)
+        // change contentOffset when selected
+        let frameCenter = colorPlateScrollView.center
+        let buttonCenter = colorUnitButton.center + colorPlateScrollView.frame.origin
+        colorPlateScrollView.setContentOffset(buttonCenter - frameCenter, animated: true)
     }
 }
 
 
 
 extension ChooseThemeColorViewController: UIScrollViewDelegate {
-    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        colorContainerView.adjustApperanceDuringScrolling(containerFrame: scrollView.frame)
+    }
 }

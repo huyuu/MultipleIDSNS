@@ -12,7 +12,11 @@ import UIKit
 class RoundedNextButton: UIButton {
     
     var isColorSelected: Bool = false
-    var fillColor: UIColor = UIColor.clear
+    var fillColor: UIColor = UIColor.clear {
+        didSet {
+            self.setNeedsDisplay()
+        }
+    }
     
     
     override func draw(_ rect: CGRect) {
@@ -46,31 +50,18 @@ class RoundedNextButton: UIButton {
     }
     
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        // draw next arror path
-//        let patternLayer = CAShapeLayer()
-//        patternLayer.path = CAShapeLayer.drawNextPattern(in: self.layer.frame, insetsBy: UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0), controlDistanceFromVerticalCenter: 20.0)
-//        patternLayer.lineCap = .round
-//        patternLayer.lineWidth = 6.0
-//        patternLayer.lineJoin = .round
-//        patternLayer.strokeColor = UIColor.defaultBlueColor.cgColor
-//        patternLayer.fillColor = UIColor.clear.cgColor
-//        
-//        // set cornerRadisus
-//        layer.cornerRadius = self.frame.width / 2
-//        layer.borderWidth = 0.1
-//        layer.borderColor = UIColor.defaultBlueColor.cgColor
-//        
-//        layer.addSublayer(patternLayer)
-    }
-    
     
     
     // MARK: Custom Helper Functions
     
     private func prepare() {
         
+    }
+    
+    
+    internal func updateApperanceWithColor(_ color: UIColor) {
+        self.isEnabled = true
+        self.isColorSelected = true
+        self.fillColor = color
     }
 }

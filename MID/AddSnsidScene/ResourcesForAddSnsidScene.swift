@@ -119,7 +119,11 @@ class ResourcesForAddSnsidScene: ProjectResource {
     
     // MARK: - Choose Theme Color
     
-    var themeColor: UIColor = UIColor.defaultBlueColor
+    var themeColor: UIColor = UIColor.placeHolderForThemeColor
+    let pieces: Int = 5
+    var colorUnitPositions: [ColorUnitPositionInfo]!
+    let requiredAmountOfColorUnits = 3000
+    weak var colorContainerView: ColorContainerView!
     
     
     
@@ -136,6 +140,11 @@ class ResourcesForAddSnsidScene: ProjectResource {
     init(owner: Account, snsids: [SNSID]) {
         self.owner = owner
         self.existingNames = snsids.map({ $0.name })
+        /// for preFetching colorUnitPositions. contentFrame should be updated synchronously with storybord
+        let contentFrame = CGRect(x: 0, y: 0, width: 3000, height: 3000)
+        self.generateColorUnitPositions(in: contentFrame, elementSize: ColorUnitButton.intrinsicSize, completionHandler: { (positions) in
+            return
+        })
         self.fetchExistingTopics()
     }
     
@@ -168,19 +177,6 @@ class ResourcesForAddSnsidScene: ProjectResource {
     }
     
     
-//    internal func updateSearchResults(accordingTo string: String, completion: @escaping () -> ()) {
-//        /// get search results according to given string
-//        let searchResults: [Topic] = self.existingTopics.filter { (topic) -> Bool in
-//            return topic.title.contains(string)
-//        }
-//
-//        self.searchResultBlocks = searchResults.map({ (topic) -> SearchTopicBlock in
-//            return SearchTopicBlock(type: .availableTopic, content: topic.title)
-//        })
-//        completion()
-//    }
-    
-    
     internal static func indicatorColor(accordingTo isValid: Bool) -> UIColor {
         return isValid  ? #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1) : #colorLiteral(red: 0.8275103109, green: 0.03921728841, blue: 0.09085532289, alpha: 1)
     }
@@ -198,6 +194,73 @@ class ResourcesForAddSnsidScene: ProjectResource {
         } else {
             return inititalInset - (heightForItem + minLineSpacing)
         }
+    }
+    
+    
+    internal func generateColorUnitPositions(in viewFrame: CGRect, elementSize: CGSize, completionHandler: @escaping ([ColorUnitPositionInfo]) -> ()) {
+        let containerCenter = CGPoint(x: viewFrame.origin.x + viewFrame.width/2, y: viewFrame.origin.y + viewFrame.height/2)
+        let pointsPerFrame = Int( requiredAmountOfColorUnits/(pieces*pieces) )
+        /// determine whether a point is isolated
+        let determineDistance = elementSize.width / 2
+        // preparation for concurrent operations
+        let runQueue = DispatchQueue(label: "colorUnitPositions", qos: .default, attributes: .concurrent)
+        let group = DispatchGroup()
+        
+        var totalPositions: [ColorUnitPositionInfo] = []
+        let frames = self.splitFrame(of: viewFrame, into: pieces)
+        
+        for frame in frames {
+            group.enter()
+            runQueue.async {
+                var localPositions: [ColorUnitPositionInfo] = []
+                var count = 0
+                while count < pointsPerFrame {
+                    let randomX = CGFloat.random(in: frame.minX..<frame.maxX)
+                    let randomY = CGFloat.random(in: frame.minY..<frame.maxY)
+                    let position = ColorUnitPositionInfo(CGPoint(x: randomX, y: randomY), containerCenter: containerCenter)
+                    
+                    if position.isIsolated(in: localPositions, determineDistance: determineDistance) {
+                        localPositions.append(position)
+                        count += 1
+                    }
+                }
+                totalPositions.append(contentsOf: localPositions)
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: DispatchQueue.main) {
+            self.colorUnitPositions = totalPositions
+            completionHandler(totalPositions)
+        }
+    }
+    
+    
+    /// Privately used in _func_ generateColorUnitPositions(in:elementSize:completionHandler:).
+    private func splitFrame(of originFrame: CGRect, into pieces: Int) -> [CGRect] {
+        let width = originFrame.width / CGFloat(pieces)
+        let height = originFrame.height / CGFloat(pieces)
+        
+        let xs = (0..<pieces).map { (multiplier) -> CGFloat in
+            return originFrame.origin.x + width * CGFloat(multiplier)
+        }
+        let ys = (0..<pieces).map { (multiplier) -> CGFloat in
+            return originFrame.origin.y + height * CGFloat(multiplier)
+        }
+        
+        var frames: [CGRect] = []
+        for x in xs {
+            for y in ys {
+                let frame = CGRect(x: x, y: y, width: width, height: height)
+                frames.append(frame)
+            }
+        }
+        return frames
+    }
+    
+    
+    deinit {
+        self.topicTankRef.removeAllObservers()
     }
 }
 
@@ -257,6 +320,47 @@ struct SearchTopicCellAttributes {
     
     init(of type: SearchTopicCellAttributesType) {
         self.type = type
+    }
+}
+
+
+
+// MARK: - ColorUnitPositionInfo Struct Definition
+
+/// Only for generating ColorUnit positions
+struct ColorUnitPositionInfo {
+    var center: CGPoint
+    let distanceFromContainerCenter: CGFloat
+    let normalizedAngle: CGFloat
+    
+    
+    init(_ center: CGPoint, containerCenter: CGPoint) {
+        self.center = center
+        self.distanceFromContainerCenter = center.distance(from: containerCenter)
+        self.normalizedAngle = center.angle(from: containerCenter, normalizedBy: 2*CGFloat.pi)
+    }
+    
+    
+    private init(center: CGPoint, distanceFromContainerCenter: CGFloat, normalizedAngle: CGFloat) {
+        self.center = center
+        self.distanceFromContainerCenter = distanceFromContainerCenter
+        self.normalizedAngle = normalizedAngle
+    }
+    
+
+    fileprivate func isIsolated(in positions: [ColorUnitPositionInfo], determineDistance: CGFloat) -> Bool {
+        for existingPosition in positions {
+            if self.center.distance(from: existingPosition.center) <= determineDistance {
+                return false
+            }
+        }
+        return true
+    }
+    
+    
+    internal func insetsBy(_ inset: CGPoint) -> ColorUnitPositionInfo {
+        let newValue = ColorUnitPositionInfo(center: self.center + inset, distanceFromContainerCenter: self.distanceFromContainerCenter, normalizedAngle: self.normalizedAngle)
+        return newValue
     }
 }
 

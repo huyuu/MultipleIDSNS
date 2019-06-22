@@ -101,6 +101,20 @@ public extension CGPoint {
     }
     
     
+    static func -(left: CGPoint, right: CGPoint) -> CGPoint {
+        let x = left.x - right.x
+        let y = left.y - right.y
+        return CGPoint(x: x, y: y)
+    }
+    
+    
+    static func +(left: CGPoint, right: CGPoint) -> CGPoint {
+        let x = left.x + right.x
+        let y = left.y + right.y
+        return CGPoint(x: x, y: y)
+    }
+    
+    
     func vector(from origin: CGPoint) -> CGPoint {
         let x = self.x - origin.x
         let y = self.y - origin.y

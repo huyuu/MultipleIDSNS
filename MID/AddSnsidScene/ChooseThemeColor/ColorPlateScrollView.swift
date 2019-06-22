@@ -34,6 +34,4 @@ class ColorPlateScrollView: UIScrollView {
     private func prepare() {
         
     }
-    
-
 }

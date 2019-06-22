@@ -160,4 +160,7 @@ extension UIColor {
     public var brightnessComponent: CGFloat {
         return hueComponents.brightness
     }
+    
+    
+    public static var placeHolderForThemeColor = UIColor(hue: 0, saturation: 1.0, brightness: 1.0, alpha: 1.0)
 }

@@ -12,10 +12,10 @@ import UIKit
 class ColorContainerView: UIView {
     
     
-    var themeColor: UIColor = UIColor(hue: 0, saturation: 1.0, brightness: 1.0, alpha: 1.0)
-    var colorUnits: [ColorUnitButton] = []
+    var themeColor: UIColor = UIColor.placeHolderForThemeColor
+    var colorButtons: [ColorUnitButton] = []
     /// color unit density
-    let requiredAmountOfColorUnits = 500
+
     lazy var radius: CGFloat = {
         return self.frame.size.width / 2
     }()
@@ -25,10 +25,20 @@ class ColorContainerView: UIView {
     
     // MARK: - inits
     
-    func completeInit(themeColor: UIColor, delegate: ChooseThemeColorViewController) {
-        self.themeColor = themeColor
+    func completeInit(delegate: ChooseThemeColorViewController) {
         self.delegate = delegate
+        self.themeColor = delegate.resources.themeColor
         self.backgroundColor = UIColor.clear
+        
+        // generate coloredButtons to self
+        if let positions = delegate.resources.colorUnitPositions {
+            self.colorButtons = self.generateColoredButtons(from: positions)
+        } else {
+            delegate.resources.generateColorUnitPositions(in: self.frame, elementSize: ColorUnitButton.intrinsicSize, completionHandler: { [unowned self] (positions) in
+                self.colorButtons = self.generateColoredButtons(from: positions)
+                self.layoutSubviews()
+            })
+        }
     }
     
     
@@ -38,53 +48,45 @@ class ColorContainerView: UIView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.prepare()
     }
     
     
     override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
-        self.prepare()
     }
     
     
     
     // MARK: Custom Helper Functions
     
-    private func prepare() {
-        let themeColorUnit = ColorUnit(center: self.center, themeColor: self.themeColor)
-        let colorButtons = self.generateRandomColorUnits(from: themeColorUnit).map { (colorUnit) -> ColorUnitButton in
-            let button = colorUnit.translateToButton(centerUnit: themeColorUnit, radius: self.radius)
+    
+    private func generateColoredButtons(from positions: [ColorUnitPositionInfo]) -> [ColorUnitButton] {
+        let themeColor = delegate.resources.themeColor
+        let blackOutDistance: CGFloat = min( self.frame.width, self.frame.height )
+//        let originInset = delegate.colorPlateScrollView.frame.origin
+        
+        let colorButtons = positions.map { (positionInfo) -> ColorUnitButton in
+            let colorUnit = ColorUnit(position: positionInfo, themeColor: themeColor, blackOutDistance: blackOutDistance)
+            let button = colorUnit.translateToButton()
+            // handle touch up
             button.addTarget(self, action: #selector(didSelectColor(_:)), for: .touchUpInside)
             self.addSubview(button)
             return button
         }
-    }
-    
-    
-    private func generateRandomColorUnits(from centerUnit: ColorUnit) -> [ColorUnit] {
-        var colorUnits: [ColorUnit] = [centerUnit]
-        var count = colorUnits.count
-        // if more is required
-        while count < self.requiredAmountOfColorUnits {
-            let randomX = CGFloat.random(in: 0...(self.frame.size.width - ColorUnitButton.intrinsicSize.width/2))
-            let randomY = CGFloat.random(in: 0...(self.frame.size.height - ColorUnitButton.intrinsicSize.height/2))
-            let colorUnit = ColorUnit(center: CGPoint(x: randomX, y: randomY), themeColor: self.themeColor)
-            
-            if true {
-                colorUnits.append(colorUnit)
-                count += 1
-            }
-        }
-        
-        return colorUnits
+        return colorButtons
     }
     
     
     @objc func didSelectColor(_ sender: ColorUnitButton) {
-        sender.setNeedsDisplay()
-        self.delegate!.resources.themeColor = sender.fillColor
-        self.delegate!.didSelectColor()
+        // pass the functionalities to delegate
+        self.delegate!.didSelectColor(sender)
+    }
+    
+    
+    internal func adjustApperanceDuringScrolling(containerFrame: CGRect) {
+        self.colorButtons.forEach { (button) in
+            button.scale(accordingTo: containerFrame)
+        }
     }
 }
 
@@ -92,48 +94,33 @@ class ColorContainerView: UIView {
 
 // MARK: - ColorUnit Definition
 
+/// A _lightweight_ color unit type for general usage which should latter be transformed to ColorUnitButton type.
 fileprivate struct ColorUnit {
+    // instances should be initialized
+    let position: ColorUnitPositionInfo
+    var themeColor: UIColor
+    var fillColor: UIColor
+    // default instances
     var origin: CGPoint {
-        return CGPoint(x: self.center.x - ColorUnitButton.intrinsicSize.width/2, y: self.center.y - ColorUnitButton.intrinsicSize.height/2)
+        return CGPoint(x: self.position.center.x - ColorUnitButton.intrinsicSize.width/2, y: self.position.center.y - ColorUnitButton.intrinsicSize.height/2)
     }
-    var center: CGPoint
     let size: CGSize = ColorUnitButton.intrinsicSize
-    let themColor: UIColor
     static let multiConstant: CGFloat = 0.1
-
-
-
-    init(center: CGPoint, themeColor: UIColor) {
-        self.center = center
-        self.themColor = themeColor
-    }
-
-
-    func isIsolated(in container: [ColorUnit]) -> Bool {
-        for existingColor in container {
-            if self.center.distance(from: existingColor.center) <= ColorUnitButton.radius {
-                return false
-            }
-        }
-        return true
-    }
     
     
-    func getColor(from centerUnit: ColorUnit, radius: CGFloat) -> UIColor {
-        let containerCenter = centerUnit.center
-        let normalizedAngle = self.center.angle(from: containerCenter, normalizedBy: 2*CGFloat.pi)
-        
-        let hueValue = normalizedAngle
+    init(position: ColorUnitPositionInfo, themeColor: UIColor, blackOutDistance: CGFloat) {
+        self.themeColor = themeColor
+        self.position = position
+        // set fillColor
+        let hueValue = position.normalizedAngle
         let saturationValue: CGFloat = 1.0
-        let brightnessValue = self.center.distance(from: containerCenter, normalizedBy: radius)
-        
-        return UIColor(hue: hueValue, saturation: saturationValue, brightness: brightnessValue, alpha: 1.0)
+        let brightnessValue = max( 1 - position.distanceFromContainerCenter/blackOutDistance, 0 )
+        self.fillColor = UIColor(hue: hueValue, saturation: saturationValue, brightness: brightnessValue, alpha: 1.0)
     }
     
     
-    func translateToButton(centerUnit: ColorUnit, radius: CGFloat) -> ColorUnitButton {
-        let color = self.getColor(from: centerUnit, radius: radius)
-        return ColorUnitButton(fillWith: color, frame: CGRect(x: self.origin.x, y: self.origin.y, width: ColorUnitButton.intrinsicSize.width, height: ColorUnitButton.intrinsicSize.height))
+    func translateToButton() -> ColorUnitButton {
+        return ColorUnitButton(fillWith: self.fillColor, frame: CGRect(x: self.origin.x, y: self.origin.y, width: ColorUnitButton.intrinsicSize.width, height: ColorUnitButton.intrinsicSize.height))
     }
 }
 

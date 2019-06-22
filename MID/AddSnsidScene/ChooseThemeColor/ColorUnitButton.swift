@@ -67,4 +67,34 @@ class ColorUnitButton: UIButton {
     private func prepare() {
         
     }
+    
+    
+    internal func scale(accordingTo scrollViewFrame: CGRect) {
+        let buttonCenter = self.center + scrollViewFrame.origin
+        
+        let leftSpacing = buttonCenter.x - scrollViewFrame.minX
+        let rightSpacing = scrollViewFrame.maxX - buttonCenter.x
+        let topSpacing = buttonCenter.y - scrollViewFrame.minY
+        let bottomSpacing = scrollViewFrame.maxY - buttonCenter.y
+        
+        let recessiveScale: CGFloat = 0.01
+        let dominantScale: CGFloat = 1.0
+        let recessiveAlpha: CGFloat = 0.01
+        let dominantAlpha: CGFloat = 1.0
+        
+        guard (leftSpacing>0) && (rightSpacing>0) && (topSpacing>0) && (bottomSpacing>0) else {
+            return
+        }
+        
+        let minSpacingToEdge = min( leftSpacing, rightSpacing, topSpacing, bottomSpacing )
+        let edgeCenterDistance = max( scrollViewFrame.width, scrollViewFrame.height )
+        let centeringRate = minSpacingToEdge / edgeCenterDistance
+        let scale = (dominantScale - recessiveScale)*centeringRate + recessiveScale
+        let scaleTransFormer = CGAffineTransform(scaleX: scale, y: scale)
+        let alpha = (dominantAlpha - recessiveAlpha)*centeringRate + recessiveAlpha
+        
+        self.transform = scaleTransFormer
+        self.alpha = alpha
+        self.setNeedsDisplay()
+    }
 }
