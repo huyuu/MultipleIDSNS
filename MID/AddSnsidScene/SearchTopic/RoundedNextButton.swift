@@ -12,9 +12,23 @@ import UIKit
 class RoundedNextButton: UIButton {
     
     var isColorSelected: Bool = false
-    var fillColor: UIColor = UIColor.clear {
+    override var isEnabled: Bool {
+        willSet {
+            fillColor = newValue ? UIColor.white : UIColor.lightGray
+        }
+    }
+    var fillColor: UIColor = UIColor.white {
         didSet {
             self.setNeedsDisplay()
+        }
+    }
+    var strokeColor: UIColor {
+        get {
+            if isEnabled {
+                return isColorSelected ? UIColor.white : UIColor.defaultBlueColor
+            } else {
+                return UIColor.white
+            }
         }
     }
     static let intrinsicFrame: CGRect = {
@@ -27,9 +41,8 @@ class RoundedNextButton: UIButton {
     }()
     
     
+    
     override func draw(_ rect: CGRect) {
-        let strokeColor = isColorSelected ? UIColor.white : UIColor.defaultBlueColor
-        
         strokeColor.setStroke()
         fillColor.setFill()
         
@@ -55,6 +68,16 @@ class RoundedNextButton: UIButton {
     override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         self.prepare()
+    }
+    
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.shadowOpacity = 0.5
+        layer.shadowRadius = 10
+        layer.masksToBounds = false
+        layer.shadowColor = UIColor.lightGray.cgColor
+        layer.shadowOffset = CGSize(width: 0, height: 8.0)
     }
     
     

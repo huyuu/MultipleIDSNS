@@ -9,11 +9,15 @@
 import UIKit
 
 @IBDesignable
-class NewNameTableViewController: UITableViewController {
+class NewNameViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     internal var resources: ResourcesForAddSnsidScene!
     private var indicatorLayer: CALayer!
-    private var doneButton: RoundedNextButton!
+    
+    @IBOutlet weak var doneButton: RoundedNextButton!
+    
+    
+    @IBOutlet var tableView: UITableView!
     
 
     override func viewDidLoad() {
@@ -22,20 +26,19 @@ class NewNameTableViewController: UITableViewController {
     }
     
     
-    
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resources.numberOfNewNameCells
     }
 
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cells = resources.totalNewNameCells
         let cell = tableView.dequeueReusableCell(withIdentifier: cells[indexPath.row].reuseId, for: indexPath)
 
@@ -45,7 +48,7 @@ class NewNameTableViewController: UITableViewController {
     }
     
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
     }
  
@@ -55,7 +58,7 @@ class NewNameTableViewController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard resources.segueIdToSearchTopic == segue.identifier! else { fatalError() }
-        let destinationController = segue.destination as! SearchTopicTableViewController
+        let destinationController = segue.destination as! SearchTopicViewController
         destinationController.resources = self.resources
     }
     
@@ -67,12 +70,15 @@ class NewNameTableViewController: UITableViewController {
 
 // MARK: - Custom Helper Functions
 
-extension NewNameTableViewController {
+extension NewNameViewController {
     private func prepareForViewDidLoad() {
         // set navigation items
         self.navigationItem.title = resources.navigationItemTitle
         self.navigationItem.rightBarButtonItem = nil
         self.navigationItem.leftBarButtonItem?.title = "Back"
+        // init doneButton
+        doneButton.addTarget(self, action: #selector(doneButtonTabbed(_:)), for: .touchUpInside)
+        doneButton.isEnabled = false
     }
     
     
@@ -104,6 +110,8 @@ extension NewNameTableViewController {
             let errorDescriptionLabel = cell.viewWithTag(11) as! UILabel
             // set error description string
             errorDescriptionLabel.text = cellAttributes.content!
+            errorDescriptionLabel.textColor = resources.nameIsAvailable ? UIColor.white : UIColor.black
+
         }
     }
     
@@ -112,16 +120,11 @@ extension NewNameTableViewController {
         layer.cornerRadius = resources.cornerRadiusOfNewNameCell
         layer.borderWidth = resources.borderWidthOfNewNameCell
         layer.borderColor = ResourcesForAddSnsidScene.indicatorColor(accordingTo: self.resources.nameIsAvailable).cgColor
+        // reload tableView to show the error description string
+        let indexPath = IndexPath(row: resources.rowOfErrorDescriptionCell, section: 0)
+        tableView.reloadRows(at: [indexPath], with: .fade)
         // trigger On/Off of the doneButton
         self.doneButton.isEnabled = resources.nameIsAvailable
-    }
-    
-    
-    private func addDoneButtonToView() {
-        let doneButton = RoundedNextButton(frame: RoundedNextButton.intrinsicFrame)
-        doneButton.addTarget(self, action: #selector(doneButtonTabbed(_:)), for: .touchUpInside)
-        self.tableView.addSubview(doneButton)
-        self.doneButton = doneButton
     }
     
     
@@ -138,7 +141,7 @@ extension NewNameTableViewController {
 
 // MARK: - UITextField Delegate
 
-extension NewNameTableViewController: UITextFieldDelegate {
+extension NewNameViewController: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         textField.text = resources.userInputForNewName
         return true
@@ -156,8 +159,6 @@ extension NewNameTableViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        // reload tableView to show the error description string
-        self.tableView.reloadData()
         return true
     }
 }

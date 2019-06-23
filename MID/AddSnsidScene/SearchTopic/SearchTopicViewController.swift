@@ -9,9 +9,12 @@
 import UIKit
 
 @IBDesignable
-class SearchTopicTableViewController: UITableViewController {
+class SearchTopicViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     internal var resources: ResourcesForAddSnsidScene!
+    
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var doneButton: RoundedNextButton!
     
 
     override func viewDidLoad() {
@@ -20,26 +23,17 @@ class SearchTopicTableViewController: UITableViewController {
     }
 
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resources.numberOfSearchTopicCells
     }
     
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard indexPath.row == resources.doneButtonCellRowIndex else { return UITableView.automaticDimension }
-        let cellAttributes = resources.totalSearchTopicCells[indexPath.row]
-        guard case .doneButton = cellAttributes.type else { return UITableView.automaticDimension }
-        
-        return resources.getHeightForDoneButtonCell()
-    }
-    
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cells = resources.totalSearchTopicCells
         let cell = tableView.dequeueReusableCell(withIdentifier: cells[indexPath.row].reuseId, for: indexPath)
         
@@ -49,17 +43,14 @@ class SearchTopicTableViewController: UITableViewController {
     }
     
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         switch resources.totalSearchTopicCells[indexPath.row].type {
         case .searchResult(_):
             // choose topic
             self.didChooseTopic(at: indexPath)
             // reload tableView
-            self.tableView.reloadData()
-            
-        case .doneButton:
-            self.doneButtonTabbed()
+            self.refresh()
             
         default:
             break
@@ -90,12 +81,15 @@ class SearchTopicTableViewController: UITableViewController {
 
 // MARK: - Custom Helper Functions
 
-extension SearchTopicTableViewController {
+extension SearchTopicViewController {
     private func prepareForViewDidLoad() {
         // set navigation items
         self.navigationItem.title = resources.navigationItemTitle
         self.navigationItem.rightBarButtonItem = nil
         self.navigationItem.leftBarButtonItem?.title = "Back"
+        // set doneButton
+        doneButton.addTarget(self, action: #selector(doneButtonTabbed), for: .touchUpInside)
+        doneButton.isEnabled = false
     }
     
     
@@ -126,12 +120,6 @@ extension SearchTopicTableViewController {
         case let .searchResult(topicTitle):
             let topicLabel = cell.viewWithTag(11) as! SearchResultLabel
             topicLabel.attributedText = self.paintText(of: topicTitle)!
-            
-            
-        case .doneButton:
-            let doneButton = cell.viewWithTag(11) as! RoundedNextButton
-            
-            doneButton.addTarget(self, action: #selector(doneButtonTabbed), for: .touchUpInside)
         }
     }
     
@@ -202,6 +190,12 @@ extension SearchTopicTableViewController {
     @objc private func doneButtonTabbed() {
         self.performSegue(withIdentifier: resources.segueIdToChooseThemeColor, sender: nil)
     }
+    
+    
+    private func refresh() {
+        doneButton.isEnabled = resources.shouldNavigateToChooseThemeColorScene
+        tableView.reloadData()
+    }
 }
 
 
@@ -209,12 +203,12 @@ extension SearchTopicTableViewController {
 
 // MARK: - UITextField Delegate
 
-extension SearchTopicTableViewController: UITextFieldDelegate {
+extension SearchTopicViewController: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         // if existingTopics is still not fetched, fetch it.
         if let _ = resources.existingTopics {} else {
             resources.fetchExistingTopics(completion: {
-                self.tableView.reloadData()
+                self.refresh()
             })
         }
         // show stored text
@@ -230,7 +224,7 @@ extension SearchTopicTableViewController: UITextFieldDelegate {
     
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.tableView.reloadData()
+        self.refresh()
         return true
     }
 }
@@ -239,7 +233,7 @@ extension SearchTopicTableViewController: UITextFieldDelegate {
 
 // MARK: - CollectionView Delegate
 
-extension SearchTopicTableViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension SearchTopicViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return resources.numberOfChosenTopics
     }

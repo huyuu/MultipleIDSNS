@@ -28,14 +28,15 @@ class ResourcesForAddSnsidScene: ProjectResource {
     
     private var staticNewNameCells = [ NewNameCellAttributes(of: .title, content: "New Name"),
                          NewNameCellAttributes(of: .name, content: "Enter the name") ]
-    private var errorDescriptionCells = [ NewNameCellAttributes(of: .errorDescription, content: "Name already exists.") ]
+    private var errorDescriptionCells = [ NewNameCellAttributes(of: .errorDescription, content: "Name already exists or is blank.") ]
     var totalNewNameCells: [NewNameCellAttributes] {
         var newValue: [NewNameCellAttributes] = []
         newValue.append(contentsOf: staticNewNameCells)
-        if !nameIsAvailable { newValue.append(contentsOf: errorDescriptionCells) }
+        newValue.append(contentsOf: errorDescriptionCells)
         return newValue
     }
     var numberOfNewNameCells: Int { return totalNewNameCells.count }
+    var rowOfErrorDescriptionCell: Int { return numberOfNewNameCells-1 }
     var nameIsAvailable: Bool {
         guard userInputForNewName != "" else { return false }
         let isAvailable = !( existingNames.map({ $0.lowercased() }).contains(userInputForNewName.lowercased()) )
@@ -65,16 +66,12 @@ class ResourcesForAddSnsidScene: ProjectResource {
             return SearchTopicCellAttributes(of: .searchResult(topicTitle: topic.title))
         })
     }
-    var searchTopicDoneCell = [SearchTopicCellAttributes.init(of: .doneButton)]
     /// use this property to determine rows for display
     var totalSearchTopicCells: [SearchTopicCellAttributes] {
         var newValue = [SearchTopicCellAttributes]()
         newValue.append(contentsOf: staticSearchTopicCells)
         newValue.append(contentsOf: chosenTopicsCell)
         newValue.append(contentsOf: searchResultCells)
-        if shouldNavigateToChooseThemeColorScene {
-            newValue.append(contentsOf: searchTopicDoneCell)
-        }
         return newValue
     }
     /// this is the only property should be set
@@ -92,9 +89,6 @@ class ResourcesForAddSnsidScene: ProjectResource {
         // if user is still choosing topics, return false
         guard searchResultCells.count == 0 else { return false }
         return true
-    }
-    var doneButtonCellRowIndex: Int {
-        return totalSearchTopicCells.count - 1
     }
     
     
@@ -189,21 +183,6 @@ class ResourcesForAddSnsidScene: ProjectResource {
     
     internal static func indicatorColor(accordingTo isValid: Bool) -> UIColor {
         return isValid  ? #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1) : #colorLiteral(red: 0.8275103109, green: 0.03921728841, blue: 0.09085532289, alpha: 1)
-    }
-    
-    
-    internal func getHeightForDoneButtonCell() -> CGFloat {
-        let count = self.chosenTopicTitles.count
-        let itemsPerRow = Int(self.itemsPerRow)
-        let inititalInset: CGFloat = 200.0
-        
-        if count <= itemsPerRow {
-            return inititalInset
-        } else if itemsPerRow * 2 < count {
-            return inititalInset - (heightForItem + minLineSpacing) * 2
-        } else {
-            return inititalInset - (heightForItem + minLineSpacing)
-        }
     }
     
     
@@ -306,7 +285,6 @@ enum SearchTopicCellAttributesType {
     case searchBar(placeHolderString: String)
     case chosenTopics(_ topicTitles: [String])
     case searchResult(topicTitle: String)
-    case doneButton
 }
 
 
@@ -323,8 +301,6 @@ struct SearchTopicCellAttributes {
             return "chosenTopics\(commonString)"
         case .searchResult(_):
             return "searchResult\(commonString)"
-        case .doneButton:
-            return "doneButton\(commonString)"
         }
     }()
     
