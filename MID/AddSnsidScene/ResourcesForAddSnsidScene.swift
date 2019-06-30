@@ -83,6 +83,21 @@ class ResourcesForAddSnsidScene: ProjectResource {
     var topicsAreAcceptibale: Bool {
         return chosenTopicTitles.count > 0 ? true : false
     }
+    var topicCanBeNew: Bool {
+        // a nil string can't be a new topic ="=
+        guard userInputForSearchTopic != "" else { return false }
+        for cell in searchResultCells {
+            // should always be true
+            if case .searchResult(let topicTitle) = cell.type {
+                // if userInput matches an existing topic in topicTank, return false.
+                if topicTitle == userInputForSearchTopic {
+                    return false
+                }
+            }
+        }
+        // else
+        return true
+    }
     /// use this property to judge whether should navigate to next scene
     var shouldNavigateToChooseThemeColorScene: Bool {
         guard topicsAreAcceptibale else { return false }
@@ -129,6 +144,28 @@ class ResourcesForAddSnsidScene: ProjectResource {
     weak var colorContainerView: ColorContainerView!
     var previouslyChoosenButtonIndex: Int!
     
+    
+    
+    // MARK: - New Topic Scene
+    
+    lazy var newTopicCells: [NewTopicCellAttributes] = [NewTopicCellAttributes(of: .title),
+                                                        NewTopicCellAttributes(of: .icon),
+                                                        NewTopicCellAttributes(of: .description),
+                                                        NewTopicCellAttributes(of: .combination)]
+    var newTopicTitle: String? = nil
+    var newTopicIcon: UIImage? = nil
+    var newTopicDescription: String? = nil
+    /// use this property to determine whether a new topic is created successfully
+    var isCreatingNewTopicDone: Bool {
+        guard let _ = newTopicTitle,
+            let _ = newTopicIcon,
+            let _ = newTopicDescription else {
+                return false
+        }
+        return true
+    }
+    var userInputForNewTopicDescription: String = ""
+    let placeHolderForNewTopicTextView = "Enter description of topic..."
     
     
     
@@ -306,6 +343,40 @@ struct SearchTopicCellAttributes {
     
     
     init(of type: SearchTopicCellAttributesType) {
+        self.type = type
+    }
+}
+
+
+
+// MARK: - NewTopicCell Atrributes
+
+enum NewTopicCellAttributesType {
+    case title
+    case icon
+    case description
+    case combination
+}
+
+
+struct NewTopicCellAttributes {
+    let type: NewTopicCellAttributesType
+    lazy var reuseId: String = {
+        let commonString = "CellForNewTopic"
+        switch self.type {
+        case .title:
+            return "title\(commonString)"
+        case .icon:
+            return "icon\(commonString)"
+        case .description:
+            return "description\(commonString)"
+        case .combination:
+            return "combination\(commonString)"
+        }
+    }()
+    
+    
+    init(of type: NewTopicCellAttributesType) {
         self.type = type
     }
 }

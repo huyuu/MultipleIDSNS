@@ -44,7 +44,7 @@ class SearchTopicViewController: UIViewController, UITableViewDelegate, UITableV
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: false)
         switch resources.totalSearchTopicCells[indexPath.row].type {
         case .searchResult(_):
             // choose topic
@@ -69,6 +69,10 @@ class SearchTopicViewController: UIViewController, UITableViewDelegate, UITableV
             
             
         case resources.segueIdToNewTopic:
+            let destinationController = segue.destination as! NewTopicViewController
+            // remember to set the new topic title
+            resources.newTopicTitle = resources.userInputForSearchTopic
+            destinationController.resources = self.resources
             break
             
         default:
@@ -104,11 +108,13 @@ extension SearchTopicViewController {
             
         case let .searchBar(placeHolderString):
             let searchTextField = cell.viewWithTag(11) as! UITextField
+            let newTopicButton = cell.viewWithTag(12) as! EdisonBulbButton
             
             // prepare for user input
             searchTextField.delegate = self
             searchTextField.placeholder = placeHolderString
             searchTextField.becomeFirstResponder()
+            newTopicButton.isEnabled = resources.topicCanBeNew
             
             
         case let .chosenTopics(topicTitles):
@@ -245,20 +251,5 @@ extension SearchTopicViewController: UICollectionViewDelegate, UICollectionViewD
         self.updateUIForChosenTopics(of: cell, for: indexPath)
         
         return cell
-    }
-}
-
-
-
-// MARK: - Custom UITextField Helper Functions
-
-fileprivate extension UITextField {
-    /// for textFieldShouldChangeChar
-    func textForStorage(newChar: String) -> String {
-        let text = self.text ?? ""
-        guard newChar != "" else {
-            return String(text.dropLast())
-        }
-        return text + newChar
     }
 }

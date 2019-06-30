@@ -121,3 +121,29 @@ public extension CGPoint {
         return CGPoint(x: x, y: y)
     }
 }
+
+
+
+public extension UITextView {
+    /// for textFieldShouldChangeChar
+    func textForStorage(newChar: String) -> String {
+        let text = self.text ?? ""
+        guard newChar != "" else {
+            return String(text.dropLast())
+        }
+        return text + newChar
+    }
+}
+
+
+
+public extension UITextField {
+    /// for textFieldShouldChangeChar
+    func textForStorage(newChar: String) -> String {
+        let text = self.text ?? ""
+        guard newChar != "" else {
+            return String(text.dropLast())
+        }
+        return text + newChar
+    }
+}

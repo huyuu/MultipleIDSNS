@@ -29,6 +29,9 @@
 		266693EB21C3F23A008C8DFE /* DataSupplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266693EA21C3F23A008C8DFE /* DataSupplementation.swift */; };
 		266AF2FF21D447E000414418 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 266AF2FE21D447E000414418 /* GoogleService-Info.plist */; };
 		2670ABCD2286CAB800A540DB /* DrawingHelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2670ABCC2286CAB800A540DB /* DrawingHelperFunctions.swift */; };
+		2671F9B422C751870018F6AF /* CameraButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2671F9B322C751870018F6AF /* CameraButton.swift */; };
+		2671F9B622C795BD0018F6AF /* EdisonBulbButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2671F9B522C795BD0018F6AF /* EdisonBulbButton.swift */; };
+		2671F9B822C822D60018F6AF /* TextViewWithPlaceHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2671F9B722C822D60018F6AF /* TextViewWithPlaceHolder.swift */; };
 		26740CF122B5B36F0037B63D /* ColorContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26740CF022B5B36F0037B63D /* ColorContainerView.swift */; };
 		26740CF322B5BA200037B63D /* ColorUnitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26740CF222B5BA200037B63D /* ColorUnitButton.swift */; };
 		26740CF522B6046B0037B63D /* ColorPlateScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26740CF422B6046B0037B63D /* ColorPlateScrollView.swift */; };
@@ -99,6 +102,9 @@
 		266693EA21C3F23A008C8DFE /* DataSupplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSupplementation.swift; sourceTree = "<group>"; };
 		266AF2FE21D447E000414418 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2670ABCC2286CAB800A540DB /* DrawingHelperFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingHelperFunctions.swift; sourceTree = "<group>"; };
+		2671F9B322C751870018F6AF /* CameraButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraButton.swift; sourceTree = "<group>"; };
+		2671F9B522C795BD0018F6AF /* EdisonBulbButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EdisonBulbButton.swift; sourceTree = "<group>"; };
+		2671F9B722C822D60018F6AF /* TextViewWithPlaceHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewWithPlaceHolder.swift; sourceTree = "<group>"; };
 		26740CF022B5B36F0037B63D /* ColorContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorContainerView.swift; sourceTree = "<group>"; };
 		26740CF222B5BA200037B63D /* ColorUnitButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUnitButton.swift; sourceTree = "<group>"; };
 		26740CF422B6046B0037B63D /* ColorPlateScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPlateScrollView.swift; sourceTree = "<group>"; };
@@ -179,6 +185,7 @@
 				26D37E0D22AC08D500D65811 /* ChosenTopicButton.swift */,
 				26D37E0B22AC063D00D65811 /* SearchResultLabel.swift */,
 				265BC30622B48DB80037EEBB /* RoundedNextButton.swift */,
+				2671F9B522C795BD0018F6AF /* EdisonBulbButton.swift */,
 			);
 			path = SearchTopic;
 			sourceTree = "<group>";
@@ -247,6 +254,8 @@
 			isa = PBXGroup;
 			children = (
 				26783CA222BF28F600E3D045 /* NewTopicViewController.swift */,
+				2671F9B322C751870018F6AF /* CameraButton.swift */,
+				2671F9B722C822D60018F6AF /* TextViewWithPlaceHolder.swift */,
 			);
 			path = NewTopic;
 			sourceTree = "<group>";
@@ -572,10 +581,13 @@
 				268FF2C9227E4FFF0016C82A /* ResourcesForScrollView.swift in Sources */,
 				261DFD8E22AB5854000B6733 /* SearchTopicViewController.swift in Sources */,
 				2699EA722290044A0029FA37 /* ResourcesForAddReply.swift in Sources */,
+				2671F9B422C751870018F6AF /* CameraButton.swift in Sources */,
 				2670ABCD2286CAB800A540DB /* DrawingHelperFunctions.swift in Sources */,
+				2671F9B822C822D60018F6AF /* TextViewWithPlaceHolder.swift in Sources */,
 				2693820F21CFD194007549F6 /* ReplyPast+CoreDataProperties.swift in Sources */,
 				269AB002223BCDEC0069EA06 /* ReplyClass.swift in Sources */,
 				26B5E1ED22AA8E450040F43C /* ChosenTopicLabel.swift in Sources */,
+				2671F9B622C795BD0018F6AF /* EdisonBulbButton.swift in Sources */,
 				26C0C07121BEB79000667E87 /* WeakErrorHandler.swift in Sources */,
 				262F812E227E710B00F4B390 /* MainScrollViewController.swift in Sources */,
 				2633167C22A9F30900C0F5E8 /* ResourcesForAddSnsidScene.swift in Sources */,

@@ -99,16 +99,23 @@ extension CAShapeLayer {
 
 extension UIColor {
     public convenience init?(_ hexString: String) {
-        guard let red = Int( "0x\(hexString.prefix(2))" ),
-            let green = Int( "0x\(hexString.prefix(2))" ),
-            let blue = Int( "0x\(hexString.prefix(2))" ) else { return nil }
+        var hexStringWithoutSharp = hexString.first == "#" ? String(hexString.dropFirst()) : hexString
+        
+        guard let red = Int("\(hexStringWithoutSharp.prefix(2))", radix: 16 ),
+            let green = Int("\(hexStringWithoutSharp.prefix(4).suffix(2))", radix: 16 ),
+            let blue = Int("\(hexStringWithoutSharp.suffix(2))", radix: 16 ) else { return nil }
         self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
     }
     
     
-    public static let defaultBlueColor: UIColor = {
-        return UIColor(red: 0, green: 122.0/255.0, blue: 1, alpha: 1)
-    }()
+    public static let defaultBlueColor: UIColor = UIColor(red: 0, green: 122.0/255.0, blue: 1, alpha: 1)
+    
+    public static let primaryColor = UIColor("#344955")!
+    public static let textOnPrimaryColor = UIColor("#fcffef")!
+    public static let secondaryColor = UIColor("#f9aa33")!
+    public static let textOnSecondaryColor = UIColor("#000000")!
+    public static let errorBackgroundColor = UIColor("#B00020")!
+    public static let textOnErrorColor = UIColor.white
     
     
     public var rgbComponents: (red: CGFloat, blue: CGFloat, green: CGFloat) {

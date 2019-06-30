@@ -174,14 +174,4 @@ fileprivate extension UITextField {
     func layoutAccordingTo(_ isValid: Bool) {
         self.layer.borderColor = ResourcesForAddSnsidScene.indicatorColor(accordingTo: isValid).cgColor
     }
-    
-    
-    /// for textFieldShouldChangeChar
-    func textForStorage(newChar: String) -> String {
-        let text = self.text ?? ""
-        guard newChar != "" else {
-            return String(text.dropLast())
-        }
-        return text + newChar
-    }
 }
