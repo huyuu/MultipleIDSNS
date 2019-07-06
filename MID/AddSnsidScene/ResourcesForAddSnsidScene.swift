@@ -148,7 +148,7 @@ class ResourcesForAddSnsidScene: ProjectResource {
     
     // MARK: - New Topic Scene
     
-    lazy var newTopicCells: [NewTopicCellAttributes] = [NewTopicCellAttributes(of: .title),
+    var newTopicCells: [NewTopicCellAttributes] = [NewTopicCellAttributes(of: .title),
                                                         NewTopicCellAttributes(of: .icon),
                                                         NewTopicCellAttributes(of: .description),
                                                         NewTopicCellAttributes(of: .combination)]
@@ -166,6 +166,16 @@ class ResourcesForAddSnsidScene: ProjectResource {
     }
     var userInputForNewTopicDescription: String = ""
     let placeHolderForNewTopicTextView = "Enter description of topic..."
+    var descriptionTextViewShouldBecomeFirstResponder = false
+    var indexPathOfDescriptionCellInNewTopicScene: IndexPath {
+        for (row, attribute) in newTopicCells.enumerated() {
+            if case .description = attribute.type {
+                return IndexPath(row: row, section: 0)
+            }
+        }
+        // shouldn't happened
+        return IndexPath(row: 2, section: 0)
+    }
     
     
     
@@ -361,23 +371,23 @@ enum NewTopicCellAttributesType {
 
 struct NewTopicCellAttributes {
     let type: NewTopicCellAttributesType
-    lazy var reuseId: String = {
-        let commonString = "CellForNewTopic"
-        switch self.type {
-        case .title:
-            return "title\(commonString)"
-        case .icon:
-            return "icon\(commonString)"
-        case .description:
-            return "description\(commonString)"
-        case .combination:
-            return "combination\(commonString)"
-        }
-    }()
+    let reuseId: String
     
     
     init(of type: NewTopicCellAttributesType) {
         self.type = type
+        
+        let commonString = "CellForNewTopic"
+        switch type {
+        case .title:
+            self.reuseId = "title\(commonString)"
+        case .icon:
+            self.reuseId = "icon\(commonString)"
+        case .description:
+            self.reuseId = "description\(commonString)"
+        case .combination:
+            self.reuseId = "combination\(commonString)"
+        }
     }
 }
 

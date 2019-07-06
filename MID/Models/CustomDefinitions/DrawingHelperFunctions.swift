@@ -99,7 +99,7 @@ extension CAShapeLayer {
 
 extension UIColor {
     public convenience init?(_ hexString: String) {
-        var hexStringWithoutSharp = hexString.first == "#" ? String(hexString.dropFirst()) : hexString
+        let hexStringWithoutSharp = hexString.first == "#" ? String(hexString.dropFirst()) : hexString
         
         guard let red = Int("\(hexStringWithoutSharp.prefix(2))", radix: 16 ),
             let green = Int("\(hexStringWithoutSharp.prefix(4).suffix(2))", radix: 16 ),
@@ -111,8 +111,12 @@ extension UIColor {
     public static let defaultBlueColor: UIColor = UIColor(red: 0, green: 122.0/255.0, blue: 1, alpha: 1)
     
     public static let primaryColor = UIColor("#344955")!
-    public static let textOnPrimaryColor = UIColor("#fcffef")!
+    public static let primaryLightColor = UIColor("#5f7481")!
+    public static let primaryDarkColor = UIColor("#0b222c")!
+    public static let textOnPrimaryColor = UIColor("#ffffff")!
     public static let secondaryColor = UIColor("#f9aa33")!
+    public static let secondaryLightColor = UIColor("#ffdc65")!
+    public static let secondaryDarkColor = UIColor("#c17b00")!
     public static let textOnSecondaryColor = UIColor("#000000")!
     public static let errorBackgroundColor = UIColor("#B00020")!
     public static let textOnErrorColor = UIColor.white

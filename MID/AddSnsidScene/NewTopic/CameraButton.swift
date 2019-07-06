@@ -10,6 +10,10 @@ import UIKit
 
 @IBDesignable
 class CameraButton: UIButton {
+    
+    private var fillColor: UIColor = .primaryColor
+    private var strokeColor: UIColor = .textOnPrimaryColor
+    
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -22,18 +26,31 @@ class CameraButton: UIButton {
         self.prepare()
     }
     
+    /**
+     Layouts for different scenes.
+     - parameter fillColor: Filled background color. Use previous value when set to nil.
+     - parameter strokeColor: Border and text color. Use previous value when set to nil.
+     */
+    internal func layoutWith(fillColor: UIColor?=nil, strokeColor: UIColor?=nil) {
+        if let fillColor = fillColor {
+            self.fillColor = fillColor
+        }
+        if let strokeColor = strokeColor {
+            self.strokeColor = strokeColor
+        }
+        setNeedsDisplay()
+    }
     
-    override func draw(_ rect: CGRect) {
-        let strokeColor = UIColor.textOnPrimaryColor
-        let fillColor = UIColor.primaryColor
-        
+    
+    override func draw(_ rect: CGRect) {        
         // general
         let center = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
         let edge = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
         
         // set camera outside frame
-        let topEdgeForFlash = UIEdgeInsets(top: 4, left: 0, bottom: 0, right: 0)
-        let rectShell = UIBezierPath(roundedRect: self.bounds.inset(by: edge).inset(by: topEdgeForFlash), cornerRadius: 10.0)
+        let topEdgeForFlash = UIEdgeInsets(top: self.bounds.height/8, left: 0, bottom: 0, right: 0)
+        let cornerRadius: CGFloat = (self.bounds.width - edge.left - edge.right)/9
+        let rectShell = UIBezierPath(roundedRect: self.bounds.inset(by: edge).inset(by: topEdgeForFlash), cornerRadius: cornerRadius)
         
         fillColor.setFill()
         rectShell.fill()
@@ -55,8 +72,8 @@ class CameraButton: UIButton {
         
         
         // set center circle
-        let radius = self.frame.width/2 / 2
-        let circle = UIBezierPath(arcCenter: center, radius: radius, startAngle: 0, endAngle: CGFloat.pi*2, clockwise: true)
+        let radius = self.frame.width/5*2 / 2
+        let circle = UIBezierPath(arcCenter: CGPoint(x: rectShell.bounds.midX, y: rectShell.bounds.midY), radius: radius, startAngle: 0, endAngle: CGFloat.pi*2, clockwise: true)
         
         circle.lineWidth = 4.0
         strokeColor.setStroke()

@@ -56,13 +56,6 @@ extension NewTopicViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
     }
-    
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        if let contentOffsetHolder = self.contentOffsetHolder {
-//            tableView.setContentOffset(contentOffsetHolder, animated: false)
-//        }
-    }
 }
 
 
@@ -126,15 +119,31 @@ extension NewTopicViewController {
     private func configure(_ cell: UITableViewCell, indexPath: IndexPath) {
         switch resources.newTopicCells[indexPath.row].type {
         case .title:
-            let titleLable = cell.viewWithTag(11) as! UILabel
+            let titleLabel = cell.viewWithTag(11) as! CornerRoundedLabel
             
-            titleLable.text = resources.newTopicTitle ?? ""
+            titleLabel.layoutAccordingTo(isContentAcceptable: true, fillColor: .textOnPrimaryColor, strokeColor: .primaryColor)
+            titleLabel.text = resources.newTopicTitle ?? ""
             
             
         case .icon:
             let iconImageView = cell.viewWithTag(11) as! UIImageView
             let addIconButton = cell.viewWithTag(12) as! CameraButton
-            iconImageView.image = resources.newTopicIcon
+            
+            // set iconImageView attributes
+            iconImageView.layer.cornerRadius = 40.0
+            iconImageView.layer.masksToBounds = true
+            iconImageView.layer.borderWidth = 1.0
+            iconImageView.layer.borderColor = UIColor.textOnPrimaryColor.cgColor
+            // if icon exists
+            if let icon = resources.newTopicIcon {
+                iconImageView.image = icon
+                iconImageView.backgroundColor = UIColor.clear
+                addIconButton.layoutWith(fillColor: .clear, strokeColor: .clear)
+            } else {
+                iconImageView.backgroundColor = .primaryLightColor
+                // set addIconButton layout attributes
+                addIconButton.layoutWith(fillColor: .textOnPrimaryColor, strokeColor: .primaryLightColor)
+            }
             // add target for taking photos
             addIconButton.addTarget(self, action: #selector(startPickIconImage(_:)), for: .touchUpInside)
             
@@ -144,6 +153,11 @@ extension NewTopicViewController {
             
             descriptionTextView.delegate = self
             descriptionTextView.placeHolder = "Enter description for new topic..."
+            // check if description textView should become firstResponder (often after icon has been chosen.)
+            if resources.descriptionTextViewShouldBecomeFirstResponder {
+                descriptionTextView.becomeFirstResponder()
+                resources.descriptionTextViewShouldBecomeFirstResponder = false
+            }
             self.textView = descriptionTextView
             
             
@@ -208,6 +222,8 @@ extension NewTopicViewController: UIImagePickerControllerDelegate, UINavigationC
         }
         picker.dismiss(animated: true, completion: {
             self.tableView.reloadData()
+            self.tableView.scrollToRow(at: self.resources.indexPathOfDescriptionCellInNewTopicScene, at: .top, animated: true)
+            self.resources.descriptionTextViewShouldBecomeFirstResponder = true
         })
     }
 }
