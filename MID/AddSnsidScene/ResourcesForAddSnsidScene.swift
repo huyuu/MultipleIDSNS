@@ -148,10 +148,13 @@ class ResourcesForAddSnsidScene: ProjectResource {
     
     // MARK: - New Topic Scene
     
-    var newTopicCells: [NewTopicCellAttributes] = [NewTopicCellAttributes(of: .title),
-                                                        NewTopicCellAttributes(of: .icon),
-                                                        NewTopicCellAttributes(of: .description),
-                                                        NewTopicCellAttributes(of: .combination)]
+    var newTopicCells = [NewTopicCellAttributes(of: .title),
+                         NewTopicCellAttributes(of: .icon),
+                         NewTopicCellAttributes(of: .description),
+                         NewTopicCellAttributes(of: .dummy),
+                         NewTopicCellAttributes(of: .combination)]
+    
+
     var newTopicTitle: String? = nil
     var newTopicIcon: UIImage? = nil
     var newTopicDescription: String? = nil
@@ -159,7 +162,7 @@ class ResourcesForAddSnsidScene: ProjectResource {
     var isCreatingNewTopicDone: Bool {
         guard let _ = newTopicTitle,
             let _ = newTopicIcon,
-            let _ = newTopicDescription else {
+            !userInputForNewTopicDescription.isEmpty else {
                 return false
         }
         return true
@@ -176,6 +179,17 @@ class ResourcesForAddSnsidScene: ProjectResource {
         // shouldn't happened
         return IndexPath(row: 2, section: 0)
     }
+    var indexPathOfCombinationCellInNewTopicScene: IndexPath? {
+        for (row, attribute) in newTopicCells.enumerated() {
+            if case .combination = attribute.type {
+                return IndexPath(row: row, section: 0)
+            }
+        }
+        // if still not available
+        return nil
+    }
+    var shouldScrollToCombinationCell: Bool = false
+
     
     
     
@@ -365,6 +379,7 @@ enum NewTopicCellAttributesType {
     case title
     case icon
     case description
+    case dummy
     case combination
 }
 
@@ -385,6 +400,8 @@ struct NewTopicCellAttributes {
             self.reuseId = "icon\(commonString)"
         case .description:
             self.reuseId = "description\(commonString)"
+        case .dummy:
+            self.reuseId = "dummy\(commonString)"
         case .combination:
             self.reuseId = "combination\(commonString)"
         }

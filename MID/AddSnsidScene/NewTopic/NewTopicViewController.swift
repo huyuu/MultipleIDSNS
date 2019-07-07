@@ -75,6 +75,7 @@ extension NewTopicViewController: UITextViewDelegate {
             return true
         }
         
+        
         resources.userInputForNewTopicDescription = textView.textForStorage(newChar: text)
         let textViewWithPlaceHolder = textView as! TextViewWithPlaceHolder
         textViewWithPlaceHolder.updateAppearanceAccordingTo(resources.userInputForNewTopicDescription)
@@ -85,6 +86,7 @@ extension NewTopicViewController: UITextViewDelegate {
          To fixed it, simplely create a dummy cell with height long enough for your contentOffset.
          For details, see here [https://stackoverflow.com/questions/33789807/uitableview-jumps-up-after-begin-endupdates-when-using-uitableviewautomaticdimen]
         */
+        
         tableView.beginUpdates()
         tableView.endUpdates()
 
@@ -96,9 +98,14 @@ extension NewTopicViewController: UITextViewDelegate {
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
         // set text to newTopicDescription anyway
         resources.newTopicDescription = textView.text ?? ""
-        self.updateDoneButtonState()
         textView.resignFirstResponder()
         return true
+    }
+    
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        resources.shouldScrollToCombinationCell = true
+        self.refresh()
     }
 }
 
@@ -121,19 +128,15 @@ extension NewTopicViewController {
         case .title:
             let titleLabel = cell.viewWithTag(11) as! CornerRoundedLabel
             
-            titleLabel.layoutAccordingTo(isContentAcceptable: true, fillColor: .textOnPrimaryColor, strokeColor: .primaryColor)
             titleLabel.text = resources.newTopicTitle ?? ""
+            titleLabel.layoutAccordingTo(isContentAcceptable: true, fillColor: .textOnPrimaryColor, strokeColor: .primaryColor)
             
             
         case .icon:
             let iconImageView = cell.viewWithTag(11) as! UIImageView
             let addIconButton = cell.viewWithTag(12) as! CameraButton
             
-            // set iconImageView attributes
-            iconImageView.layer.cornerRadius = 40.0
-            iconImageView.layer.masksToBounds = true
-            iconImageView.layer.borderWidth = 1.0
-            iconImageView.layer.borderColor = UIColor.textOnPrimaryColor.cgColor
+            self.customizeImageView(iconImageView)
             // if icon exists
             if let icon = resources.newTopicIcon {
                 iconImageView.image = icon
@@ -161,14 +164,39 @@ extension NewTopicViewController {
             self.textView = descriptionTextView
             
             
-        case .combination:
+        case .dummy:
             break
+            
+            
+        case .combination:
+            let combinationImageView = cell.viewWithTag(11) as! UIImageView
+            let titleLabel = cell.viewWithTag(12) as! CornerRoundedLabel
+            let descriptionLabel = cell.viewWithTag(13) as! UILabel
+            
+            // set imageView
+            self.customizeImageView(combinationImageView)
+            combinationImageView.image = resources.newTopicIcon
+            // set title Label
+            titleLabel.text = resources.newTopicTitle!
+            titleLabel.layoutAccordingTo(isContentAcceptable: true, fillColor: .secondaryColor, strokeColor: .textOnSecondaryColor)
+            // set description Label
+            descriptionLabel.text = resources.userInputForNewTopicDescription
+            // when combination scene is ready, scroll to it
+            if resources.shouldScrollToCombinationCell {
+                tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+                resources.shouldScrollToCombinationCell = false
+            }
         }
     }
     
     
     private func updateDoneButtonState() {
-        doneButton.isEnabled = resources.isCreatingNewTopicDone
+        if resources.isCreatingNewTopicDone {
+            doneButton.isEnabled = true
+            self.view.bringSubviewToFront(doneButton)
+        } else {
+            self.view.sendSubviewToBack(doneButton)
+        }
     }
     
     
@@ -207,6 +235,21 @@ extension NewTopicViewController {
             break
         }
     }
+    
+    
+    private func customizeImageView(_ imageView: UIImageView) {
+        // set iconImageView attributes
+        imageView.layer.cornerRadius = 40.0
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 1.0
+        imageView.layer.borderColor = UIColor.textOnPrimaryColor.cgColor
+    }
+    
+    
+    private func refresh() {
+        self.tableView.reloadData()
+        self.updateDoneButtonState()
+    }
 }
 
 
@@ -221,8 +264,8 @@ extension NewTopicViewController: UIImagePickerControllerDelegate, UINavigationC
             resources.newTopicIcon = pickedImage
         }
         picker.dismiss(animated: true, completion: {
-            self.tableView.reloadData()
-            self.tableView.scrollToRow(at: self.resources.indexPathOfDescriptionCellInNewTopicScene, at: .top, animated: true)
+            self.refresh()
+            self.tableView.scrollToRow(at: self.resources.indexPathOfDescriptionCellInNewTopicScene, at: .middle, animated: true)
             self.resources.descriptionTextViewShouldBecomeFirstResponder = true
         })
     }
