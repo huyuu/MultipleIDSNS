@@ -24,14 +24,17 @@ class NewTopicViewController: UIViewController {
     }
     
     
-    /// Add new topic complete -> back to choose topics
-    @IBAction func doneButtonTabbed(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+    
+    // MARK: - Navigation
+    
+    /// Add new topic scene completed -> back to choose topics.
+    @IBAction func doneButtonTabbed(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
     }
 }
 
@@ -115,11 +118,15 @@ extension NewTopicViewController: UITextViewDelegate {
 
 extension NewTopicViewController {
     private func prepareForViewDidLoad() {
+        // set doneButton inital style
         doneButton.isEnabled = false
+        self.updateDoneButtonState()
         // add observer for keybord adjustment
         NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeybord(when:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-                NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeybord(when:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeybord(when:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeybord(when:)), name: UIResponder.keyboardDidHideNotification, object: nil)
+        // set tableView to be  unselectable
+        tableView.allowsSelection = false
     }
     
     
@@ -136,14 +143,12 @@ extension NewTopicViewController {
             let iconImageView = cell.viewWithTag(11) as! UIImageView
             let addIconButton = cell.viewWithTag(12) as! CameraButton
             
-            self.customizeImageView(iconImageView)
+            // set image view
+            self.customizeImageView(iconImageView, icon: resources.newTopicIcon)
             // if icon exists
-            if let icon = resources.newTopicIcon {
-                iconImageView.image = icon
-                iconImageView.backgroundColor = UIColor.clear
+            if let _ = resources.newTopicIcon {
                 addIconButton.layoutWith(fillColor: .clear, strokeColor: .clear)
             } else {
-                iconImageView.backgroundColor = .primaryLightColor
                 // set addIconButton layout attributes
                 addIconButton.layoutWith(fillColor: .textOnPrimaryColor, strokeColor: .primaryLightColor)
             }
@@ -174,18 +179,13 @@ extension NewTopicViewController {
             let descriptionLabel = cell.viewWithTag(13) as! UILabel
             
             // set imageView
-            self.customizeImageView(combinationImageView)
-            combinationImageView.image = resources.newTopicIcon
+            self.customizeImageView(combinationImageView, icon: resources.newTopicIcon)
             // set title Label
             titleLabel.text = resources.newTopicTitle!
             titleLabel.layoutAccordingTo(isContentAcceptable: true, fillColor: .secondaryColor, strokeColor: .textOnSecondaryColor)
             // set description Label
-            descriptionLabel.text = resources.userInputForNewTopicDescription
-            // when combination scene is ready, scroll to it
-            if resources.shouldScrollToCombinationCell {
-                tableView.scrollToRow(at: indexPath, at: .top, animated: true)
-                resources.shouldScrollToCombinationCell = false
-            }
+            let userInput = resources.userInputForNewTopicDescription
+            descriptionLabel.text = userInput.isEmpty ? "placeHolder" : userInput
         }
     }
     
@@ -237,9 +237,18 @@ extension NewTopicViewController {
     }
     
     
-    private func customizeImageView(_ imageView: UIImageView) {
+    private func customizeImageView(_ imageView: UIImageView, icon: UIImage?=nil) {
+        // if icon exists
+        if let icon = icon {
+            imageView.image = icon
+            imageView.backgroundColor = UIColor.clear
+        } else {
+            imageView.backgroundColor = .primaryLightColor
+        }
+        
         // set iconImageView attributes
-        imageView.layer.cornerRadius = 40.0
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 20.0
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 1.0
         imageView.layer.borderColor = UIColor.textOnPrimaryColor.cgColor
@@ -249,6 +258,11 @@ extension NewTopicViewController {
     private func refresh() {
         self.tableView.reloadData()
         self.updateDoneButtonState()
+        // when combination scene is ready, scroll to it
+        if resources.shouldScrollToCombinationCell {
+            tableView.scrollToRow(at: resources.indexPathOfCombinationCellInNewTopicScene!, at: .top, animated: true)
+            resources.shouldScrollToCombinationCell = false
+        }
     }
 }
 
@@ -263,7 +277,7 @@ extension NewTopicViewController: UIImagePickerControllerDelegate, UINavigationC
         if let pickedImage = info[.originalImage] as? UIImage {
             resources.newTopicIcon = pickedImage
         }
-        picker.dismiss(animated: true, completion: {
+        picker.dismiss(animated: true, completion: { 
             self.refresh()
             self.tableView.scrollToRow(at: self.resources.indexPathOfDescriptionCellInNewTopicScene, at: .middle, animated: true)
             self.resources.descriptionTextViewShouldBecomeFirstResponder = true

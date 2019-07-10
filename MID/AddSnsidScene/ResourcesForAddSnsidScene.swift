@@ -152,7 +152,8 @@ class ResourcesForAddSnsidScene: ProjectResource {
                          NewTopicCellAttributes(of: .icon),
                          NewTopicCellAttributes(of: .description),
                          NewTopicCellAttributes(of: .dummy),
-                         NewTopicCellAttributes(of: .combination)]
+                         NewTopicCellAttributes(of: .combination),
+                         NewTopicCellAttributes(of: .dummy)]
     
 
     var newTopicTitle: String? = nil
