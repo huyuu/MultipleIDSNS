@@ -22,7 +22,7 @@
                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Name" borderStyle="roundedRect" placeholder="Enter new user name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qQ7-fy-Uty" customClass="TextFieldWithIndicationBorder" customModule="MID" customModuleProvider="target">
                         <rect key="frame" x="40" y="20" width="262" height="88.5"/>
                         <nil key="textColor"/>
-                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                         <textInputTraits key="textInputTraits"/>
                     </textField>
                 </subviews>

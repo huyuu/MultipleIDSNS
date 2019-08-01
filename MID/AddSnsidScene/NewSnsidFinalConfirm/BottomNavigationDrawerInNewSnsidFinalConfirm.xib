@@ -30,14 +30,13 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="40"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O1I-Dg-9lz" customClass="UpDownArrowButton" customModule="MID" customModuleProvider="target">
-                                    <rect key="frame" x="195" y="8" width="24" height="24"/>
+                                    <rect key="frame" x="187" y="8" width="40" height="24"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="24" id="QaK-qd-VP8"/>
                                         <constraint firstAttribute="width" constant="40" id="Vnf-Tp-QGR"/>
                                     </constraints>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstItem="O1I-Dg-9lz" firstAttribute="centerY" secondItem="0fg-jY-4Sz" secondAttribute="centerY" id="8Mz-kc-yVH"/>
                                 <constraint firstItem="O1I-Dg-9lz" firstAttribute="centerX" secondItem="0fg-jY-4Sz" secondAttribute="centerX" id="Asx-JE-QAq"/>

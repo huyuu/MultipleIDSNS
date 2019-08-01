@@ -30,29 +30,35 @@ class TextFieldWithIndicationBorder: UITextField {
     }
     
     
-    override func draw(_ rect: CGRect) {
-        // draw border
-        let linewidth: CGFloat = 3.0
-        let borderInsets = UIEdgeInsets(top: linewidth/2, left: linewidth/2, bottom: linewidth/2, right: linewidth/2)
-        let border = UIBezierPath(roundedRect: self.bounds.inset(by: borderInsets), cornerRadius: 16)
-        border.lineWidth = linewidth
-        let strokeColor = isInputAvailable ? validBorderColor : invalidBorderColor
-        strokeColor.setStroke()
-        border.stroke()
-        
-        // draw text
-        let textInsets = UIEdgeInsets(top: edgeInsets.top, left: edgeInsets.left+4, bottom: edgeInsets.bottom, right: edgeInsets.right+4)
-        super.drawText(in: rect.inset(by: textInsets))
-        self.sizeToFit()
-    }
-    
-    
     override var intrinsicContentSize: CGSize {
         var size = super.intrinsicContentSize
         
         size.width += edgeInsets.left + edgeInsets.right
         size.height += edgeInsets.top + edgeInsets.bottom
         return size
+    }
+    
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let borderLayer = CAShapeLayer()
+        // draw border
+        let linewidth: CGFloat = 3.0
+        let borderLineInsets = UIEdgeInsets(top: linewidth/2, left: linewidth/2, bottom: linewidth/2, right: linewidth/2)
+        borderLayer.frame = CGRect(x: self.bounds.origin.x-edgeInsets.left,
+                                   y: self.bounds.origin.y-edgeInsets.top,
+                                   width: self.bounds.width + edgeInsets.left + edgeInsets.right,
+                                   height: self.bounds.height + edgeInsets.top + edgeInsets.bottom)
+        let borderLine = UIBezierPath(roundedRect: borderLayer.bounds.inset(by: borderLineInsets), cornerRadius: MIDCornerRadius.formalTextField)
+        
+        borderLayer.path = borderLine.cgPath
+        borderLayer.lineWidth = linewidth
+        let strokeColor = isInputAvailable ? validBorderColor : invalidBorderColor
+        borderLayer.strokeColor = strokeColor.cgColor
+        borderLayer.fillColor = UIColor.clear.cgColor
+        
+        layer.addSublayer(borderLayer)
     }
     
     

@@ -43,6 +43,7 @@
 		26780B8022F277D50094DA58 /* UpDownArrowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26780B7F22F277D50094DA58 /* UpDownArrowButton.swift */; };
 		26780B8422F295B80094DA58 /* BottomNavigationDrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26780B8322F295B80094DA58 /* BottomNavigationDrawerViewController.swift */; };
 		26780B8622F2ACA30094DA58 /* AnimateAuxilary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26780B8522F2ACA30094DA58 /* AnimateAuxilary.swift */; };
+		26780B8822F2C2310094DA58 /* StandardAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26780B8722F2C2310094DA58 /* StandardAttributes.swift */; };
 		26783CA322BF28F600E3D045 /* NewTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26783CA222BF28F600E3D045 /* NewTopicViewController.swift */; };
 		2679A4EC22910B5B00F57BF8 /* TimeLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2679A4EB22910B5B00F57BF8 /* TimeLineTableViewCell.swift */; };
 		268602C121D842AB0032EDCB /* AddReplyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268602C021D842AB0032EDCB /* AddReplyViewController.swift */; };
@@ -127,6 +128,7 @@
 		26780B7F22F277D50094DA58 /* UpDownArrowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpDownArrowButton.swift; sourceTree = "<group>"; };
 		26780B8322F295B80094DA58 /* BottomNavigationDrawerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNavigationDrawerViewController.swift; sourceTree = "<group>"; };
 		26780B8522F2ACA30094DA58 /* AnimateAuxilary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAuxilary.swift; sourceTree = "<group>"; };
+		26780B8722F2C2310094DA58 /* StandardAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardAttributes.swift; sourceTree = "<group>"; };
 		26783CA222BF28F600E3D045 /* NewTopicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTopicViewController.swift; sourceTree = "<group>"; };
 		2679A4EB22910B5B00F57BF8 /* TimeLineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineTableViewCell.swift; sourceTree = "<group>"; };
 		268602C021D842AB0032EDCB /* AddReplyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddReplyViewController.swift; sourceTree = "<group>"; };
@@ -411,6 +413,7 @@
 				2670ABCC2286CAB800A540DB /* DrawingHelperFunctions.swift */,
 				26780B8322F295B80094DA58 /* BottomNavigationDrawerViewController.swift */,
 				26780B8522F2ACA30094DA58 /* AnimateAuxilary.swift */,
+				26780B8722F2C2310094DA58 /* StandardAttributes.swift */,
 			);
 			path = CustomDefinitions;
 			sourceTree = "<group>";
@@ -660,6 +663,7 @@
 				2699EA6B228FEC7B0029FA37 /* ResourcesForAddPost.swift in Sources */,
 				269AAFF2223B8B7C0069EA06 /* SNSIDClass.swift in Sources */,
 				2699EA68228FB5790029FA37 /* ResourcesForPostDetails.swift in Sources */,
+				26780B8822F2C2310094DA58 /* StandardAttributes.swift in Sources */,
 				26C0C07921BF553600667E87 /* Account+CoreDataClass.swift in Sources */,
 				269AAFF0223B78190069EA06 /* StoredAccountInfos+CoreDataProperties.swift in Sources */,
 				26C0C05321BE888500667E87 /* AppDelegate.swift in Sources */,

@@ -45,10 +45,7 @@ import UIKit
     
 
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        // display background blured view
-        self.displayBackgroundBluredView()
-        
+        super.viewWillAppear(animated)        
         self.tableView.reloadData()
     }
     
@@ -56,6 +53,8 @@ import UIKit
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.animateToInitialPosition()
+        // set expandsion state to closed.
+        self.expansionState = .full
     }
 }
 
@@ -158,6 +157,11 @@ extension BottomNavigationDrawerInNewSnsidFinalConfirm {
         headerView.backgroundColor = UIColor.white
         // set stroke color for upDownIndicatorButton
         upDownIndicatorButton.completeInitWith(strokeColor: UIColor.primaryDarkColor)
+        
+        // set rounded corners to whole view
+        self.view.layer.cornerRadius = MIDCornerRadius.fullScreenView
+        self.view.layer.shadowOpacity = 0.4
+        self.view.layer.masksToBounds = true
     }
     
     
@@ -167,29 +171,26 @@ extension BottomNavigationDrawerInNewSnsidFinalConfirm {
     }
     
     
-    private func
-        displayBackgroundBluredView() {
-        // Init a blured view
-        let blurEffect = UIBlurEffect(style: .regular)
-        let visualEffectView = UIVisualEffectView(effect: blurEffect)
-        let bluredView = UIVisualEffectView(effect: blurEffect)
-        bluredView.contentView.addSubview(visualEffectView)
-        // Set its frame
-        bluredView.frame = UIScreen.main.bounds
-        visualEffectView.frame = UIScreen.main.bounds
-        // Insert below self.view
-        self.view.insertSubview(bluredView, at: 0)
-    }
+//    private func displayBackgroundBluredView() {
+//        // Init a blured view
+//        let blurEffect = UIBlurEffect(style: .regular)
+//        let visualEffectView = UIVisualEffectView(effect: blurEffect)
+//        let bluredView = UIVisualEffectView(effect: blurEffect)
+//        bluredView.contentView.addSubview(visualEffectView)
+//        // Set its frame
+//        bluredView.frame = UIScreen.main.bounds
+//        visualEffectView.frame = UIScreen.main.bounds
+//        // Insert below self.view
+//        self.view.insertSubview(bluredView, at: 0)
+//    }
     
     
     private func animateToInitialPosition() {
-        UIView.animate(withDuration: 0.4, animations: { [unowned self] in
+        UIView.animate(withDuration: UIView.UIMotionDuration.fast.rawValue, animations: { [unowned self] in
             // Change y origin to initial position
             let newYOrigin = self.resources.fullyExpandedHeight
             self.view.frame = CGRect(x: 0, y: newYOrigin, width: self.view.frame.width, height: self.view.frame.height)
         })
-        // set expandsion state to closed.
-        self.expansionState = .full
     }
     
     
@@ -220,7 +221,7 @@ extension BottomNavigationDrawerInNewSnsidFinalConfirm {
         let isExpanding = yVelocity < 0
         
         if case .ended = recognizer.state {
-            UIView.animate(withDuration: min(expectedDuration, 1.0), delay: 0.0, options: [.allowUserInteraction],
+            UIView.animate(withDuration: min(expectedDuration, UIView.UIMotionDuration.fast.rawValue), delay: 0.0, options: [.allowUserInteraction],
                 animations: { [self, isClosing, isExpanding] in
                     if isClosing {
                         self.view.frame = CGRect(x: 0, y: self.resources.closedHeight, width: self.view.frame.width, height: self.view.frame.height)

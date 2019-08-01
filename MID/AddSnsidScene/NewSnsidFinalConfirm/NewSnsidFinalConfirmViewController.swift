@@ -14,6 +14,7 @@ class NewSnsidFinalConfirmViewController: UIViewController {
     
     internal var resources: ResourcesForAddSnsidScene!
     private var bottomNavDrawer: BottomNavigationDrawerInNewSnsidFinalConfirm? = nil
+    private var overlayBluredView: UIVisualEffectView? = nil
     
 
     override func viewDidLoad() {
@@ -46,6 +47,14 @@ extension NewSnsidFinalConfirmViewController: UITableViewDelegate, UITableViewDa
 
 extension NewSnsidFinalConfirmViewController {
     private func showBottomNavigatinoDrawer(of type: BottomNavigationDrawerAttributesType) {
+        // display blured view
+        self.overlayBluredView = self.generateOverlayBluredView()
+        UIView.animate(withDuration: UIView.UIMotionDuration.quiteFast.rawValue) { [self] in
+            self.view.addSubview(self.overlayBluredView!)
+            // hide navigation bar
+            self.navigationController?.navigationBar.isHidden = true
+        }
+        
         /// Init bottom navigation drawer
         let newBottomNavDrawer = BottomNavigationDrawerInNewSnsidFinalConfirm()
         // Inheritate from the previous bottomNavDrawer
@@ -62,8 +71,19 @@ extension NewSnsidFinalConfirmViewController {
             let yOrigin: CGFloat = self.view.frame.maxY
             return CGRect(x: 0, y: yOrigin, width: width, height: height)
         }()
+        
         // set it to self's reference
         self.bottomNavDrawer = newBottomNavDrawer
+    }
+    
+    
+    private func generateOverlayBluredView() -> UIVisualEffectView {
+        // Init a blured view
+        let blurEffect = UIBlurEffect(style: .dark)
+        let bluredView = UIVisualEffectView(effect: blurEffect)
+        // Set its frame
+        bluredView.frame = UIScreen.main.bounds
+        return bluredView
     }
     
     

@@ -24,4 +24,14 @@ extension UIView {
             return 0.0
         }
     }
+    
+    
+    public enum UIMotionDuration: TimeInterval {
+        case superFast = 0.1
+        case quiteFast = 0.24
+        case fast = 0.3
+        case slow = 0.6
+        case quiteSlow = 0.72
+        case superSlow = 1.0
+    }
 }
