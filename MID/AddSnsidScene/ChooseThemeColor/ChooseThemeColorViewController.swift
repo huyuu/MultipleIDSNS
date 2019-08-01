@@ -25,17 +25,28 @@ class ChooseThemeColorViewController: UIViewController {
     }
     
     
+
+}
+
+
+
+// MARK: - Navigations
+
+extension ChooseThemeColorViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier! {
+        case resources.segueIdToFinalConfirm:
+            let destinationController = segue.destination as! NewSnsidFinalConfirmViewController
+            destinationController.resources = self.resources
+            
+        default:
+            break
+        }
+    }
+    
+    
     @IBAction func doneButtonDidTabbed(_ sender: Any) {
-        guard let resources = self.resources else { return }
-        
-//        SNSID(name: resources.newName,
-//              owner: resources.owner.name,
-//              ownerRef: resources.owner.ref,
-//              myPosts: nil,
-//              myReplies: nil,
-//              follows: nil,
-//              followers: nil,
-//              topics: <#T##JSONDATA#>, myLikes: <#T##JSONDATA?#>, focusingPosts: <#T##JSONDATA?#>, settings: <#T##JSONDATA#>)
+        self.performSegue(withIdentifier: resources.segueIdToFinalConfirm, sender: sender)
     }
 }
 

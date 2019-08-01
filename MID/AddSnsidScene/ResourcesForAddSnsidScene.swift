@@ -20,6 +20,7 @@ class ResourcesForAddSnsidScene: ProjectResource {
     let segueIdToSearchTopic = "searchTopic"
     let segueIdToChooseThemeColor = "chooseThemeColor"
     let segueIdToNewTopic = "newTopic"
+    let segueIdToFinalConfirm = "finalConfirm"
     var existingTopics: [Topic]! = nil
     
     
@@ -190,7 +191,24 @@ class ResourcesForAddSnsidScene: ProjectResource {
         return nil
     }
     var shouldScrollToCombinationCell: Bool = false
-
+    
+    
+    
+    // MARK: - Final Confirm Scene
+    
+    let finalConfirmCells = [FinalConfirmCellAttributes(of: .title),
+                             FinalConfirmCellAttributes(of: .icon),
+                             FinalConfirmCellAttributes(of: .information)]
+    var snsidIconImage: UIImage? = nil
+    var snsidDescription: String = ""
+    var bottomNavDrawerState: BottomNavigationDrawerViewController.ExpansionState = .closed
+    
+    
+    
+    // MARK: - Final Confirm Cell Bottom Navigation Drawer
+    
+    let fullyExpandedHeight: CGFloat = 100
+    let closedHeight: CGFloat = UIScreen.main.bounds.height - 60
     
     
     
@@ -389,10 +407,9 @@ struct NewTopicCellAttributes {
     let type: NewTopicCellAttributesType
     let reuseId: String
     
-    
     init(of type: NewTopicCellAttributesType) {
         self.type = type
-        
+        // for reuseId
         let commonString = "CellForNewTopic"
         switch type {
         case .title:
@@ -405,6 +422,63 @@ struct NewTopicCellAttributes {
             self.reuseId = "dummy\(commonString)"
         case .combination:
             self.reuseId = "combination\(commonString)"
+        }
+    }
+}
+
+
+
+// MAKR: - Final Confirm Cell Enum
+
+enum FinalConfirmCellAttributesType {
+    case title
+    case icon
+    case information
+}
+
+
+struct FinalConfirmCellAttributes {
+    let type: FinalConfirmCellAttributesType
+    let reuseId: String
+    
+    init(of type: FinalConfirmCellAttributesType) {
+        self.type = type
+        // for reuseId
+        let commonString = "CellForNewSnsidFinalConfirm"
+        switch type {
+        case .title:
+            self.reuseId = "title\(commonString)"
+        case .icon:
+            self.reuseId = "icon\(commonString)"
+        case .information:
+            self.reuseId = "information\(commonString)"
+        }
+    }
+}
+
+
+
+// MARK: - Bottom Navigation Drawer of Final Confirm
+
+enum BottomNavigationDrawerAttributesType {
+    case name
+    case description
+}
+
+
+struct BottomNavigationDrawerAttributes {
+    let type: BottomNavigationDrawerAttributesType
+    let reuseId: String
+    let cellAmount = 1
+    
+    init(of type: BottomNavigationDrawerAttributesType) {
+        self.type = type
+        let commonString = "CellForBottomNavigationDrawerOfNewSnsidFinalConfirm"
+        switch type {
+        case .name:
+            self.reuseId = "changingName\(commonString)"
+        case .description:
+            self.reuseId = "edittingDescription\(commonString)"
         }
     }
 }

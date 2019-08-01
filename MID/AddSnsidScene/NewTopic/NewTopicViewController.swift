@@ -277,7 +277,7 @@ extension NewTopicViewController: UIImagePickerControllerDelegate, UINavigationC
         if let pickedImage = info[.originalImage] as? UIImage {
             resources.newTopicIcon = pickedImage
         }
-        picker.dismiss(animated: true, completion: { 
+        picker.dismiss(animated: true, completion: { [unowned self] in
             self.refresh()
             self.tableView.scrollToRow(at: self.resources.indexPathOfDescriptionCellInNewTopicScene, at: .middle, animated: true)
             self.resources.descriptionTextViewShouldBecomeFirstResponder = true

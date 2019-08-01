@@ -80,16 +80,63 @@ extension CAShapeLayer {
     }
     
     
-    public static func drawNextPattern(in frame: CGRect) -> UIBezierPath {
+    public static func drawNextPattern(in frame: CGRect, direction: NextPatternDirection = .right) -> UIBezierPath {
         let path = UIBezierPath()
-        let startPoint = CGPoint(x: frame.width/3, y: frame.height/3)
-        let endPoint = CGPoint(x: frame.width/3, y: frame.height*2/3)
-        let middlePoint = CGPoint(x: frame.width*2/3, y: frame.height/2)
+        
+        let startPoint: CGPoint = {
+            switch direction {
+            case .up:
+                return CGPoint(x: frame.width/3, y: frame.height*2/3)
+            case .down:
+                return CGPoint(x: frame.width/3, y: frame.height/3)
+            case .left:
+                return CGPoint(x: frame.width*2/3, y: frame.height/3)
+            case .right:
+                return CGPoint(x: frame.width/3, y: frame.height/3)
+            case .level:
+                return CGPoint(x: frame.width/3, y: frame.height/2)
+            }
+        }()
+        
+        let middlePoint: CGPoint = {
+            switch direction {
+            case .up:
+                return CGPoint(x: frame.width/2, y: frame.height/3)
+            case .down:
+                return CGPoint(x: frame.width/2, y: frame.height*2/3)
+            case .left:
+                return CGPoint(x: frame.width/3, y: frame.height/2)
+            case .right:
+                return CGPoint(x: frame.width*2/3, y: frame.height/2)
+            case .level:
+                return CGPoint(x: frame.width/2, y: frame.height/2)
+            }
+        }()
+        
+        let endPoint: CGPoint = {
+            switch direction {
+            case .up:
+                return CGPoint(x: frame.width*2/3, y: frame.height*2/3)
+            case .down:
+                return CGPoint(x: frame.width*2/3, y: frame.height/3)
+            case .left:
+                return CGPoint(x: frame.width*2/3, y: frame.height*2/3)
+            case .right:
+                return CGPoint(x: frame.width/3, y: frame.height*2/3)
+            case .level:
+                return CGPoint(x: frame.width*2/3, y: frame.height/2)
+            }
+        }()
         
         path.move(to: startPoint)
         path.addLine(to: middlePoint)
         path.addLine(to: endPoint)
         return path
+    }
+    
+    
+    public enum NextPatternDirection {
+        case up, down, left, right, level
     }
 }
 
