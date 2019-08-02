@@ -49,31 +49,35 @@ extension NewSnsidFinalConfirmViewController {
     private func showBottomNavigatinoDrawer(of type: BottomNavigationDrawerAttributesType) {
         // display blured view
         self.overlayBluredView = self.generateOverlayBluredView()
-        UIView.animate(withDuration: UIView.UIMotionDuration.quiteFast.rawValue) { [self] in
+        UIView.animate(withDuration: Standards.UIMotionDuration.quiteFast) { [self] in
             self.view.addSubview(self.overlayBluredView!)
             // hide navigation bar
             self.navigationController?.navigationBar.isHidden = true
         }
         
         /// Init bottom navigation drawer
-        let newBottomNavDrawer = BottomNavigationDrawerInNewSnsidFinalConfirm()
-        // Inheritate from the previous bottomNavDrawer
-        newBottomNavDrawer.completeInitWith(resources: self.resources, type: type)
-        
-        /// Add as self's child
+        let newBottomNavDrawer = BottomNavigationDrawerInNewSnsidFinalConfirm(resources: self.resources, type: .name, origin: CGPoint(x: 0, y: self.view.frame.maxY), size: self.view.frame.size)
+        /// Add as self's child. Note that we'll handle animations of bottomNavDrawer in its own class.
         self.addChild(newBottomNavDrawer)
         self.view.addSubview(newBottomNavDrawer.view)
         newBottomNavDrawer.didMove(toParent: self)
-        /// Adjust BND's position and size
-        newBottomNavDrawer.view.frame = { [unowned self] in
-            let height = self.view.frame.height
-            let width = self.view.frame.width
-            let yOrigin: CGFloat = self.view.frame.maxY
-            return CGRect(x: 0, y: yOrigin, width: width, height: height)
-        }()
         
         // set it to self's reference
         self.bottomNavDrawer = newBottomNavDrawer
+    }
+
+    
+    internal func dismissBottomNavigationDrawer() {
+        // remove blured view from view hierarchy
+        self.overlayBluredView?.removeFromSuperview()
+        self.overlayBluredView = nil
+        // dismiss bottomNavDrawer
+        self.bottomNavDrawer?.standardDismiss(completion: {
+            // remove bottomNavDrawer from view hierarchy
+            self.bottomNavDrawer?.view.removeFromSuperview()
+            self.bottomNavDrawer?.removeFromParent()
+            self.bottomNavDrawer = nil
+        })
     }
     
     
@@ -83,6 +87,12 @@ extension NewSnsidFinalConfirmViewController {
         let bluredView = UIVisualEffectView(effect: blurEffect)
         // Set its frame
         bluredView.frame = UIScreen.main.bounds
+        // add gesture recognizer
+        bluredView.isUserInteractionEnabled = true
+        bluredView.addGestureRecognizer({
+            return UITapGestureRecognizer(target: self, action: #selector(bluredViewDidTap))
+        }() )
+        
         return bluredView
     }
     
@@ -105,6 +115,11 @@ extension NewSnsidFinalConfirmViewController {
         photoPicker.delegate = self
         self.present(photoPicker, animated: true, completion: nil)
     }
+    
+    
+    @objc func bluredViewDidTap() {
+        self.dismissBottomNavigationDrawer()
+    }
 }
 
 
@@ -115,12 +130,7 @@ extension NewSnsidFinalConfirmViewController {
     private func prepareForViewDidLoad() {
         tableView.allowsSelection = false
     }
-    
-    
-    private func prepareForViewWillLoad() {
-        
-    }
-    
+
     
     private func configureCell(_ cell: UITableViewCell, cellAttributes: FinalConfirmCellAttributes) {
         switch cellAttributes.type {

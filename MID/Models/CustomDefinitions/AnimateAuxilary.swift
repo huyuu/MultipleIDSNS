@@ -26,12 +26,26 @@ extension UIView {
     }
     
     
-    public enum UIMotionDuration: TimeInterval {
-        case superFast = 0.1
-        case quiteFast = 0.24
-        case fast = 0.3
-        case slow = 0.6
-        case quiteSlow = 0.72
-        case superSlow = 1.0
+    public func standardDismiss(completion: (() -> ())? = nil) {
+        UIView.animate(withDuration: Standards.UIMotionDuration.superFast,
+            animations: {
+                self.frame = CGRect(x: 0, y: BottomNavigationDrawerViewController.standardYPosition(at: .invisible), width: self.frame.width, height: self.frame.height)
+        }, completion: { _ in
+            completion?()
+        })
+        
+    }
+}
+
+
+
+extension UIViewController {
+    public func standardDismiss(completion: (() -> ())? = nil) {
+        UIView.animate(withDuration: Standards.UIMotionDuration.superFast,
+                       animations: {
+                        self.view.frame = CGRect(x: 0, y: BottomNavigationDrawerViewController.standardYPosition(at: .invisible), width: self.view.frame.width, height: self.view.frame.height)
+        }, completion: { _ in
+            completion?()
+        })
     }
 }

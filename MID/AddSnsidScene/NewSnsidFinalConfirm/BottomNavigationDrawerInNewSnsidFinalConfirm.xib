@@ -30,10 +30,10 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="40"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O1I-Dg-9lz" customClass="UpDownArrowButton" customModule="MID" customModuleProvider="target">
-                                    <rect key="frame" x="187" y="8" width="40" height="24"/>
+                                    <rect key="frame" x="171" y="8" width="72" height="24"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="24" id="QaK-qd-VP8"/>
-                                        <constraint firstAttribute="width" constant="40" id="Vnf-Tp-QGR"/>
+                                        <constraint firstAttribute="width" constant="72" id="Vnf-Tp-QGR"/>
                                     </constraints>
                                 </button>
                             </subviews>

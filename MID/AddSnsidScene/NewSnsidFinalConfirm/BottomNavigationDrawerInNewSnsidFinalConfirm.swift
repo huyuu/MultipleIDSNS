@@ -16,6 +16,9 @@ import UIKit
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var upDownIndicatorButton: UpDownArrowButton!
     
+    
+    // MARK: - Instances
+    
     internal var resources: ResourcesForAddSnsidScene!
     internal var type: BottomNavigationDrawerAttributesType? = nil
     
@@ -30,6 +33,8 @@ import UIKit
                     return .down
                 case .partial:
                     return .level
+                case .invisible:
+                    return .up
                 }
             }()
             // present it on upDownIndicatorButton whenever expansionState changed
@@ -37,6 +42,9 @@ import UIKit
         }
     }
     
+    
+    
+    // MARK: - View Actions
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,6 +63,22 @@ import UIKit
         self.animateToInitialPosition()
         // set expandsion state to closed.
         self.expansionState = .full
+    }
+    
+    
+    
+    // MARK: - Inits
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented in \(BottomNavigationDrawerInNewSnsidFinalConfirm.self).")
+    }
+    
+    
+    internal init(resources: ResourcesForAddSnsidScene, type: BottomNavigationDrawerAttributesType, origin: CGPoint, size: CGSize) {
+        super.init(nibName: nil, bundle: nil)
+        self.resources = resources
+        self.type = type
+        self.view.frame = CGRect(origin: origin, size: size)
     }
 }
 
@@ -159,15 +183,9 @@ extension BottomNavigationDrawerInNewSnsidFinalConfirm {
         upDownIndicatorButton.completeInitWith(strokeColor: UIColor.primaryDarkColor)
         
         // set rounded corners to whole view
-        self.view.layer.cornerRadius = MIDCornerRadius.fullScreenView
+        self.view.layer.cornerRadius = Standards.CornerRadius.fullScreenView
         self.view.layer.shadowOpacity = 0.4
         self.view.layer.masksToBounds = true
-    }
-    
-    
-    internal func completeInitWith(resources: ResourcesForAddSnsidScene, type: BottomNavigationDrawerAttributesType) {
-        self.resources = resources
-        self.type = type
     }
     
     
@@ -186,7 +204,7 @@ extension BottomNavigationDrawerInNewSnsidFinalConfirm {
     
     
     private func animateToInitialPosition() {
-        UIView.animate(withDuration: UIView.UIMotionDuration.fast.rawValue, animations: { [unowned self] in
+        UIView.animate(withDuration: Standards.UIMotionDuration.fast, animations: { [unowned self] in
             // Change y origin to initial position
             let newYOrigin = self.resources.fullyExpandedHeight
             self.view.frame = CGRect(x: 0, y: newYOrigin, width: self.view.frame.width, height: self.view.frame.height)
@@ -215,24 +233,38 @@ extension BottomNavigationDrawerInNewSnsidFinalConfirm {
         
         // Animate BottomNavDrawer
         
-        let yVelocity = recognizer.velocity(in: self.view).y
-        let expectedDuration = UIView.calculateDurationGivenYInfos(bottomPosition: resources.closedHeight, topPosition: resources.fullyExpandedHeight, currentPosition: self.view.frame.minY, velocity: yVelocity)
-        let isClosing = yVelocity > 0
-        let isExpanding = yVelocity < 0
-        
         if case .ended = recognizer.state {
-            UIView.animate(withDuration: min(expectedDuration, UIView.UIMotionDuration.fast.rawValue), delay: 0.0, options: [.allowUserInteraction],
-                animations: { [self, isClosing, isExpanding] in
-                    if isClosing {
-                        self.view.frame = CGRect(x: 0, y: self.resources.closedHeight, width: self.view.frame.width, height: self.view.frame.height)
-                        self.expansionState = .closed
-                    } else if isExpanding {
-                        self.view.frame = CGRect(x: 0, y: self.resources.fullyExpandedHeight, width: self.view.frame.width, height: self.view.frame.height)
+            
+            let yVelocity = recognizer.velocity(in: self.view).y
+            let expectedDuration = UIView.calculateDurationGivenYInfos(bottomPosition: resources.closedHeight, topPosition: resources.fullyExpandedHeight, currentPosition: self.view.frame.minY, velocity: yVelocity)
+            let isClosing = yVelocity > 0
+            let isExpanding = yVelocity < 0
+            
+            if isExpanding {
+                UIView.animate(withDuration: min(expectedDuration, Standards.UIMotionDuration.superFast), delay: 0.0, options: [.allowUserInteraction],
+                               animations: { [self] in
+                                self.view.frame = CGRect(x: 0, y: self.resources.fullyExpandedHeight, width: self.view.frame.width, height: self.view.frame.height)
+                                
+                    }, completion: { [unowned self] _ in
                         self.expansionState = .full
-                    }
-                }, completion: { [unowned self] _ in
-                    if isExpanding { self.tableView.isScrollEnabled = true }
-            })
+                        self.tableView.isScrollEnabled = true
+                })
+            } else if isClosing {
+                let parentViewController = self.parent as! NewSnsidFinalConfirmViewController
+                parentViewController.dismissBottomNavigationDrawer()
+            }
+//            UIView.animate(withDuration: min(expectedDuration, UIView.UIMotionDuration.superFast.rawValue), delay: 0.0, options: [.allowUserInteraction],
+//                animations: { [self, isClosing, isExpanding] in
+//                    if isClosing {
+//                        self.view.frame = CGRect(x: 0, y: BottomNavigationDrawerViewController.standardYPosition(at: .invisible),
+//                                                 width: self.view.frame.width, height: self.view.frame.height)
+//                    } else if isExpanding {
+//                        self.view.frame = CGRect(x: 0, y: self.resources.fullyExpandedHeight, width: self.view.frame.width, height: self.view.frame.height)
+//                    }
+//                }, completion: { [unowned self, isClosing, isExpanding] _ in
+//                    if isClosing { self.expansionState = .invisible } else if isExpanding { self.expansionState = .full }
+//                    if isExpanding { self.tableView.isScrollEnabled = true }
+//            })
         }
         // reset recognizer to zero
         recognizer.setTranslation(.zero, in: view)

@@ -50,7 +50,7 @@ class TextFieldWithIndicationBorder: UITextField {
                                    y: self.bounds.origin.y-edgeInsets.top,
                                    width: self.bounds.width + edgeInsets.left + edgeInsets.right,
                                    height: self.bounds.height + edgeInsets.top + edgeInsets.bottom)
-        let borderLine = UIBezierPath(roundedRect: borderLayer.bounds.inset(by: borderLineInsets), cornerRadius: MIDCornerRadius.formalTextField)
+        let borderLine = UIBezierPath(roundedRect: borderLayer.bounds.inset(by: borderLineInsets), cornerRadius: Standards.CornerRadius.formalTextField)
         
         borderLayer.path = borderLine.cgPath
         borderLayer.lineWidth = linewidth
