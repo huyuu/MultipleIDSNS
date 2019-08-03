@@ -19,6 +19,12 @@ class TextViewWithPlaceHolder: UITextView {
             setNeedsDisplay()
         }
     }
+    // update layout whenever text is set
+    override var text: String! {
+        didSet {
+            self.layoutAccordingTo(text)
+        }
+    }
     
 
     override func awakeFromNib() {
@@ -56,7 +62,7 @@ class TextViewWithPlaceHolder: UITextView {
     }
     
     
-    internal func updateAppearanceAccordingTo(_ text: String) {
+    internal func layoutAccordingTo(_ text: String) {
         placeHolderLabel.alpha = text.isEmpty ? 1 : 0
         self.setNeedsDisplay()
     }

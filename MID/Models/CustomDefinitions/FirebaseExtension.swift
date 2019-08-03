@@ -121,6 +121,10 @@ extension Database {
     public static func rootReference() -> DatabaseReference {
         return Database.database().reference()
     }
+    
+    public static let userTankReference: DatabaseReference = Database.database().reference().child("userTank")
+    public static let snsidTankReference: DatabaseReference = Database.database().reference().child("snsidTank")
+    public static let topicTankReference: DatabaseReference = Database.database().reference().child("topicTank")
 }
 
 

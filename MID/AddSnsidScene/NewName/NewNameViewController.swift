@@ -110,7 +110,7 @@ extension NewNameViewController {
             let errorDescriptionLabel = cell.viewWithTag(11) as! UILabel
             // set error description string
             errorDescriptionLabel.text = cellAttributes.content!
-            errorDescriptionLabel.textColor = resources.nameIsAvailable ? UIColor.white : UIColor.black
+            errorDescriptionLabel.textColor = resources.isNameAvailable ? UIColor.white : UIColor.black
 
         }
     }
@@ -119,17 +119,17 @@ extension NewNameViewController {
     private func updateLayerForIndication(_ layer: CALayer) {
         layer.cornerRadius = resources.cornerRadiusOfNewNameCell
         layer.borderWidth = resources.borderWidthOfNewNameCell
-        layer.borderColor = ResourcesForAddSnsidScene.indicatorColor(accordingTo: self.resources.nameIsAvailable).cgColor
+        layer.borderColor = ResourcesForAddSnsidScene.indicatorColor(accordingTo: self.resources.isNameAvailable).cgColor
         // reload tableView to show the error description string
         let indexPath = IndexPath(row: resources.rowOfErrorDescriptionCell, section: 0)
         tableView.reloadRows(at: [indexPath], with: .fade)
         // trigger On/Off of the doneButton
-        self.doneButton.isEnabled = resources.nameIsAvailable
+        self.doneButton.isEnabled = resources.isNameAvailable
     }
     
     
     @objc func doneButtonTabbed(_ sender: RoundedNextButton) {
-        if resources.nameIsAvailable {
+        if resources.isNameAvailable {
             // store new name
             resources.newName = resources.userInputForNewName
             self.performSegue(withIdentifier: resources.segueIdToSearchTopic, sender: nil)
@@ -160,6 +160,11 @@ extension NewNameViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        resources.userInputForNewName = textField.text ?? ""
     }
 }
 

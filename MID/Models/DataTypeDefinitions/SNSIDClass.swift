@@ -44,22 +44,41 @@ public class SNSID: DecodableFromFIRReference {
     
     
     /** Required init for DecodableFromFIRReference */
-    public required convenience init(fromJSON jsonData: JSONDATA) {
-        guard let name = jsonData["name"] as? String,
-            let owner = jsonData["owner"] as? String,
-            let ownerRef = jsonData["ownerRef"] as? String,
-            let myPosts = jsonData["myPosts"] as? JSONDATA?,
-            let myReplies = jsonData["myReplies"] as? JSONDATA?,
-            let follows = jsonData["follows"] as? JSONDATA?,
-            let followers = jsonData["followers"] as? JSONDATA?,
-            let topics = jsonData["topics"] as? JSONDATA,
-            let myLikes = jsonData["myLikes"] as? JSONDATA?,
-            let focusingPosts = jsonData["focusingPosts"] as? JSONDATA?,
-            let settings = jsonData["settings"] as? JSONDATA,
-            let _ = settings["themeColor"] as? String else {
-                raiseFatalError("KeyError When decoding to SNSID")
-                fatalError()
+    public required convenience init(fromJSON jsonData: JSONDATA) {        
+        let commonErrorString = "when creating SNSID instance"
+        
+        guard let name = jsonData["name"] as? String else {
+            raiseFatalError("KeyError: can't convert jsonData[name] to String \(commonErrorString).")
+            fatalError()
         }
+        
+        guard let owner = jsonData["owner"] as? String else {
+            raiseFatalError("KeyError: can't convert jsonData[owner] to String \(commonErrorString).")
+            fatalError()
+        }
+        
+        guard let ownerRef = jsonData["ownerRef"] as? String else {
+            raiseFatalError("KeyError: can't convert jsonData[ownerRef] to String \(commonErrorString).")
+            fatalError()
+        }
+        
+        guard let topics = jsonData["topics"] as? JSONDATA else {
+            raiseFatalError("KeyError: can't convert jsonData[topics] to JSONDATA \(commonErrorString).")
+            fatalError()
+        }
+        
+        guard let settings = jsonData["settings"] as? JSONDATA else {
+            raiseFatalError("KeyError: can't convert jsonData[settings] to JSONDATA \(commonErrorString).")
+            fatalError()
+        }
+        
+        let myPosts: JSONDATA? = jsonData["myPosts"] == nil ? nil : jsonData["myPosts"] as? JSONDATA
+        let myReplies: JSONDATA? = jsonData["myReplies"] == nil ? nil : jsonData["myReplies"] as? JSONDATA
+        let follows: JSONDATA? = jsonData["follows"] == nil ? nil : jsonData["follows"] as? JSONDATA
+        let followers: JSONDATA? = jsonData["followers"] == nil ? nil : jsonData["followers"] as? JSONDATA
+        let myLikes: JSONDATA? = jsonData["myLikes"] == nil ? nil : jsonData["myLikes"] as? JSONDATA
+        let focusingPosts: JSONDATA? = jsonData["focusingPosts"] == nil ? nil : jsonData["focusingPosts"] as? JSONDATA
+        
         self.init(name: name, owner: owner, ownerRef: ownerRef, myPosts: myPosts, myReplies: myReplies, follows: follows, followers: followers, topics: topics, myLikes: myLikes, focusingPosts: focusingPosts, settings: settings)
     }
 }
@@ -72,6 +91,7 @@ extension SNSID: EncodableToFIRReference {
         let returnJSON: JSONDATA = [
             "name": self.name,
             "owner": self.owner,
+            "ownerRef": self.ownerRef,
             "myPosts": self.myPosts?.expanded(),
             "myReplies": self.myReplies?.expanded(),
             "follows": self.follows?.expanded(),

@@ -34,6 +34,14 @@ class NewTopicViewController: UIViewController {
     
     /// Add new topic scene completed -> back to choose topics.
     @IBAction func doneButtonTabbed(_ sender: Any) {
+        // add topic to resources
+        var chosenTitles = resources.chosenTopicTitles
+        chosenTitles.append(resources.newTopicTitle!)
+        resources.chosenTopicsCell = [ SearchTopicCellAttributes(of: .chosenTopics(chosenTitles)) ]
+        // add new topic to container
+        resources.createdTopicTitles.append(resources.newTopicTitle!)
+        // clear user input
+        resources.userInputForSearchTopic = ""
         self.dismiss(animated: true, completion: nil)
     }
 }
@@ -81,7 +89,7 @@ extension NewTopicViewController: UITextViewDelegate {
         
         resources.userInputForNewTopicDescription = textView.textForStorage(newChar: text)
         let textViewWithPlaceHolder = textView as! TextViewWithPlaceHolder
-        textViewWithPlaceHolder.updateAppearanceAccordingTo(resources.userInputForNewTopicDescription)
+        textViewWithPlaceHolder.layoutAccordingTo(resources.userInputForNewTopicDescription)
         
         /**
          Their seems to be a bug that update tableView will automatically cause contentOffset set to zero. After try and errors, this seems to happen only when the tableView is scrolled down enough for the system to think that the current contentOffset can't be a proper value.

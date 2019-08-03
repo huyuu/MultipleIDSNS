@@ -109,15 +109,24 @@ extension BottomNavigationDrawerInNewSnsidFinalConfirm: UITableViewDelegate, UIT
 // MARK: - TextField Delegate
 
 extension BottomNavigationDrawerInNewSnsidFinalConfirm: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        resources.userInputForNewName = textField.textForStorage(newChar: string)
+        let textFieldWithIndicator = textField as! TextFieldWithIndicationBorder
+        textFieldWithIndicator.layoutAccodingTo(resources.isNameAvailable)
+
+        return true
+    }
     
-}
-
-
-
-// MARK: - TextView Delegate
-
-extension BottomNavigationDrawerInNewSnsidFinalConfirm: UITextViewDelegate {
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        resources.newName = textField.text ?? ""
+    }
 }
 
 
@@ -166,9 +175,6 @@ extension BottomNavigationDrawerInNewSnsidFinalConfirm {
         // register nib for Changing Name
         let nibForChangingName = UINib(nibName: "ChangingNameTableViewCellInBottomNavigationDrawer", bundle: nil)
         tableView.register(nibForChangingName, forCellReuseIdentifier: "changingNameCellForBottomNavigationDrawerOfNewSnsidFinalConfirm")
-        // register nib for Editting Description
-        let nibFOrEdittingDescription = UINib(nibName: "\(EdittingDescriptionTableViewCellInBottomNavigationDrawer.self)", bundle: nil)
-        tableView.register(nibFOrEdittingDescription, forCellReuseIdentifier: "edittingDescriptionCellForBottomNavigationDrawerOfNewSnsidFinalConfirm")
         // set tableView delegate
         tableView.delegate = self
         tableView.dataSource = self
@@ -189,20 +195,6 @@ extension BottomNavigationDrawerInNewSnsidFinalConfirm {
     }
     
     
-//    private func displayBackgroundBluredView() {
-//        // Init a blured view
-//        let blurEffect = UIBlurEffect(style: .regular)
-//        let visualEffectView = UIVisualEffectView(effect: blurEffect)
-//        let bluredView = UIVisualEffectView(effect: blurEffect)
-//        bluredView.contentView.addSubview(visualEffectView)
-//        // Set its frame
-//        bluredView.frame = UIScreen.main.bounds
-//        visualEffectView.frame = UIScreen.main.bounds
-//        // Insert below self.view
-//        self.view.insertSubview(bluredView, at: 0)
-//    }
-    
-    
     private func animateToInitialPosition() {
         UIView.animate(withDuration: Standards.UIMotionDuration.fast, animations: { [unowned self] in
             // Change y origin to initial position
@@ -214,21 +206,21 @@ extension BottomNavigationDrawerInNewSnsidFinalConfirm {
     
     @objc func scrollUpToCoverParentView(recognizer: UIPanGestureRecognizer) {
         
-//        // Calculate final position
-//
-//        let finalYOriginPosition: CGFloat = { [unowned self] in
-//            let translation = recognizer.translation(in: self.view)
-//            let currentYOrigin = self.view.frame.minY
-//            return currentYOrigin + translation.y
-//        }()
-//        // Bools for checking whether the final position is between closed and fully-expanded state.
-//        let isFinalYOriginAboveClosedPosition = finalYOriginPosition < resources.closedHeight
-//        let isFinalYOriginBelowFullyExpandedPosition = finalYOriginPosition > resources.fullyExpandedHeight
-//        // If the final yOrigin position is between closed and fully epanded position, mark the view as expandable and respond to pan gestures.
-//        if isFinalYOriginAboveClosedPosition && isFinalYOriginBelowFullyExpandedPosition {
-//            // scroll BottomNavDrawer
-//            view.frame = CGRect(x: 0, y: finalYOriginPosition, width: view.frame.width, height: view.frame.height)
-//        }
+        // Calculate final position
+
+        let finalYOriginPosition: CGFloat = { [unowned self] in
+            let translation = recognizer.translation(in: self.view)
+            let currentYOrigin = self.view.frame.minY
+            return currentYOrigin + translation.y
+        }()
+        // Bools for checking whether the final position is between closed and fully-expanded state.
+        let isFinalYOriginAboveClosedPosition = finalYOriginPosition < resources.closedHeight
+        let isFinalYOriginBelowFullyExpandedPosition = finalYOriginPosition > resources.fullyExpandedHeight
+        // If the final yOrigin position is between closed and fully epanded position, mark the view as expandable and respond to pan gestures.
+        if isFinalYOriginAboveClosedPosition && isFinalYOriginBelowFullyExpandedPosition {
+            // scroll BottomNavDrawer
+            view.frame = CGRect(x: 0, y: finalYOriginPosition, width: view.frame.width, height: view.frame.height)
+        }
         
         
         // Animate BottomNavDrawer
@@ -253,19 +245,8 @@ extension BottomNavigationDrawerInNewSnsidFinalConfirm {
                 let parentViewController = self.parent as! NewSnsidFinalConfirmViewController
                 parentViewController.dismissBottomNavigationDrawer()
             }
-//            UIView.animate(withDuration: min(expectedDuration, UIView.UIMotionDuration.superFast.rawValue), delay: 0.0, options: [.allowUserInteraction],
-//                animations: { [self, isClosing, isExpanding] in
-//                    if isClosing {
-//                        self.view.frame = CGRect(x: 0, y: BottomNavigationDrawerViewController.standardYPosition(at: .invisible),
-//                                                 width: self.view.frame.width, height: self.view.frame.height)
-//                    } else if isExpanding {
-//                        self.view.frame = CGRect(x: 0, y: self.resources.fullyExpandedHeight, width: self.view.frame.width, height: self.view.frame.height)
-//                    }
-//                }, completion: { [unowned self, isClosing, isExpanding] _ in
-//                    if isClosing { self.expansionState = .invisible } else if isExpanding { self.expansionState = .full }
-//                    if isExpanding { self.tableView.isScrollEnabled = true }
-//            })
         }
+        
         // reset recognizer to zero
         recognizer.setTranslation(.zero, in: view)
     }
@@ -276,12 +257,8 @@ extension BottomNavigationDrawerInNewSnsidFinalConfirm {
         case .name:
             let changingNameCell = cell as! ChangingNameTableViewCellInBottomNavigationDrawer
             
+            changingNameCell.nameTextField.delegate = self
             changingNameCell.nameTextField.text = resources.newName
-            
-        case .description:
-            let edittingDescriptionCell = cell as! EdittingDescriptionTableViewCellInBottomNavigationDrawer
-            
         }
     }
-    
 }

@@ -38,7 +38,7 @@ class ResourcesForAddSnsidScene: ProjectResource {
     }
     var numberOfNewNameCells: Int { return totalNewNameCells.count }
     var rowOfErrorDescriptionCell: Int { return numberOfNewNameCells-1 }
-    var nameIsAvailable: Bool {
+    var isNameAvailable: Bool {
         guard userInputForNewName != "" else { return false }
         let isAvailable = !( existingNames.map({ $0.lowercased() }).contains(userInputForNewName.lowercased()) )
         return isAvailable
@@ -127,12 +127,6 @@ class ResourcesForAddSnsidScene: ProjectResource {
     let cornerRadiusOfChosenTopicCell: CGFloat = 10.0
     let borderWidthOfChosenTopicCell: CGFloat = 2.0
     
-//    var chosenTopic: Topic {
-//        return self.chosenTopicTitles.map({ (topicTitle) -> Topic in
-//            Topic(title: topicTitle, adherents: )
-//        })
-//    }
-    
     
     
     // MARK: - Choose Theme Color
@@ -191,6 +185,7 @@ class ResourcesForAddSnsidScene: ProjectResource {
         return nil
     }
     var shouldScrollToCombinationCell: Bool = false
+    var createdTopicTitles: [String] = []
     
     
     
@@ -198,10 +193,20 @@ class ResourcesForAddSnsidScene: ProjectResource {
     
     let finalConfirmCells = [FinalConfirmCellAttributes(of: .title),
                              FinalConfirmCellAttributes(of: .icon),
-                             FinalConfirmCellAttributes(of: .information)]
+                             FinalConfirmCellAttributes(of: .information),
+                             FinalConfirmCellAttributes(of: .dummy)]
+    lazy var indexOfNameCellInFinalConfirm: IndexPath = {
+        for (index, cellAttributes) in self.finalConfirmCells.enumerated() {
+            if case .information = cellAttributes.type {
+                return IndexPath(row: index, section: 0)
+            }
+        }
+        return IndexPath(row: 2, section: 0) // shouldn't happen
+    }()
     var snsidIconImage: UIImage? = nil
-    var snsidDescription: String = ""
     var bottomNavDrawerState: BottomNavigationDrawerViewController.ExpansionState = .closed
+    let snsidDescriptionPlaceHolder = "Enter descriptions of your account."
+    var snsidDescription = ""
     
     
     
@@ -209,6 +214,8 @@ class ResourcesForAddSnsidScene: ProjectResource {
     
     let fullyExpandedHeight: CGFloat = 100
     let closedHeight: CGFloat = UIScreen.main.bounds.height - 60
+    
+    
     
     
     
@@ -330,6 +337,7 @@ class ResourcesForAddSnsidScene: ProjectResource {
     
     deinit {
         self.topicTankRef.removeAllObservers()
+        print("Resources if AddSnsid Scene is deinited. Wow :)")
     }
 }
 
@@ -434,6 +442,7 @@ enum FinalConfirmCellAttributesType {
     case title
     case icon
     case information
+    case dummy
 }
 
 
@@ -452,6 +461,8 @@ struct FinalConfirmCellAttributes {
             self.reuseId = "icon\(commonString)"
         case .information:
             self.reuseId = "information\(commonString)"
+        case .dummy:
+            self.reuseId = "dummy\(commonString)"
         }
     }
 }
@@ -462,7 +473,6 @@ struct FinalConfirmCellAttributes {
 
 enum BottomNavigationDrawerAttributesType {
     case name
-    case description
 }
 
 
@@ -477,8 +487,6 @@ struct BottomNavigationDrawerAttributes {
         switch type {
         case .name:
             self.reuseId = "changingName\(commonString)"
-        case .description:
-            self.reuseId = "edittingDescription\(commonString)"
         }
     }
 }

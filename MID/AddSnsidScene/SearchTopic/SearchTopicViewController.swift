@@ -21,6 +21,12 @@ class SearchTopicViewController: UIViewController, UITableViewDelegate, UITableV
         super.viewDidLoad()
         self.prepareForViewDidLoad()
     }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.prepareForViewWillAppear()
+    }
 
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -94,6 +100,11 @@ extension SearchTopicViewController {
         // set doneButton
         doneButton.addTarget(self, action: #selector(doneButtonTabbed), for: .touchUpInside)
         doneButton.isEnabled = false
+    }
+    
+    
+    private func prepareForViewWillAppear() {
+        self.tableView.reloadData()
     }
     
     

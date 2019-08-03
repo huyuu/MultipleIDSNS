@@ -7,19 +7,33 @@
 //
 
 import UIKit
+import Firebase
 
 class NewSnsidFinalConfirmViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var doneButton: RoundedNextButton!
     
     internal var resources: ResourcesForAddSnsidScene!
     private var bottomNavDrawer: BottomNavigationDrawerInNewSnsidFinalConfirm? = nil
     private var overlayBluredView: UIVisualEffectView? = nil
+    private var textView: TextViewWithPlaceHolder!
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.prepareForViewDidLoad()
+    }
+    
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    
+    @IBAction func doneButtonDidTap(_ sender: Any) {
+        self.updateDatabase()
+        self.navigationController!.popToRootViewController(animated: true)
     }
 }
 
@@ -38,6 +52,60 @@ extension NewSnsidFinalConfirmViewController: UITableViewDelegate, UITableViewDa
         
         self.configureCell(cell, cellAttributes: cellAttributes)
         return cell
+    }
+}
+
+
+
+// MARK: - TextView Delegate
+
+extension NewSnsidFinalConfirmViewController: UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        // if textView should return, resignFirstResponder.
+        guard text != "\n" else {
+            textView.resignFirstResponder()
+            return true
+        }
+        
+        resources.snsidDescription = textView.textForStorage(newChar: text)
+        let textViewWithPlaceHolder = textView as! TextViewWithPlaceHolder
+        textViewWithPlaceHolder.layoutAccordingTo(resources.snsidDescription)
+        
+        tableView.beginUpdates()
+        tableView.endUpdates()
+        
+        return true
+    }
+    
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        resources.snsidDescription = textView.text ?? ""
+    }
+    
+    
+    @objc func adjustForKeyboard(when notification: Notification) {
+        guard let keyboardScreenFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+        // bottomNavDrawer is in the front view
+        guard self.bottomNavDrawer == nil else { return }
+
+        switch notification.name {
+        case UIResponder.keyboardWillChangeFrameNotification:
+            fallthrough
+        case UIResponder.keyboardWillShowNotification:
+            let keyboardViewFrame = tableView.convert(keyboardScreenFrame, from: view.window)
+            let textViewFrame = self.textView.convert(self.textView.frame, to: tableView)
+            
+            let currentTextViewLowerBound = textViewFrame.origin.y + textViewFrame.height
+            let keyboardUpperBound = keyboardViewFrame.origin.y
+            
+            if currentTextViewLowerBound >= keyboardUpperBound {
+                let adjustment = currentTextViewLowerBound - keyboardUpperBound
+                tableView.contentOffset.y += adjustment
+            }
+            
+        default:
+            break
+        }
     }
 }
 
@@ -71,8 +139,12 @@ extension NewSnsidFinalConfirmViewController {
         // remove blured view from view hierarchy
         self.overlayBluredView?.removeFromSuperview()
         self.overlayBluredView = nil
+        // show navigation bar
+        self.navigationController?.navigationBar.isHidden = false
         // dismiss bottomNavDrawer
         self.bottomNavDrawer?.standardDismiss(completion: {
+            // reload name label
+            self.tableView.reloadRows(at: [self.resources.indexOfNameCellInFinalConfirm], with: .automatic)
             // remove bottomNavDrawer from view hierarchy
             self.bottomNavDrawer?.view.removeFromSuperview()
             self.bottomNavDrawer?.removeFromParent()
@@ -102,11 +174,6 @@ extension NewSnsidFinalConfirmViewController {
     }
     
     
-    @objc func descriptionLabelDidTap() {
-        showBottomNavigatinoDrawer(of: .description)
-    }
-    
-    
     @objc func iconImageDidTap() {
         guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else { return }
         
@@ -129,6 +196,9 @@ extension NewSnsidFinalConfirmViewController {
 extension NewSnsidFinalConfirmViewController {
     private func prepareForViewDidLoad() {
         tableView.allowsSelection = false
+        // Add observer for keyboard
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard(when:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard(when:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
 
     
@@ -145,23 +215,79 @@ extension NewSnsidFinalConfirmViewController {
             iconImageView.addGestureRecognizer(tapGesture)
             
             // Show icon image
-            iconImageView.image = resources.snsidIconImage
+            iconImageView.backgroundColor = UIColor.primaryColor
+            iconImageView.clipsToBounds = true
+            iconImageView.layer.contents = resources.snsidIconImage
+            CALayer.roundCornersAndAddShadow(shadowLayer: iconImageView.layer, contentsLayer: iconImageView.layer, of: .RoundIconImageView, cornerRadius: iconImageView.bounds.width)
+            
             
         case .information:
             let nameLabel = cell.viewWithTag(11) as! UILabel
-            let descriptionLabel = cell.viewWithTag(12) as! UILabel
+            let descriptionTextView = cell.viewWithTag(12) as! TextViewWithPlaceHolder
             // Add tap gestures
             nameLabel.isUserInteractionEnabled = true
             nameLabel.addGestureRecognizer({
                 return UITapGestureRecognizer(target: self, action: #selector(nameLabelDidTap))
             }() )
-            descriptionLabel.isUserInteractionEnabled = true
-            descriptionLabel.addGestureRecognizer({
-                return UITapGestureRecognizer(target: self, action: #selector(descriptionLabelDidTap))
-            }() )
+            // init description text view
+            descriptionTextView.delegate = self
+            self.textView = descriptionTextView
+            
             // Show contents
             nameLabel.text = resources.newName
-            descriptionLabel.text = resources.snsidDescription
+            descriptionTextView.placeHolder = resources.snsidDescriptionPlaceHolder
+            descriptionTextView.text = resources.snsidDescription
+            
+        case .dummy:
+            break
+        }
+    }
+    
+    
+    private func updateDatabase() {
+        guard let resources = self.resources,
+            let name = resources.newName,
+            !resources.chosenTopicTitles.isEmpty else { return }
+        
+        let runQueue = DispatchQueue.global()
+        runQueue.async {
+            let newSnsidIdentifier = "\(resources.owner.email)&&\(name)"
+            let newSnsidURL = "\(Database.snsidTankReference)/\(newSnsidIdentifier)"
+            let topicRefs: JSONDATA = {
+                var json = JSONDATA()
+                for title in resources.chosenTopicTitles {
+                    json["\(title)"] = ["ref": newSnsidURL]
+                }
+                return json
+            }()
+            
+            let newSnsid = SNSID(name: name,
+                                 owner: resources.owner.email,
+                                 ownerRef: resources.owner.ref,
+                                 myPosts: nil,
+                                 myReplies: nil,
+                                 follows: nil,
+                                 followers: nil,
+                                 topics: topicRefs,
+                                 myLikes: nil,
+                                 focusingPosts: nil,
+                                 settings: ["themeColor": resources.themeColor.toHexString()])
+            
+            // add newSnsid in snsidTank
+            newSnsidURL.getFIRDatabaseReference.setValue(newSnsid.toJSON())
+            // add new child to user
+            resources.owner.ref.getFIRDatabaseReference.child("snsids").child(name).setValue(["ref": newSnsidURL])
+            // add new topics
+            resources.createdTopicTitles.forEach { (title) in
+                Database.topicTankReference.child(title).setValue(
+                    ["title": title, "adherents": ["ref": newSnsidURL]]
+                )
+            }
+            // add adherent to existing topics
+            resources.chosenTopicTitles.forEach { (title) in
+                Database.topicTankReference.child(title).child("adherents").child(newSnsidIdentifier)
+                    .setValue(["ref": newSnsidURL])
+            }
         }
     }
 }

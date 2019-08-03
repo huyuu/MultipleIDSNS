@@ -11,8 +11,8 @@ import UIKit
 @IBDesignable
 class TextFieldWithIndicationBorder: UITextField {
 
-    private var isInputAvailable = false
-    private let validBorderColor = UIColor.green
+    private var isInputAvailable = true
+    private let validBorderColor = UIColor.correctColor
     private let invalidBorderColor = UIColor.errorBackgroundColor
     
     private let edgeInsets = UIEdgeInsets(top: 8, left: 24, bottom: 8, right: 24)

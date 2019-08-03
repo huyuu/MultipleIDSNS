@@ -18,10 +18,10 @@ public struct Standards {
     
     enum UIMotionDuration {
         static let superFast = 0.11
-        static let quiteFast = 0.32
-        static let fast = 0.4
-        static let slow = 0.6
-        static let quiteSlow = 0.72
+        static let quiteFast = 0.24
+        static let fast = 0.3
+        static let slow = 0.5
+        static let quiteSlow = 0.6
         static let superSlow = 1.0
     }
 }

@@ -14,16 +14,16 @@ import UIKit
 extension CALayer {
     
     /// Public func for rounding corers and  adding shadow. The caller should select a cell type.
-    public static func roundCornersAndAddShadow(shadowLayer: CALayer, contentsLayer: CALayer, of cellType: ShadowType, shadowColor: UIColor=UIColor.black) {
+    public static func roundCornersAndAddShadow(shadowLayer: CALayer, contentsLayer: CALayer, of cellType: ShadowType, cornerRadius: CGFloat?=nil, shadowColor: UIColor=UIColor.black) {
         switch cellType {
         case .MainScrollViewCell:
             self.roundCornersAndAddShadow(shadowLayer: shadowLayer, contentsLayer: contentsLayer, cornerRadius: 50.0, borderWidth: 0.01, shadowOpacity: 0.2, shadowOffset: 7.0, shadowRadius: 5.0, shadowColor: shadowColor)
             
-            
         case .SearchResultCell:
             self.roundCornersAndAddShadow(shadowLayer: shadowLayer, contentsLayer: contentsLayer, cornerRadius: 20.0, borderWidth: 0.01, shadowOpacity: 0, shadowOffset: 0, shadowRadius: 0, shadowColor: UIColor.clear)
             
-            
+        case .RoundIconImageView:
+            self.roundCornersAndAddShadow(shadowLayer: shadowLayer, contentsLayer: contentsLayer, cornerRadius: cornerRadius!, borderWidth: 0, shadowOpacity: 0.2, shadowOffset: 0, shadowRadius: cornerRadius!, shadowColor: shadowColor)
         }
     }
     
@@ -54,6 +54,7 @@ extension CALayer {
 public enum ShadowType {
     case MainScrollViewCell
     case SearchResultCell
+    case RoundIconImageView
 }
 
 
@@ -167,6 +168,7 @@ extension UIColor {
     public static let textOnSecondaryColor = UIColor("#000000")!
     public static let errorBackgroundColor = UIColor("#B00020")!
     public static let textOnErrorColor = UIColor.white
+    public static let correctColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
     
     
     public var rgbComponents: (red: CGFloat, blue: CGFloat, green: CGFloat) {
@@ -217,6 +219,18 @@ extension UIColor {
     
     public var brightnessComponent: CGFloat {
         return hueComponents.brightness
+    }
+    
+    
+    public func toHexString() -> String {
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        getRed(&r, green: &g, blue: &b, alpha: &a)
+        
+        let rgb = (Int)(r*255)<<16 | (Int)(g*255)<<8 | (Int)(b*255)<<0
+        return String(format: "#%06x", rgb)
     }
     
     
