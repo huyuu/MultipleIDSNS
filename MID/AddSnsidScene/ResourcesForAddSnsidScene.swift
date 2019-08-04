@@ -203,6 +203,14 @@ class ResourcesForAddSnsidScene: ProjectResource {
         }
         return IndexPath(row: 2, section: 0) // shouldn't happen
     }()
+    lazy var indexOfIconCellInFinalConfirm: IndexPath = {
+        for (index, cellAttributes) in self.finalConfirmCells.enumerated() {
+            if case .icon = cellAttributes.type {
+                return IndexPath(row: index, section: 0)
+            }
+        }
+        return IndexPath(row: 1, section: 0) // shouldn't happen
+    }()
     var snsidIconImage: UIImage? = nil
     var bottomNavDrawerState: BottomNavigationDrawerViewController.ExpansionState = .closed
     let snsidDescriptionPlaceHolder = "Enter descriptions of your account."

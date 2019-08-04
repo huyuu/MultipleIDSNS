@@ -300,7 +300,8 @@ extension NewSnsidFinalConfirmViewController: UIImagePickerControllerDelegate, U
             resources.snsidIconImage = pickedImage
         }
         picker.dismiss(animated: true, completion: { [unowned self] in
-            self.tableView.reloadData()
+            // reload icon cell
+            self.tableView.reloadRows(at: [self.resources.indexOfIconCellInFinalConfirm], with: .automatic)
         })
     }
 }
