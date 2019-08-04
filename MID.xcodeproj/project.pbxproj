@@ -13,6 +13,7 @@
 		261DFD8A22AB3B36000B6733 /* NewNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261DFD8922AB3B36000B6733 /* NewNameViewController.swift */; };
 		261DFD8C22AB49B1000B6733 /* AvailabilityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261DFD8B22AB49B1000B6733 /* AvailabilityIndicatorView.swift */; };
 		261DFD8E22AB5854000B6733 /* SearchTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261DFD8D22AB5854000B6733 /* SearchTopicViewController.swift */; };
+		262255E522F6578100F674A8 /* ViewWithRoundedCornersAndShadowImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262255E422F6578100F674A8 /* ViewWithRoundedCornersAndShadowImage.swift */; };
 		2625DBFC22409315002DC051 /* AddSNSIDViewControllerNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2625DBFB22409315002DC051 /* AddSNSIDViewControllerNew.swift */; };
 		2625DBFE2240D1E4002DC051 /* TopicClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2625DBFD2240D1E4002DC051 /* TopicClass.swift */; };
 		2625DC0222424BC4002DC051 /* AddTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2625DC0122424BC4002DC051 /* AddTopicViewController.swift */; };
@@ -96,6 +97,7 @@
 		261DFD8922AB3B36000B6733 /* NewNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNameViewController.swift; sourceTree = "<group>"; };
 		261DFD8B22AB49B1000B6733 /* AvailabilityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailabilityIndicatorView.swift; sourceTree = "<group>"; };
 		261DFD8D22AB5854000B6733 /* SearchTopicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTopicViewController.swift; sourceTree = "<group>"; };
+		262255E422F6578100F674A8 /* ViewWithRoundedCornersAndShadowImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewWithRoundedCornersAndShadowImage.swift; sourceTree = "<group>"; };
 		2625DBFB22409315002DC051 /* AddSNSIDViewControllerNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSNSIDViewControllerNew.swift; sourceTree = "<group>"; };
 		2625DBFD2240D1E4002DC051 /* TopicClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicClass.swift; sourceTree = "<group>"; };
 		2625DC0122424BC4002DC051 /* AddTopicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTopicViewController.swift; sourceTree = "<group>"; };
@@ -271,6 +273,7 @@
 				2643799D22F0FECF0055752E /* ChangingNameTableViewCellInBottomNavigationDrawer.xib */,
 				26C1DA3322EEE71700748FBC /* TextFieldWithIndicationBorder.swift */,
 				26780B7F22F277D50094DA58 /* UpDownArrowButton.swift */,
+				262255E422F6578100F674A8 /* ViewWithRoundedCornersAndShadowImage.swift */,
 			);
 			path = NewSnsidFinalConfirm;
 			sourceTree = "<group>";
@@ -617,6 +620,7 @@
 				26740CF122B5B36F0037B63D /* ColorContainerView.swift in Sources */,
 				268FF2CC227E518B0016C82A /* MainTableViewCell.swift in Sources */,
 				26E5571421C0AEF6000604DE /* TimeLineTableViewController.swift in Sources */,
+				262255E522F6578100F674A8 /* ViewWithRoundedCornersAndShadowImage.swift in Sources */,
 				26C0C07A21BF553600667E87 /* Account+CoreDataProperties.swift in Sources */,
 				26CC29482243CAEE00BADC49 /* MID.xcdatamodeld in Sources */,
 				26C0C06A21BE8A0400667E87 /* Main0TableViewController.swift in Sources */,

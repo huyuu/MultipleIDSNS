@@ -174,7 +174,7 @@ extension NewSnsidFinalConfirmViewController {
     }
     
     
-    @objc func iconImageDidTap() {
+    @objc func iconViewDidTap() {
         guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else { return }
         
         let photoPicker = UIImagePickerController()
@@ -208,17 +208,14 @@ extension NewSnsidFinalConfirmViewController {
             let titleLabel = cell.viewWithTag(11) as! UILabel
             
         case .icon:
-            let iconImageView = cell.viewWithTag(11) as! UIImageView
+            let iconView = cell.viewWithTag(11) as! ViewWithRoundedCornersAndShadowImage
             // Add tap gesture
-            iconImageView.isUserInteractionEnabled = true
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(iconImageDidTap))
-            iconImageView.addGestureRecognizer(tapGesture)
+            iconView.isUserInteractionEnabled = true
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(iconViewDidTap))
+            iconView.addGestureRecognizer(tapGesture)
             
             // Show icon image
-            iconImageView.backgroundColor = UIColor.primaryColor
-            iconImageView.clipsToBounds = true
-            iconImageView.layer.contents = resources.snsidIconImage
-            CALayer.roundCornersAndAddShadow(shadowLayer: iconImageView.layer, contentsLayer: iconImageView.layer, of: .RoundIconImageView, cornerRadius: iconImageView.bounds.width)
+            iconView.layoutWith(image: resources.snsidIconImage)
             
             
         case .information:

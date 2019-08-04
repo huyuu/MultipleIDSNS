@@ -244,6 +244,10 @@ extension SearchTopicViewController: UITextFieldDelegate {
         self.refresh()
         return true
     }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        resources.userInputForSearchTopic = textField.text ?? ""
+    }
 }
 
 
