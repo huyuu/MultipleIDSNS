@@ -215,7 +215,7 @@ extension NewSnsidFinalConfirmViewController {
             iconView.addGestureRecognizer(tapGesture)
             
             // Show icon image
-            iconView.layoutWith(image: resources.snsidIconImage)
+            iconView.layoutWith(image: resources.snsidIconImage, cornerRadius: nil, baseColor: UIColor.primaryLightColor, accentColor: UIColor.white, shouldHideShadowAtDefault: true, shouldShowCameraPatternAtDefault: true)
             
             
         case .information:

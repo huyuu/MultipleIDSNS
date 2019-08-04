@@ -139,6 +139,44 @@ extension CAShapeLayer {
     public enum NextPatternDirection {
         case up, down, left, right, level
     }
+    
+    
+    public static func drawCameraPattern(in frame: CGRect) -> (UIBezierPath, UIBezierPath) {
+        // general
+        let center = CGPoint(x: frame.midX, y: frame.midY)
+        let edge = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
+        
+        // set camera outside frame
+        let topEdgeForFlash = UIEdgeInsets(top: frame.height/8, left: 0, bottom: 0, right: 0)
+        let cornerRadius: CGFloat = (frame.width - edge.left - edge.right)/9
+        let shellRect = frame.inset(by: edge).inset(by: topEdgeForFlash)
+        let shell = UIBezierPath(roundedRect: shellRect, cornerRadius: cornerRadius)
+        
+        let shellWidth = frame.inset(by: edge).width
+        let leftBottomPoint = CGPoint(x: frame.minX + edge.left + shellWidth/4,
+                                      y: frame.minY + edge.top + topEdgeForFlash.top)
+        let rightBottomPoint = CGPoint(x: frame.minX + edge.left + shellWidth/4*3,
+                                       y: frame.minY + edge.top + topEdgeForFlash.top)
+        let leftTopPoint = CGPoint(x: frame.minX + edge.left + shellWidth/3,
+                                   y: frame.minY + edge.top)
+        let rightTopPoint = CGPoint(x: frame.minX + edge.left + shellWidth/3*2,
+                                    y: frame.minY + edge.top)
+        
+        shell.move(to: leftBottomPoint)
+        shell.addLine(to: leftTopPoint)
+        shell.addLine(to: rightTopPoint)
+        shell.addLine(to: rightBottomPoint)
+        shell.close()
+        
+        shell.lineJoinStyle = .round
+        
+        // set center circle
+        let radius = frame.width/5*2 / 2
+        let circle = UIBezierPath(arcCenter: CGPoint(x: shellRect.midX, y: shellRect.midY), radius: radius, startAngle: 0, endAngle: CGFloat.pi*2, clockwise: true)
+        circle.lineWidth = 4.0
+        
+        return (shell, circle)
+    }
 }
 
 
