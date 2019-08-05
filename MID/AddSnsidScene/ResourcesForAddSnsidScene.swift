@@ -25,8 +25,15 @@ class ResourcesForAddSnsidScene: ProjectResource {
     
     
     
+    // MARK: - Container
+    
+    let nextSceneObserverKey = "nextScene"
+    
+    
+    
     // MARK: - New Name TableView Configuration
     
+    let pageIndexOfNewName = 0
     private var staticNewNameCells = [ NewNameCellAttributes(of: .title, content: "New Name"),
                          NewNameCellAttributes(of: .name, content: "Enter the name") ]
     private var errorDescriptionCells = [ NewNameCellAttributes(of: .errorDescription, content: "Name already exists or is blank.") ]
@@ -37,17 +44,14 @@ class ResourcesForAddSnsidScene: ProjectResource {
         return newValue
     }
     var numberOfNewNameCells: Int { return totalNewNameCells.count }
-    var rowOfErrorDescriptionCell: Int { return numberOfNewNameCells-1 }
+    var rowNumberOfErrorDescriptionCell: Int { return numberOfNewNameCells-1 }
     var isNameAvailable: Bool {
-        guard userInputForNewName != "" else { return false }
+        guard !userInputForNewName.isEmpty else { return false }
         let isAvailable = !( existingNames.map({ $0.lowercased() }).contains(userInputForNewName.lowercased()) )
         return isAvailable
     }
     /// is the only property should be set
     var userInputForNewName: String = ""
-    let textFieldBorderWidth: CGFloat = 1.5
-    let borderWidthOfNewNameCell: CGFloat = 4.0
-    let cornerRadiusOfNewNameCell: CGFloat = 20.0
     /// should be set before segue to searchTopic
     var newName: String!
     
@@ -55,11 +59,12 @@ class ResourcesForAddSnsidScene: ProjectResource {
     
     // MARK: - Search Topic TableView Configuration
     
+    let pageIndexOfSearchTopic = 1
     var numberOfSearchTopicCells: Int { return totalSearchTopicCells.count }
-    var staticSearchTopicCells = [ SearchTopicCellAttributes(of: .title("Search Topic")),
+    private var staticSearchTopicCells = [ SearchTopicCellAttributes(of: .title("Search Topic")),
                              SearchTopicCellAttributes(of: .searchBar(placeHolderString: "Searching Topics...")) ]
     var chosenTopicsCell: [SearchTopicCellAttributes] = []
-    var searchResultCells: [SearchTopicCellAttributes] {
+    private var searchResultCells: [SearchTopicCellAttributes] {
         /// get matchedTopics
         let matchedTopics = existingTopics.filter({ $0.title.lowercased().contains(userInputForSearchTopic.lowercased()) })
         // asign it to searResultCells
@@ -75,11 +80,19 @@ class ResourcesForAddSnsidScene: ProjectResource {
         newValue.append(contentsOf: searchResultCells)
         return newValue
     }
+    var indicesBelowSearchTopicBar: [IndexPath] {
+        var indices: [IndexPath] = []
+        for (index, attributes) in totalSearchTopicCells.enumerated() {
+            if case .title(_) = attributes.type { continue }
+            else {
+                indices.append(IndexPath(row: index, section: 0))
+            }
+        }
+        return indices
+    }
     /// this is the only property should be set
     var userInputForSearchTopic = ""
     let edgesOfSearchResultCell = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
-    let cornerRadiusOfSearchResultCell: CGFloat = 20.0
-    let borderWidthOfSearchResultCell: CGFloat = 2.0
     /// use this property to judge whether topics are acceptible
     var topicsAreAcceptibale: Bool {
         return chosenTopicTitles.count > 0 ? true : false
@@ -124,13 +137,11 @@ class ResourcesForAddSnsidScene: ProjectResource {
     let minLineSpacing: CGFloat = 5.0
     let heightForItem: CGFloat = 30.0
     
-    let cornerRadiusOfChosenTopicCell: CGFloat = 10.0
-    let borderWidthOfChosenTopicCell: CGFloat = 2.0
-    
     
     
     // MARK: - Choose Theme Color
     
+    let pageIndexOfChooseThemeColor = 2
     var themeColor: UIColor = UIColor.placeHolderForThemeColor
     let pieces: Int = 6
     var colorUnitPositions: [ColorUnitPositionInfo]!
@@ -191,6 +202,7 @@ class ResourcesForAddSnsidScene: ProjectResource {
     
     // MARK: - Final Confirm Scene
     
+    let pageIndexOfFinalConfirm = 3
     let finalConfirmCells = [FinalConfirmCellAttributes(of: .title),
                              FinalConfirmCellAttributes(of: .icon),
                              FinalConfirmCellAttributes(of: .information),
@@ -345,32 +357,35 @@ class ResourcesForAddSnsidScene: ProjectResource {
     
     deinit {
         self.topicTankRef.removeAllObservers()
-        print("Resources if AddSnsid Scene is deinited. Wow :)")
+        print("Resources of AddSnsid Scene is deinited. Wow :)")
+    }
+    
+    
+    
+    // MARK: - NewNameCellAttributes
+    
+    enum NewNameCellAttributesType: String {
+        case title
+        case name
+        case errorDescription
+    }
+    
+    struct NewNameCellAttributes {
+        let content: String
+        let type: NewNameCellAttributesType
+        let reuseId: String
+        
+        init(of type: NewNameCellAttributesType, content: String="") {
+            self.content = content
+            self.type = type
+            self.reuseId = "\(type.rawValue)CellForNewName"
+        }
     }
 }
 
 
 
-// MARK: - NewNameCellAttributes
 
-enum NewNameCellAttributesType: String {
-    case title
-    case name
-    case errorDescription
-}
-
-
-struct NewNameCellAttributes {
-    var content: String? = nil
-    let type: NewNameCellAttributesType
-    lazy var reuseId: String = { return "\(type.rawValue)CellForNewName" }()
-    
-    
-    init(of type: NewNameCellAttributesType, content: String?=nil) {
-        self.content = content
-        self.type = type
-    }
-}
 
 
 

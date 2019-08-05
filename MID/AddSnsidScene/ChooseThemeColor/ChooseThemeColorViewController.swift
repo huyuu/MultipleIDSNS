@@ -9,14 +9,14 @@
 import UIKit
 
 @IBDesignable
-class ChooseThemeColorViewController: UIViewController {
+class ChooseThemeColorViewController: UIViewController, AddSnsidSceneController {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var colorPlateScrollView: ColorPlateScrollView!
-    @IBOutlet weak var doneButton: RoundedNextButton!
     @IBOutlet weak var colorContainerView: ColorContainerView!
     
-    internal var resources: ResourcesForAddSnsidScene!
+    internal weak var resources: ResourcesForAddSnsidScene!
+    internal weak var containerViewController: AddSnsidContainerViewController?
     
     
     override func viewDidLoad() {
@@ -25,28 +25,10 @@ class ChooseThemeColorViewController: UIViewController {
     }
     
     
-
-}
-
-
-
-// MARK: - Navigations
-
-extension ChooseThemeColorViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.identifier! {
-        case resources.segueIdToFinalConfirm:
-            let destinationController = segue.destination as! NewSnsidFinalConfirmViewController
-            destinationController.resources = self.resources
-            
-        default:
-            break
-        }
-    }
     
+    // MARK: - Navigations
     
-    @IBAction func doneButtonDidTabbed(_ sender: Any) {
-        self.performSegue(withIdentifier: resources.segueIdToFinalConfirm, sender: sender)
+    internal func willTransitToNextScene() {
     }
 }
 
@@ -56,10 +38,8 @@ extension ChooseThemeColorViewController {
 
 extension ChooseThemeColorViewController {
     private func prepareForViewDidLoad() {
-        // set navigation items
-        self.navigationItem.title = resources.navigationItemTitle
-        self.navigationItem.rightBarButtonItem = nil
-        self.navigationItem.leftBarButtonItem?.title = "Back"
+        // set titleLabel's textColor
+        titleLabel.textColor = UIColor.primaryColor
         // set color plate scroll view
         colorPlateScrollView.delegate = self
         colorPlateScrollView.contentSize = colorContainerView.frame.size
@@ -70,7 +50,7 @@ extension ChooseThemeColorViewController {
         // set contentView
         colorContainerView.completeInit(delegate: self)
         // if a themeColor is chosen, set to true
-        doneButton.isEnabled = resources.themeColor == UIColor.placeHolderForThemeColor ? false : true
+        self.containerViewController?.nextButton.isEnabled = resources.themeColor == UIColor.placeHolderForThemeColor ? false : true
     }
     
     
@@ -79,7 +59,13 @@ extension ChooseThemeColorViewController {
         // update database
         self.resources.themeColor = color
         // update doneButton Apperance
-        doneButton.updateApperanceWithColor(color)
+        self.containerViewController?.nextButton.layoutWith(
+            isEnabled: color==UIColor.placeHolderForThemeColor ? false : true,
+            baseColor: color,
+            accentColor: .textOnPrimaryColor,
+            shouldShowShadow: false,
+            borderWidth: Standards.LineWidth.SuperWide
+        )
         // update colorUnitButton Appearance
         if let index = resources.previouslyChoosenButtonIndex {
             colorContainerView.colorButtons[index].isSelected = false

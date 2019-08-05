@@ -9,12 +9,12 @@
 import UIKit
 
 @IBDesignable
-class SearchTopicViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
-    internal var resources: ResourcesForAddSnsidScene!
+class SearchTopicViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AddSnsidSceneController {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var doneButton: RoundedNextButton!
+    
+    internal weak var resources: ResourcesForAddSnsidScene!
+    internal weak var containerViewController: AddSnsidContainerViewController?
     
 
     override func viewDidLoad() {
@@ -43,7 +43,7 @@ class SearchTopicViewController: UIViewController, UITableViewDelegate, UITableV
         var cells = resources.totalSearchTopicCells
         let cell = tableView.dequeueReusableCell(withIdentifier: cells[indexPath.row].reuseId, for: indexPath)
         
-        self.updateUI(of: cell, for: indexPath)
+        self.configureCell(cell, for: indexPath)
         
         return cell
     }
@@ -54,10 +54,9 @@ class SearchTopicViewController: UIViewController, UITableViewDelegate, UITableV
         switch resources.totalSearchTopicCells[indexPath.row].type {
         case .searchResult(_):
             // choose topic
-            self.didChooseTopic(at: indexPath)
-            // reload tableView
-            self.refresh()
-            
+            self.didChooseTopic(at: indexPath, completion: { [unowned self] in
+                self.refreshToShowChosenTopics()
+            })
         default:
             break
         }
@@ -67,20 +66,20 @@ class SearchTopicViewController: UIViewController, UITableViewDelegate, UITableV
     
     // MARK: - Navigation
     
+    func willTransitToNextScene() {
+        
+    }
+    
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier! {
-        case resources.segueIdToChooseThemeColor:
-            let destinationController = segue.destination as! ChooseThemeColorViewController
-            destinationController.resources = self.resources
-            
-            
         case resources.segueIdToNewTopic:
             let destinationController = segue.destination as! NewTopicViewController
             // remember to set the new topic title
             resources.newTopicTitle = resources.userInputForSearchTopic
             destinationController.resources = self.resources
             break
-            
+
         default:
             break
         }
@@ -93,28 +92,23 @@ class SearchTopicViewController: UIViewController, UITableViewDelegate, UITableV
 
 extension SearchTopicViewController {
     private func prepareForViewDidLoad() {
-        // set navigation items
-        self.navigationItem.title = resources.navigationItemTitle
-        self.navigationItem.rightBarButtonItem = nil
-        self.navigationItem.leftBarButtonItem?.title = "Back"
-        // set doneButton
-        doneButton.addTarget(self, action: #selector(doneButtonTabbed), for: .touchUpInside)
-        doneButton.isEnabled = false
+        
     }
     
     
     private func prepareForViewWillAppear() {
-        self.tableView.reloadData()
+
     }
     
     
     /// update UI of tableView cell
-    private func updateUI(of cell: UITableViewCell, for indexPath: IndexPath) {
+    private func configureCell(_ cell: UITableViewCell, for indexPath: IndexPath) {
         let cellAttributes = resources.totalSearchTopicCells[indexPath.row]
         switch cellAttributes.type {
         case let .title(titleString):
             let titleLabel = cell.viewWithTag(11) as! UILabel
             titleLabel.text = titleString
+            titleLabel.textColor = UIColor.primaryColor
             
             
         case let .searchBar(placeHolderString):
@@ -156,7 +150,6 @@ extension SearchTopicViewController {
         let width = ( collectionViewSize.width - layout.minimumInteritemSpacing * (resources.itemsPerRow-1) ) / resources.itemsPerRow
         let height: CGFloat = resources.heightForItem
         layout.itemSize = CGSize(width: width, height: height)
-        
     }
     
     
@@ -164,15 +157,16 @@ extension SearchTopicViewController {
         let topicButton = cell.viewWithTag(101) as! ChosenTopicButton
         
         topicButton.setTitle("   \(resources.chosenTopicTitles[indexPath.item])", for: .normal)
+        topicButton.layoutWith(baseColor: UIColor.white, accentColor: UIColor.primaryLightColor)
         // set chosen topic style
         let layer = cell.layer
-        layer.cornerRadius = resources.cornerRadiusOfChosenTopicCell
-        layer.borderWidth = resources.borderWidthOfChosenTopicCell
-        layer.borderColor = UIColor.defaultBlueColor.cgColor
+        layer.cornerRadius = Standards.CornerRadius.smallCell
+        layer.borderWidth = Standards.BorderWidth.smallCell
+        layer.borderColor = UIColor.primaryLightColor.cgColor
     }
     
     
-    private func didChooseTopic(at indexPath: IndexPath) {
+    private func didChooseTopic(at indexPath: IndexPath, completion: ()->() ) {
         let cell = tableView.cellForRow(at: indexPath)!
         let topicLabel = cell.viewWithTag(11) as! UILabel
         
@@ -182,6 +176,8 @@ extension SearchTopicViewController {
         resources.chosenTopicsCell = [ SearchTopicCellAttributes(of: .chosenTopics(chosenTitles)) ]
         // clear userInput
         resources.userInputForSearchTopic = ""
+        
+        completion()
     }
     
     
@@ -204,14 +200,12 @@ extension SearchTopicViewController {
     }
     
     
-    @objc private func doneButtonTabbed() {
-        self.performSegue(withIdentifier: resources.segueIdToChooseThemeColor, sender: nil)
-    }
-    
-    
-    private func refresh() {
-        doneButton.isEnabled = resources.shouldNavigateToChooseThemeColorScene
+    private func refreshToShowChosenTopics() {
+        // reload tableView
+//        self.tableView.reloadRows(at: resources.indicesBelowSearchTopicBar, with: .automatic)
         tableView.reloadData()
+        // set isEnabled of doneButton
+        self.containerViewController?.nextButton.isEnabled = resources.shouldNavigateToChooseThemeColorScene
     }
 }
 
@@ -224,8 +218,8 @@ extension SearchTopicViewController: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         // if existingTopics is still not fetched, fetch it.
         if let _ = resources.existingTopics {} else {
-            resources.fetchExistingTopics(completion: {
-                self.refresh()
+            resources.fetchExistingTopics(completion: { [unowned self] in
+                self.refreshToShowChosenTopics()
             })
         }
         // show stored text
@@ -241,7 +235,8 @@ extension SearchTopicViewController: UITextFieldDelegate {
     
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.refresh()
+        textField.resignFirstResponder()
+        self.refreshToShowChosenTopics()
         return true
     }
     

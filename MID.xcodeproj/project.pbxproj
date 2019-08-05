@@ -36,6 +36,7 @@
 		2671F9B422C751870018F6AF /* CameraButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2671F9B322C751870018F6AF /* CameraButton.swift */; };
 		2671F9B622C795BD0018F6AF /* EdisonBulbButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2671F9B522C795BD0018F6AF /* EdisonBulbButton.swift */; };
 		2671F9B822C822D60018F6AF /* TextViewWithPlaceHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2671F9B722C822D60018F6AF /* TextViewWithPlaceHolder.swift */; };
+		2673413E22F8132000DB53C3 /* ArrowViewswift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2673413D22F8132000DB53C3 /* ArrowViewswift.swift */; };
 		26740CF122B5B36F0037B63D /* ColorContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26740CF022B5B36F0037B63D /* ColorContainerView.swift */; };
 		26740CF322B5BA200037B63D /* ColorUnitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26740CF222B5BA200037B63D /* ColorUnitButton.swift */; };
 		26740CF522B6046B0037B63D /* ColorPlateScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26740CF422B6046B0037B63D /* ColorPlateScrollView.swift */; };
@@ -86,6 +87,8 @@
 		26E5571421C0AEF6000604DE /* TimeLineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5571321C0AEF6000604DE /* TimeLineTableViewController.swift */; };
 		26E5571721C11B9D000604DE /* PostPast+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5571521C11B9D000604DE /* PostPast+CoreDataClass.swift */; };
 		26E5571C21C120E5000604DE /* PostPast+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5571B21C120E5000604DE /* PostPast+CoreDataProperties.swift */; };
+		26E6B33022F6BDC900068267 /* AddSnsidPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E6B32F22F6BDC900068267 /* AddSnsidPageViewController.swift */; };
+		26E6B33222F705C500068267 /* AddSnsidContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E6B33122F705C500068267 /* AddSnsidContainerViewController.swift */; };
 		26FD486B2286A72900D75260 /* MainCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 26FD486A2286A72900D75260 /* MainCollectionViewCell.xib */; };
 		DEA26E2989A1CCDDE1AEC9B7 /* Pods_MID.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EDF5163BC5EC3F48C209321 /* Pods_MID.framework */; };
 /* End PBXBuildFile section */
@@ -120,6 +123,7 @@
 		2671F9B322C751870018F6AF /* CameraButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraButton.swift; sourceTree = "<group>"; };
 		2671F9B522C795BD0018F6AF /* EdisonBulbButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EdisonBulbButton.swift; sourceTree = "<group>"; };
 		2671F9B722C822D60018F6AF /* TextViewWithPlaceHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewWithPlaceHolder.swift; sourceTree = "<group>"; };
+		2673413D22F8132000DB53C3 /* ArrowViewswift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrowViewswift.swift; sourceTree = "<group>"; };
 		26740CF022B5B36F0037B63D /* ColorContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorContainerView.swift; sourceTree = "<group>"; };
 		26740CF222B5BA200037B63D /* ColorUnitButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUnitButton.swift; sourceTree = "<group>"; };
 		26740CF422B6046B0037B63D /* ColorPlateScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPlateScrollView.swift; sourceTree = "<group>"; };
@@ -172,6 +176,8 @@
 		26E5571321C0AEF6000604DE /* TimeLineTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLineTableViewController.swift; sourceTree = "<group>"; };
 		26E5571521C11B9D000604DE /* PostPast+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PostPast+CoreDataClass.swift"; sourceTree = "<group>"; };
 		26E5571B21C120E5000604DE /* PostPast+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PostPast+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		26E6B32F22F6BDC900068267 /* AddSnsidPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSnsidPageViewController.swift; sourceTree = "<group>"; };
+		26E6B33122F705C500068267 /* AddSnsidContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSnsidContainerViewController.swift; sourceTree = "<group>"; };
 		26FD486A2286A72900D75260 /* MainCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainCollectionViewCell.xib; sourceTree = "<group>"; };
 		4EDF5163BC5EC3F48C209321 /* Pods_MID.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MID.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D959D41147408FBECC040F0 /* Pods-MID.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MID.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MID/Pods-MID.debug.xcconfig"; sourceTree = "<group>"; };
@@ -256,7 +262,10 @@
 				261DFD7E22AB2520000B6733 /* ChooseThemeColor */,
 				261DFD7D22AB2505000B6733 /* SearchTopic */,
 				261DFD7922AB1CCA000B6733 /* NewName */,
+				26E6B33122F705C500068267 /* AddSnsidContainerViewController.swift */,
 				2633167B22A9F30900C0F5E8 /* ResourcesForAddSnsidScene.swift */,
+				26E6B32F22F6BDC900068267 /* AddSnsidPageViewController.swift */,
+				2673413D22F8132000DB53C3 /* ArrowViewswift.swift */,
 				2633167D22A9FC6400C0F5E8 /* AddSnsidFlowLayout.swift */,
 				26B5E1EC22AA8E450040F43C /* ChosenTopicLabel.swift */,
 			);
@@ -602,6 +611,7 @@
 				26783CA322BF28F600E3D045 /* NewTopicViewController.swift in Sources */,
 				269AAFEA223B76D60069EA06 /* AccountClass.swift in Sources */,
 				261DFD8222AB2582000B6733 /* ChooseThemeColorViewController.swift in Sources */,
+				26E6B33222F705C500068267 /* AddSnsidContainerViewController.swift in Sources */,
 				26740CF522B6046B0037B63D /* ColorPlateScrollView.swift in Sources */,
 				2661289D21D718A600AE03A7 /* PrimitiveTypesExtension.swift in Sources */,
 				26609089229A3F7700E4E39F /* MainCollectionViewLayout.swift in Sources */,
@@ -609,6 +619,7 @@
 				261DFD8A22AB3B36000B6733 /* NewNameViewController.swift in Sources */,
 				26740CF322B5BA200037B63D /* ColorUnitButton.swift in Sources */,
 				261D658B22754C2C00CD4E91 /* MainCollectionCollectionViewController.swift in Sources */,
+				26E6B33022F6BDC900068267 /* AddSnsidPageViewController.swift in Sources */,
 				260D706621CF63AC0024B1A0 /* PostDetailsTableViewController.swift in Sources */,
 				26780B8422F295B80094DA58 /* BottomNavigationDrawerViewController.swift in Sources */,
 				26AC60942288004A00E59947 /* ResourcesForTimeLineScene.swift in Sources */,
@@ -641,6 +652,7 @@
 				2633167C22A9F30900C0F5E8 /* ResourcesForAddSnsidScene.swift in Sources */,
 				265BC30722B48DB80037EEBB /* RoundedNextButton.swift in Sources */,
 				26384FF422EE81050069F0C8 /* NewSnsidFinalConfirmViewController.swift in Sources */,
+				2673413E22F8132000DB53C3 /* ArrowViewswift.swift in Sources */,
 				26C1DA3422EEE71700748FBC /* TextFieldWithIndicationBorder.swift in Sources */,
 				268FF2D0227E51FA0016C82A /* MainCollectionViewCell.swift in Sources */,
 				269AAFEF223B78190069EA06 /* StoredAccountInfos+CoreDataClass.swift in Sources */,

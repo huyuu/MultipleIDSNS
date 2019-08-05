@@ -191,7 +191,7 @@ extension BottomNavigationDrawerInNewSnsidFinalConfirm {
         // set rounded corners to whole view
         self.view.layer.cornerRadius = Standards.CornerRadius.fullScreenView
         self.view.layer.shadowOpacity = 0.4
-        self.view.layer.masksToBounds = true
+        self.view.layer.masksToBounds = false
     }
     
     
@@ -242,7 +242,7 @@ extension BottomNavigationDrawerInNewSnsidFinalConfirm {
                         self.tableView.isScrollEnabled = true
                 })
             } else if isClosing {
-                let parentViewController = self.parent as! NewSnsidFinalConfirmViewController
+                let parentViewController = self.parent as! AddSnsidContainerViewController
                 parentViewController.dismissBottomNavigationDrawer()
             }
         }

@@ -11,26 +11,26 @@ import UIKit
 @IBDesignable
 class RoundedNextButton: UIButton {
     
-    var isColorSelected: Bool = false
-    override var isEnabled: Bool {
-        willSet {
-            fillColor = newValue ? UIColor.white : UIColor.lightGray
-        }
-    }
-    var fillColor: UIColor = UIColor.white {
-        didSet {
-            self.setNeedsDisplay()
-        }
-    }
-    var strokeColor: UIColor {
-        get {
-            if isEnabled {
-                return isColorSelected ? UIColor.white : UIColor.defaultBlueColor
-            } else {
-                return UIColor.white
-            }
-        }
-    }
+//    var isColorSelected: Bool = false
+//    override var isEnabled: Bool {
+//        willSet {
+//            fillColor = newValue ? UIColor.white : UIColor.lightGray
+//        }
+//    }
+//    var fillColor: UIColor = UIColor.white {
+//        didSet {
+//            self.setNeedsDisplay()
+//        }
+//    }
+//    var strokeColor: UIColor {
+//        get {
+//            if isEnabled {
+//                return isColorSelected ? UIColor.white : UIColor.defaultBlueColor
+//            } else {
+//                return UIColor.white
+//            }
+//        }
+//    }
     static let intrinsicFrame: CGRect = {
         let intrinsicSize = CGSize(width: 70, height: 70)
         let screenRect = UIScreen.main.bounds
@@ -40,21 +40,27 @@ class RoundedNextButton: UIButton {
         return CGRect(origin: originOfButton, size: intrinsicSize)
     }()
     
+    private var baseColor = UIColor.white
+    private var accentColor = UIColor.primaryColor
+    private var shouldShowShadow = true
+    private var borderWidth: CGFloat = Standards.LineWidth.Wide
     
     
     override func draw(_ rect: CGRect) {
-        strokeColor.setStroke()
-        fillColor.setFill()
-        
-        let borderPath = UIBezierPath(ovalIn: rect)
-        borderPath.lineWidth = 0.1
+        let borderEdges = UIEdgeInsets(top: borderWidth/2, left: borderWidth/2, bottom: borderWidth/2, right: borderWidth/2)
+        let borderPath = UIBezierPath(ovalIn: rect.inset(by: borderEdges))
+        borderPath.lineWidth = self.borderWidth
+        UIColor.white.setStroke()
         borderPath.stroke()
+        baseColor.setFill()
         borderPath.fill()
         
-        let arrowPath = CAShapeLayer.drawNextPattern(in: rect)
-        arrowPath.lineWidth = 6.0
+        let arrowPatternEdges = UIEdgeInsets(top: borderWidth, left: borderWidth, bottom: borderWidth, right: borderWidth)
+        let arrowPath = CAShapeLayer.drawNextPattern(in: rect.inset(by: arrowPatternEdges))
+        arrowPath.lineWidth = Standards.LineWidth.Wide
         arrowPath.lineCapStyle = .round
         arrowPath.lineJoinStyle = .round
+        accentColor.setStroke()
         arrowPath.stroke()
     }
     
@@ -73,11 +79,15 @@ class RoundedNextButton: UIButton {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.shadowOpacity = 0.5
-        layer.shadowRadius = 10
-        layer.masksToBounds = false
-        layer.shadowColor = UIColor.lightGray.cgColor
-        layer.shadowOffset = CGSize(width: 0, height: 8.0)
+        if self.shouldShowShadow {
+            layer.shadowOpacity = 0.5
+            layer.shadowRadius = 10
+            layer.masksToBounds = false
+            layer.shadowColor = UIColor.lightGray.cgColor
+        } else {
+            layer.shadowOpacity = 0
+        }
+
     }
     
     
@@ -90,9 +100,19 @@ class RoundedNextButton: UIButton {
     }
     
     
-    internal func updateApperanceWithColor(_ color: UIColor) {
-        self.isEnabled = true
-        self.isColorSelected = true
-        self.fillColor = color
+//    internal func updateApperanceWithColor(_ color: UIColor) {
+//        self.isEnabled = true
+//        self.isColorSelected = true
+//        self.fillColor = color
+//    }
+    
+    
+    internal func layoutWith(isEnabled: Bool, baseColor: UIColor, accentColor: UIColor, shouldShowShadow: Bool, borderWidth: CGFloat=Standards.LineWidth.Wide) {
+        self.isEnabled = isEnabled
+        self.shouldShowShadow = shouldShowShadow
+        self.accentColor = accentColor
+        self.baseColor = baseColor
+        self.borderWidth = borderWidth
+        setNeedsDisplay()
     }
 }

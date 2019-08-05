@@ -119,7 +119,7 @@ class MainScrollViewController: UITableViewController {
             
             
         case ResourcesForMainScrollView.segueIdentifierForAddSnsid:
-            let destinationController = segue.destination as! NewNameViewController
+            let destinationController = segue.destination as! AddSnsidContainerViewController
             destinationController.resources = self.resources.translateToResourcesForAddSnsidScene()
             
             

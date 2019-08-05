@@ -53,6 +53,7 @@ class ViewWithRoundedCornersAndShadowImage: UIView {
             // make its shape circle
             imageView.layer.cornerRadius = self.cornerRadius
             imageView.layer.masksToBounds = true
+            imageView.clipsToBounds = true
             imageView.image = image
             // background will be white when image exists.
             imageView.backgroundColor = UIColor.white
@@ -112,6 +113,8 @@ class ViewWithRoundedCornersAndShadowImage: UIView {
         self.accentColor = accentColor
         self.shouldHideShadowAtDefault = shouldHideShadowAtDefault
         self.shouldShowCameraPatternAtDefault = shouldShowCameraPatternAtDefault
+        
+        setNeedsDisplay()
         setNeedsLayout()
     }
 }

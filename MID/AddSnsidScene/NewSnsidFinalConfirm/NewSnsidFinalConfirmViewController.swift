@@ -9,14 +9,13 @@
 import UIKit
 import Firebase
 
-class NewSnsidFinalConfirmViewController: UIViewController {
+class NewSnsidFinalConfirmViewController: UIViewController, AddSnsidSceneController {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var doneButton: RoundedNextButton!
     
-    internal var resources: ResourcesForAddSnsidScene!
-    private var bottomNavDrawer: BottomNavigationDrawerInNewSnsidFinalConfirm? = nil
-    private var overlayBluredView: UIVisualEffectView? = nil
+    internal weak var resources: ResourcesForAddSnsidScene!
+    internal weak var containerViewController: AddSnsidContainerViewController?
+    
     private var textView: TextViewWithPlaceHolder!
     
 
@@ -31,10 +30,15 @@ class NewSnsidFinalConfirmViewController: UIViewController {
     }
     
     
-    @IBAction func doneButtonDidTap(_ sender: Any) {
-        self.updateDatabase()
-        self.navigationController!.popToRootViewController(animated: true)
+    internal func willTransitToNextScene() {
+//        self.updateDatabase()
     }
+    
+    
+//    @IBAction func doneButtonDidTap(_ sender: Any) {
+//        self.updateDatabase()
+//        self.navigationController!.popToRootViewController(animated: true)
+//    }
 }
 
 
@@ -66,11 +70,11 @@ extension NewSnsidFinalConfirmViewController: UITextViewDelegate {
             textView.resignFirstResponder()
             return true
         }
-        
+        // set user inpit to textView
         resources.snsidDescription = textView.textForStorage(newChar: text)
         let textViewWithPlaceHolder = textView as! TextViewWithPlaceHolder
         textViewWithPlaceHolder.layoutAccordingTo(resources.snsidDescription)
-        
+        // update tableView
         tableView.beginUpdates()
         tableView.endUpdates()
         
@@ -85,8 +89,8 @@ extension NewSnsidFinalConfirmViewController: UITextViewDelegate {
     
     @objc func adjustForKeyboard(when notification: Notification) {
         guard let keyboardScreenFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
-        // bottomNavDrawer is in the front view
-        guard self.bottomNavDrawer == nil else { return }
+        // ensure bottomNavDrawer is not at front
+        guard self.containerViewController?.bottomNavDrawer == nil else { return }
 
         switch notification.name {
         case UIResponder.keyboardWillChangeFrameNotification:
@@ -102,7 +106,6 @@ extension NewSnsidFinalConfirmViewController: UITextViewDelegate {
                 let adjustment = currentTextViewLowerBound - keyboardUpperBound
                 tableView.contentOffset.y += adjustment
             }
-            
         default:
             break
         }
@@ -114,63 +117,24 @@ extension NewSnsidFinalConfirmViewController: UITextViewDelegate {
 //MARK: - Navigations
 
 extension NewSnsidFinalConfirmViewController {
-    private func showBottomNavigatinoDrawer(of type: BottomNavigationDrawerAttributesType) {
-        // display blured view
-        self.overlayBluredView = self.generateOverlayBluredView()
-        UIView.animate(withDuration: Standards.UIMotionDuration.quiteFast) { [self] in
-            self.view.addSubview(self.overlayBluredView!)
-            // hide navigation bar
-            self.navigationController?.navigationBar.isHidden = true
-        }
-        
-        /// Init bottom navigation drawer
-        let newBottomNavDrawer = BottomNavigationDrawerInNewSnsidFinalConfirm(resources: self.resources, type: .name, origin: CGPoint(x: 0, y: self.view.frame.maxY), size: self.view.frame.size)
-        /// Add as self's child. Note that we'll handle animations of bottomNavDrawer in its own class.
-        self.addChild(newBottomNavDrawer)
-        self.view.addSubview(newBottomNavDrawer.view)
-        newBottomNavDrawer.didMove(toParent: self)
-        
-        // set it to self's reference
-        self.bottomNavDrawer = newBottomNavDrawer
-    }
-
-    
-    internal func dismissBottomNavigationDrawer() {
-        // remove blured view from view hierarchy
-        self.overlayBluredView?.removeFromSuperview()
-        self.overlayBluredView = nil
-        // show navigation bar
-        self.navigationController?.navigationBar.isHidden = false
-        // dismiss bottomNavDrawer
-        self.bottomNavDrawer?.standardDismiss(completion: {
-            // reload name label
-            self.tableView.reloadRows(at: [self.resources.indexOfNameCellInFinalConfirm], with: .automatic)
-            // remove bottomNavDrawer from view hierarchy
-            self.bottomNavDrawer?.view.removeFromSuperview()
-            self.bottomNavDrawer?.removeFromParent()
-            self.bottomNavDrawer = nil
-        })
-    }
-    
-    
-    private func generateOverlayBluredView() -> UIVisualEffectView {
-        // Init a blured view
-        let blurEffect = UIBlurEffect(style: .dark)
-        let bluredView = UIVisualEffectView(effect: blurEffect)
-        // Set its frame
-        bluredView.frame = UIScreen.main.bounds
-        // add gesture recognizer
-        bluredView.isUserInteractionEnabled = true
-        bluredView.addGestureRecognizer({
-            return UITapGestureRecognizer(target: self, action: #selector(bluredViewDidTap))
-        }() )
-        
-        return bluredView
-    }
+//    private func generateOverlayBluredView() -> UIVisualEffectView {
+//        // Init a blured view
+//        let blurEffect = UIBlurEffect(style: .dark)
+//        let bluredView = UIVisualEffectView(effect: blurEffect)
+//        // Set its frame
+//        bluredView.frame = UIScreen.main.bounds
+//        // add gesture recognizer
+//        bluredView.isUserInteractionEnabled = true
+//        bluredView.addGestureRecognizer({
+//            return UITapGestureRecognizer(target: self, action: #selector(bluredViewDidTap))
+//        }() )
+//
+//        return bluredView
+//    }
     
     
     @objc func nameLabelDidTap() {
-        showBottomNavigatinoDrawer(of: .name)
+        containerViewController?.showBottomNavigatinoDrawer(of: .name)
     }
     
     
@@ -181,11 +145,6 @@ extension NewSnsidFinalConfirmViewController {
         photoPicker.sourceType = .photoLibrary
         photoPicker.delegate = self
         self.present(photoPicker, animated: true, completion: nil)
-    }
-    
-    
-    @objc func bluredViewDidTap() {
-        self.dismissBottomNavigationDrawer()
     }
 }
 
@@ -206,6 +165,7 @@ extension NewSnsidFinalConfirmViewController {
         switch cellAttributes.type {
         case .title:
             let titleLabel = cell.viewWithTag(11) as! UILabel
+            titleLabel.textColor = UIColor.primaryColor
             
         case .icon:
             let iconView = cell.viewWithTag(11) as! ViewWithRoundedCornersAndShadowImage

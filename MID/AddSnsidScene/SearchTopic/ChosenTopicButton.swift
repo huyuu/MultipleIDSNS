@@ -11,6 +11,10 @@ import UIKit
 @IBDesignable
 class ChosenTopicButton: UIButton {
     
+    private var baseColor: UIColor = UIColor.clear
+    private var accentColor: UIColor = UIColor.defaultBlueColor
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         self.prepare()
@@ -34,7 +38,7 @@ class ChosenTopicButton: UIButton {
                                     height: self.bounds.height - frameInsets.top - frameInsets.bottom)
         patternLayer.lineWidth = 3.5
         patternLayer.lineCap = .round
-        patternLayer.strokeColor = UIColor.defaultBlueColor.cgColor
+        patternLayer.strokeColor = self.accentColor.cgColor
         
         let edges = UIEdgeInsets(top: 1, left: 1, bottom: 1, right: 1)
         let path = UIBezierPath()
@@ -54,7 +58,19 @@ class ChosenTopicButton: UIButton {
     }
     
     
+    
+    // MARK: - Custom Helper Functions
+    
     private func prepare() {
         
+    }
+    
+    
+    internal func layoutWith(baseColor: UIColor=UIColor.clear, accentColor: UIColor=UIColor.defaultBlueColor) {
+        self.backgroundColor = baseColor
+        self.accentColor = accentColor
+        self.tintColor = accentColor
+        setNeedsDisplay()
+        setNeedsLayout()
     }
 }

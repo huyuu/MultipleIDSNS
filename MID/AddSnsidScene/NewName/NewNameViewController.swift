@@ -9,15 +9,13 @@
 import UIKit
 
 @IBDesignable
-class NewNameViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
-    internal var resources: ResourcesForAddSnsidScene!
-    private var indicatorLayer: CALayer!
-    
-    @IBOutlet weak var doneButton: RoundedNextButton!
-    
+class NewNameViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AddSnsidSceneController {
     
     @IBOutlet var tableView: UITableView!
+    
+    internal weak var resources: ResourcesForAddSnsidScene!
+    internal weak var containerViewController: AddSnsidContainerViewController?
+    private var indicatorLayer: CALayer!
     
 
     override func viewDidLoad() {
@@ -42,7 +40,7 @@ class NewNameViewController: UIViewController, UITableViewDelegate, UITableViewD
         var cells = resources.totalNewNameCells
         let cell = tableView.dequeueReusableCell(withIdentifier: cells[indexPath.row].reuseId, for: indexPath)
 
-        self.updateUI(of: cell, for: indexPath)
+        self.configureCell(cell, for: indexPath)
 
         return cell
     }
@@ -51,19 +49,15 @@ class NewNameViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
     }
- 
-
+    
+    
     
     // MARK: - Navigation
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard resources.segueIdToSearchTopic == segue.identifier! else { fatalError() }
-        let destinationController = segue.destination as! SearchTopicViewController
-        destinationController.resources = self.resources
+    internal func willTransitToNextScene() {
+        // store new name
+        resources.newName = resources.userInputForNewName
     }
-    
-    
-    
 }
 
 
@@ -72,23 +66,17 @@ class NewNameViewController: UIViewController, UITableViewDelegate, UITableViewD
 
 extension NewNameViewController {
     private func prepareForViewDidLoad() {
-        // set navigation items
-        self.navigationItem.title = resources.navigationItemTitle
-        self.navigationItem.rightBarButtonItem = nil
-        self.navigationItem.leftBarButtonItem?.title = "Back"
-        // init doneButton
-        doneButton.addTarget(self, action: #selector(doneButtonTabbed(_:)), for: .touchUpInside)
-        doneButton.isEnabled = false
     }
     
     
-    private func updateUI(of cell: UITableViewCell, for indexPath: IndexPath) {
+    private func configureCell(_ cell: UITableViewCell, for indexPath: IndexPath) {
         let cellAttributes = resources.totalNewNameCells[indexPath.row]
         switch cellAttributes.type {
         case .title:
             let titleLabel = cell.viewWithTag(11) as! UILabel
-            titleLabel.text = cellAttributes.content!
             
+            titleLabel.text = cellAttributes.content
+            titleLabel.textColor = UIColor.primaryColor
             
         case .name:
             let userInputTextField = cell.viewWithTag(11) as! UITextField
@@ -96,8 +84,7 @@ extension NewNameViewController {
             
             // prepare for user input
             userInputTextField.delegate = self
-            userInputTextField.placeholder = cellAttributes.content!
-            userInputTextField.layer.borderWidth = resources.textFieldBorderWidth
+            userInputTextField.placeholder = cellAttributes.content
             userInputTextField.borderStyle = .none
             userInputTextField.layer.borderWidth = 0
             userInputTextField.becomeFirstResponder()
@@ -109,31 +96,21 @@ extension NewNameViewController {
         case .errorDescription:
             let errorDescriptionLabel = cell.viewWithTag(11) as! UILabel
             // set error description string
-            errorDescriptionLabel.text = cellAttributes.content!
+            errorDescriptionLabel.text = cellAttributes.content
             errorDescriptionLabel.textColor = resources.isNameAvailable ? UIColor.white : UIColor.black
-
         }
     }
     
     
     private func updateLayerForIndication(_ layer: CALayer) {
-        layer.cornerRadius = resources.cornerRadiusOfNewNameCell
-        layer.borderWidth = resources.borderWidthOfNewNameCell
+        layer.cornerRadius = Standards.CornerRadius.largeCell
+        layer.borderWidth = Standards.BorderWidth.largeCell
         layer.borderColor = ResourcesForAddSnsidScene.indicatorColor(accordingTo: self.resources.isNameAvailable).cgColor
         // reload tableView to show the error description string
-        let indexPath = IndexPath(row: resources.rowOfErrorDescriptionCell, section: 0)
+        let indexPath = IndexPath(row: resources.rowNumberOfErrorDescriptionCell, section: 0)
         tableView.reloadRows(at: [indexPath], with: .fade)
         // trigger On/Off of the doneButton
-        self.doneButton.isEnabled = resources.isNameAvailable
-    }
-    
-    
-    @objc func doneButtonTabbed(_ sender: RoundedNextButton) {
-        if resources.isNameAvailable {
-            // store new name
-            resources.newName = resources.userInputForNewName
-            self.performSegue(withIdentifier: resources.segueIdToSearchTopic, sender: nil)
-        }
+        self.containerViewController?.nextButton.isEnabled = resources.isNameAvailable
     }
 }
 
@@ -165,18 +142,5 @@ extension NewNameViewController: UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         resources.userInputForNewName = textField.text ?? ""
-    }
-}
-
-
-
-// MARK: - Custom UITextField Helper Functions
-
-fileprivate extension UITextField {
-    static let insetForSideView: CGFloat = 7.0
-    
-    
-    func layoutAccordingTo(_ isValid: Bool) {
-        self.layer.borderColor = ResourcesForAddSnsidScene.indicatorColor(accordingTo: isValid).cgColor
     }
 }

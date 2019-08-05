@@ -83,49 +83,53 @@ extension CAShapeLayer {
     
     public static func drawNextPattern(in frame: CGRect, direction: NextPatternDirection = .right) -> UIBezierPath {
         let path = UIBezierPath()
+        let minX = frame.minX
+        let minY = frame.minY
+        let width = frame.width
+        let height = frame.height
         
         let startPoint: CGPoint = {
             switch direction {
             case .up:
-                return CGPoint(x: frame.width/3, y: frame.height*2/3)
+                return CGPoint(x: minX + width/3, y: minY + height*2/3)
             case .down:
-                return CGPoint(x: frame.width/3, y: frame.height/3)
+                return CGPoint(x: minX + width/3, y: minY + height/3)
             case .left:
-                return CGPoint(x: frame.width*2/3, y: frame.height/3)
+                return CGPoint(x: minX + width*2/3, y: minY + height/3)
             case .right:
-                return CGPoint(x: frame.width/3, y: frame.height/3)
+                return CGPoint(x: minX + width/3, y: minY + height/3)
             case .level:
-                return CGPoint(x: frame.width/3, y: frame.height/2)
+                return CGPoint(x: minX + width/3, y: minY + height/2)
             }
         }()
         
         let middlePoint: CGPoint = {
             switch direction {
             case .up:
-                return CGPoint(x: frame.width/2, y: frame.height/3)
+                return CGPoint(x: minX + width/2, y: minY + height/3)
             case .down:
-                return CGPoint(x: frame.width/2, y: frame.height*2/3)
+                return CGPoint(x: minX + width/2, y: minY + height*2/3)
             case .left:
-                return CGPoint(x: frame.width/3, y: frame.height/2)
+                return CGPoint(x: minX + width/3, y: minY + height/2)
             case .right:
-                return CGPoint(x: frame.width*2/3, y: frame.height/2)
+                return CGPoint(x: minX + width*2/3, y: minY + height/2)
             case .level:
-                return CGPoint(x: frame.width/2, y: frame.height/2)
+                return CGPoint(x: minX + width/2, y: minY + height/2)
             }
         }()
         
         let endPoint: CGPoint = {
             switch direction {
             case .up:
-                return CGPoint(x: frame.width*2/3, y: frame.height*2/3)
+                return CGPoint(x: minX + width*2/3, y: minY + height*2/3)
             case .down:
-                return CGPoint(x: frame.width*2/3, y: frame.height/3)
+                return CGPoint(x: minX + width*2/3, y: minY + height/3)
             case .left:
-                return CGPoint(x: frame.width*2/3, y: frame.height*2/3)
+                return CGPoint(x: minX + width*2/3, y: minY + height*2/3)
             case .right:
-                return CGPoint(x: frame.width/3, y: frame.height*2/3)
+                return CGPoint(x: minX + width/3, y: minY + height*2/3)
             case .level:
-                return CGPoint(x: frame.width*2/3, y: frame.height/2)
+                return CGPoint(x: minX + width*2/3, y: minY + height/2)
             }
         }()
         
