@@ -52,7 +52,12 @@ class RoundedNextButton: UIButton {
         borderPath.lineWidth = self.borderWidth
         UIColor.white.setStroke()
         borderPath.stroke()
-        baseColor.setFill()
+        
+        if self.isEnabled == true {
+            baseColor.setFill()
+        } else {
+            UIColor.lightGray.setFill()
+        }
         borderPath.fill()
         
         let arrowPatternEdges = UIEdgeInsets(top: borderWidth, left: borderWidth, bottom: borderWidth, right: borderWidth)
@@ -60,7 +65,12 @@ class RoundedNextButton: UIButton {
         arrowPath.lineWidth = Standards.LineWidth.Wide
         arrowPath.lineCapStyle = .round
         arrowPath.lineJoinStyle = .round
-        accentColor.setStroke()
+        
+        if self.isEnabled == true {
+            accentColor.setStroke()
+        } else {
+            UIColor.gray.setStroke()
+        }
         arrowPath.stroke()
     }
     

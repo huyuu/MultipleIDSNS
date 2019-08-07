@@ -13,6 +13,8 @@ class AddSnsidContainerViewController: UIViewController {
     
     // MARK: - IBOutlets
     
+    
+    @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var nextButton: RoundedNextButton!
     @IBOutlet weak var toolBar: UIToolbar!
     
@@ -23,7 +25,11 @@ class AddSnsidContainerViewController: UIViewController {
     
     private var pageViewController: AddSnsidPageViewController!
     private var displayableViewControllers: [UIViewController]! = []
-    private var currentPageIndex = 0
+    private var currentPageIndex = 0 {
+        didSet {
+            pageControl.currentPage = currentPageIndex
+        }
+    }
     /// A internal label makes sure that it can be seen from finalConfirm VC.
     internal var bottomNavDrawer: BottomNavigationDrawerViewController?
     private var tapGestureOnBluredView: UITapGestureRecognizer?
@@ -39,7 +45,8 @@ class AddSnsidContainerViewController: UIViewController {
     
     
     deinit {
-        print("AddSnsidContainerViewController is deinitted.")
+        // make sure to remove all observers
+        resources.topicTankRef.removeAllObservers()
     }
     
     
@@ -70,9 +77,9 @@ class AddSnsidContainerViewController: UIViewController {
         
         // give nextController controll power
         let nextController = displayableViewControllers[nextPageIndex] as! AddSnsidSceneController
-        pageViewController.setViewControllers([nextController], direction: .forward, animated: true, completion: { [unowned self] _ in
-            nextController.containerViewController = self
-        })
+        // set nextController's containerViewController to self before it appears. In this way, the nextController can prepare custom resources in viewWillAppear().
+        nextController.containerViewController = self
+        pageViewController.setViewControllers([nextController], direction: .forward, animated: true, completion: nil)
         
         // add 1 to currentPageIndex
         currentPageIndex += 1
@@ -90,9 +97,8 @@ class AddSnsidContainerViewController: UIViewController {
         
         // give previousController controll power
         let previousController = displayableViewControllers[previousPageIndex] as! AddSnsidSceneController
-        pageViewController.setViewControllers([previousController], direction: .reverse, animated: true, completion: { [unowned self] _ in
-            previousController.containerViewController = self
-        })
+        previousController.containerViewController = self
+        pageViewController.setViewControllers([previousController], direction: .reverse, animated: true, completion: nil)
 
         // substitute 1 to currentPageIndex
         currentPageIndex -= 1
@@ -200,11 +206,11 @@ extension AddSnsidContainerViewController {
         nextButton.layoutWith(isEnabled: false, baseColor: .secondaryColor, accentColor: .textOnSecondaryColor, shouldShowShadow: false, borderWidth: Standards.LineWidth.SuperWide)
         
         // set toolbar initial state
-        toolBar.barTintColor = UIColor.primaryColor
+        toolBar.barTintColor = UIColor.primaryDarkColor
         let cancelItem: UIBarButtonItem = {
             let arrowView = ArrowView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
             // set layout
-            arrowView.layoutWith(accentColor: UIColor.textOnPrimaryColor, direction: .left)
+            arrowView.layoutWith(accentColor: .primaryLightColor, direction: .left)
             // set actions for arrowView
             arrowView.isUserInteractionEnabled = true
             arrowView.addGestureRecognizer({
@@ -215,6 +221,12 @@ extension AddSnsidContainerViewController {
         let dummyItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         toolBar.setItems([cancelItem, dummyItem, dummyItem], animated: false)
         toolBar.setNeedsDisplay()
+        
+        // set page control initial state
+        pageControl.isUserInteractionEnabled = false
+        pageControl.numberOfPages = displayableViewControllers.count
+        pageControl.pageIndicatorTintColor = .lightGray
+        pageControl.currentPageIndicatorTintColor = .primaryDarkColor
     }
     
     

@@ -25,6 +25,7 @@
 		263F523322ABA76300B2E325 /* InvalidNameDescriptionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263F523222ABA76300B2E325 /* InvalidNameDescriptionLabel.swift */; };
 		2643799E22F0FECF0055752E /* ChangingNameTableViewCellInBottomNavigationDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2643799C22F0FECF0055752E /* ChangingNameTableViewCellInBottomNavigationDrawer.swift */; };
 		2643799F22F0FECF0055752E /* ChangingNameTableViewCellInBottomNavigationDrawer.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2643799D22F0FECF0055752E /* ChangingNameTableViewCellInBottomNavigationDrawer.xib */; };
+		265B751822F954E9004E57C3 /* ColorUnitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265B751722F954E9004E57C3 /* ColorUnitView.swift */; };
 		265BC30722B48DB80037EEBB /* RoundedNextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265BC30622B48DB80037EEBB /* RoundedNextButton.swift */; };
 		26609089229A3F7700E4E39F /* MainCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26609088229A3F7700E4E39F /* MainCollectionViewLayout.swift */; };
 		2661289921D6697E00AE03A7 /* AddPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661289821D6697E00AE03A7 /* AddPostViewController.swift */; };
@@ -112,6 +113,7 @@
 		263F523222ABA76300B2E325 /* InvalidNameDescriptionLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvalidNameDescriptionLabel.swift; sourceTree = "<group>"; };
 		2643799C22F0FECF0055752E /* ChangingNameTableViewCellInBottomNavigationDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangingNameTableViewCellInBottomNavigationDrawer.swift; sourceTree = "<group>"; };
 		2643799D22F0FECF0055752E /* ChangingNameTableViewCellInBottomNavigationDrawer.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChangingNameTableViewCellInBottomNavigationDrawer.xib; sourceTree = "<group>"; };
+		265B751722F954E9004E57C3 /* ColorUnitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorUnitView.swift; sourceTree = "<group>"; };
 		265BC30622B48DB80037EEBB /* RoundedNextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedNextButton.swift; sourceTree = "<group>"; };
 		26609088229A3F7700E4E39F /* MainCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionViewLayout.swift; sourceTree = "<group>"; };
 		2661289821D6697E00AE03A7 /* AddPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPostViewController.swift; sourceTree = "<group>"; };
@@ -225,6 +227,7 @@
 				26740CF422B6046B0037B63D /* ColorPlateScrollView.swift */,
 				26740CF022B5B36F0037B63D /* ColorContainerView.swift */,
 				26740CF222B5BA200037B63D /* ColorUnitButton.swift */,
+				265B751722F954E9004E57C3 /* ColorUnitView.swift */,
 			);
 			path = ChooseThemeColor;
 			sourceTree = "<group>";
@@ -628,6 +631,7 @@
 				2699EA6E228FFF710029FA37 /* PostDetailsCell.swift in Sources */,
 				26E5571721C11B9D000604DE /* PostPast+CoreDataClass.swift in Sources */,
 				2625DBFC22409315002DC051 /* AddSNSIDViewControllerNew.swift in Sources */,
+				265B751822F954E9004E57C3 /* ColorUnitView.swift in Sources */,
 				26740CF122B5B36F0037B63D /* ColorContainerView.swift in Sources */,
 				268FF2CC227E518B0016C82A /* MainTableViewCell.swift in Sources */,
 				26E5571421C0AEF6000604DE /* TimeLineTableViewController.swift in Sources */,

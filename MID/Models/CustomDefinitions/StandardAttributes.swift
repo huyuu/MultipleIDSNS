@@ -37,7 +37,7 @@ public struct Standards {
     
     enum LineWidth {
         static let None: CGFloat = 0
-        static let Thin: CGFloat = 3
+        static let Thin: CGFloat = 2
         static let Medium: CGFloat = 4
         static let Wide: CGFloat = 6
         static let SuperWide: CGFloat = 18
