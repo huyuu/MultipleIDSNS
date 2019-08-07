@@ -30,15 +30,27 @@ class NewSnsidFinalConfirmViewController: UIViewController, AddSnsidSceneControl
     }
     
     
-    internal func willTransitToNextScene() {
+    func willTransitToNextScene() {
 //        self.updateDatabase()
     }
     
     
-//    @IBAction func doneButtonDidTap(_ sender: Any) {
-//        self.updateDatabase()
-//        self.navigationController!.popToRootViewController(animated: true)
-//    }
+    func updateNextButtonState(isReady: Bool) {
+        self.containerViewController?.nextButton.layoutWith(isEnabled: isReady)
+    }
+    
+    
+    private func finalCheckAndUpdateDoneButtonState() {
+        let isReady: Bool = {
+            guard let resources = self.resources else { return false }
+            guard let _ = resources.newName else { return false }
+            guard resources.topicsAreAcceptibale == true else { return false }
+            guard let _ = resources.themeColor else { return false }
+            
+            return true
+        }()
+        self.updateNextButtonState(isReady: isReady)
+    }
 }
 
 
@@ -159,6 +171,11 @@ extension NewSnsidFinalConfirmViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard(when:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard(when:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
+    
+    
+    private func prepareForViewWillAppear() {
+        self.finalCheckAndUpdateDoneButtonState()
+    }
 
     
     private func configureCell(_ cell: UITableViewCell, cellAttributes: FinalConfirmCellAttributes) {
@@ -228,7 +245,7 @@ extension NewSnsidFinalConfirmViewController {
                                  topics: topicRefs,
                                  myLikes: nil,
                                  focusingPosts: nil,
-                                 settings: ["themeColor": resources.themeColor.toHexString()])
+                                 settings: ["themeColor": resources.themeColor!.toHexString()])
             
             // add newSnsid in snsidTank
             newSnsidURL.getFIRDatabaseReference.setValue(newSnsid.toJSON())
@@ -262,6 +279,7 @@ extension NewSnsidFinalConfirmViewController: UIImagePickerControllerDelegate, U
         picker.dismiss(animated: true, completion: { [unowned self] in
             // reload icon cell
             self.tableView.reloadRows(at: [self.resources.indexOfIconCellInFinalConfirm], with: .automatic)
+            self.finalCheckAndUpdateDoneButtonState()
         })
     }
 }

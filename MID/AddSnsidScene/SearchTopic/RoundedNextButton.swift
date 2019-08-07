@@ -117,11 +117,15 @@ class RoundedNextButton: UIButton {
 //    }
     
     
-    internal func layoutWith(isEnabled: Bool, baseColor: UIColor, accentColor: UIColor, shouldShowShadow: Bool, borderWidth: CGFloat=Standards.LineWidth.Wide) {
+    internal func layoutWith(isEnabled: Bool, baseColor: UIColor?=nil, accentColor: UIColor?=nil, shouldShowShadow: Bool=false, borderWidth: CGFloat=Standards.LineWidth.SuperWide) {
         self.isEnabled = isEnabled
         self.shouldShowShadow = shouldShowShadow
-        self.accentColor = accentColor
-        self.baseColor = baseColor
+        if let accentColor = accentColor {
+            self.accentColor = accentColor
+        }
+        if let baseColor = baseColor {
+            self.baseColor = baseColor
+        }
         self.borderWidth = borderWidth
         setNeedsDisplay()
     }

@@ -39,7 +39,6 @@
 		2671F9B822C822D60018F6AF /* TextViewWithPlaceHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2671F9B722C822D60018F6AF /* TextViewWithPlaceHolder.swift */; };
 		2673413E22F8132000DB53C3 /* ArrowViewswift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2673413D22F8132000DB53C3 /* ArrowViewswift.swift */; };
 		26740CF122B5B36F0037B63D /* ColorContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26740CF022B5B36F0037B63D /* ColorContainerView.swift */; };
-		26740CF322B5BA200037B63D /* ColorUnitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26740CF222B5BA200037B63D /* ColorUnitButton.swift */; };
 		26740CF522B6046B0037B63D /* ColorPlateScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26740CF422B6046B0037B63D /* ColorPlateScrollView.swift */; };
 		26780B8022F277D50094DA58 /* UpDownArrowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26780B7F22F277D50094DA58 /* UpDownArrowButton.swift */; };
 		26780B8422F295B80094DA58 /* BottomNavigationDrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26780B8322F295B80094DA58 /* BottomNavigationDrawerViewController.swift */; };
@@ -127,7 +126,6 @@
 		2671F9B722C822D60018F6AF /* TextViewWithPlaceHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewWithPlaceHolder.swift; sourceTree = "<group>"; };
 		2673413D22F8132000DB53C3 /* ArrowViewswift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrowViewswift.swift; sourceTree = "<group>"; };
 		26740CF022B5B36F0037B63D /* ColorContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorContainerView.swift; sourceTree = "<group>"; };
-		26740CF222B5BA200037B63D /* ColorUnitButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUnitButton.swift; sourceTree = "<group>"; };
 		26740CF422B6046B0037B63D /* ColorPlateScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPlateScrollView.swift; sourceTree = "<group>"; };
 		26780B7F22F277D50094DA58 /* UpDownArrowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpDownArrowButton.swift; sourceTree = "<group>"; };
 		26780B8322F295B80094DA58 /* BottomNavigationDrawerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNavigationDrawerViewController.swift; sourceTree = "<group>"; };
@@ -226,7 +224,6 @@
 				261DFD8122AB2582000B6733 /* ChooseThemeColorViewController.swift */,
 				26740CF422B6046B0037B63D /* ColorPlateScrollView.swift */,
 				26740CF022B5B36F0037B63D /* ColorContainerView.swift */,
-				26740CF222B5BA200037B63D /* ColorUnitButton.swift */,
 				265B751722F954E9004E57C3 /* ColorUnitView.swift */,
 			);
 			path = ChooseThemeColor;
@@ -620,7 +617,6 @@
 				26609089229A3F7700E4E39F /* MainCollectionViewLayout.swift in Sources */,
 				2661289F21D7222900AE03A7 /* FirebaseExtension.swift in Sources */,
 				261DFD8A22AB3B36000B6733 /* NewNameViewController.swift in Sources */,
-				26740CF322B5BA200037B63D /* ColorUnitButton.swift in Sources */,
 				261D658B22754C2C00CD4E91 /* MainCollectionCollectionViewController.swift in Sources */,
 				26E6B33022F6BDC900068267 /* AddSnsidPageViewController.swift in Sources */,
 				260D706621CF63AC0024B1A0 /* PostDetailsTableViewController.swift in Sources */,

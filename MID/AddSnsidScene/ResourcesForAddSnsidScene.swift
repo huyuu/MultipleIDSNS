@@ -142,7 +142,7 @@ class ResourcesForAddSnsidScene: ProjectResource {
     // MARK: - Choose Theme Color
     
     let pageIndexOfChooseThemeColor = 2
-    var themeColor: UIColor = UIColor.placeHolderForThemeColor
+    var themeColor: UIColor? = nil
     let pieces: Int = 6
     let requiredAmountOfColorUnits = 4000
     let colorContainerBounds = CGRect(x: 0, y: 0, width: 3000, height: 3000)

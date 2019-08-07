@@ -243,4 +243,5 @@ protocol AddSnsidSceneController: UIViewController {
     var containerViewController: AddSnsidContainerViewController? { get set }
     var resources: ResourcesForAddSnsidScene! { get set }
     func willTransitToNextScene()
+    func updateNextButtonState(isReady: Bool)
 }

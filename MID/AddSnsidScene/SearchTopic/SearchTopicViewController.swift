@@ -71,6 +71,11 @@ class SearchTopicViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     
+    func updateNextButtonState(isReady: Bool) {
+        self.containerViewController?.nextButton.layoutWith(isEnabled: isReady)
+    }
+    
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier! {
         case resources.segueIdToNewTopic:
@@ -97,7 +102,7 @@ extension SearchTopicViewController {
     
     
     private func prepareForViewWillAppear() {
-
+        self.updateNextButtonState(isReady: resources.shouldNavigateToChooseThemeColorScene)
     }
     
     
@@ -205,7 +210,8 @@ extension SearchTopicViewController {
 //        self.tableView.reloadRows(at: resources.indicesBelowSearchTopicBar, with: .automatic)
         tableView.reloadData()
         // set isEnabled of doneButton
-        self.containerViewController?.nextButton.isEnabled = resources.shouldNavigateToChooseThemeColorScene
+        self.updateNextButtonState(isReady: resources.shouldNavigateToChooseThemeColorScene)
+//        self.containerViewController?.nextButton.isEnabled = resources.shouldNavigateToChooseThemeColorScene
     }
 }
 

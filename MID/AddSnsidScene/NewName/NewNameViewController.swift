@@ -54,9 +54,14 @@ class NewNameViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // MARK: - Navigation
     
-    internal func willTransitToNextScene() {
+    func willTransitToNextScene() {
         // store new name
         resources.newName = resources.userInputForNewName
+    }
+    
+    
+    func updateNextButtonState(isReady: Bool) {
+        self.containerViewController?.nextButton.layoutWith(isEnabled: isReady)
     }
 }
 
@@ -110,7 +115,7 @@ extension NewNameViewController {
         let indexPath = IndexPath(row: resources.rowNumberOfErrorDescriptionCell, section: 0)
         tableView.reloadRows(at: [indexPath], with: .fade)
         // trigger On/Off of the doneButton
-        self.containerViewController?.nextButton.isEnabled = resources.isNameAvailable
+        self.updateNextButtonState(isReady: resources.isNameAvailable)
     }
 }
 
