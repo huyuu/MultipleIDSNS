@@ -15,7 +15,7 @@ class EdisonBulbButton: UIButton {
         didSet { setNeedsDisplay() }
     }
     private var strokeColor: UIColor {
-        return self.isEnabled ? UIColor.defaultBlueColor : UIColor.lightGray
+        return self.isEnabled ? UIColor.secondaryColor : UIColor.lightGray
     }
     
 
@@ -36,7 +36,7 @@ class EdisonBulbButton: UIButton {
         
         // global properties
         let center = CGPoint(x: rect.midX, y: rect.midY)
-        let linewidth: CGFloat = 1.0
+        let linewidth: CGFloat = Standards.LineWidth.Thin
         
         
         // draw shell

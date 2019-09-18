@@ -283,7 +283,8 @@ class ResourcesForAddSnsidScene: ProjectResource {
     
     
     internal static func indicatorColor(accordingTo isValid: Bool) -> UIColor {
-        return isValid  ? #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1) : #colorLiteral(red: 0.8275103109, green: 0.03921728841, blue: 0.09085532289, alpha: 1)
+//        return isValid  ? UIColor("#7cb342")! : #colorLiteral(red: 0.8275103109, green: 0.03921728841, blue: 0.09085532289, alpha: 1)
+        return isValid  ? UIColor("#7cb342")! : UIColor("#e64a19")!
     }
     
     

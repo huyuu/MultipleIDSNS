@@ -65,11 +65,28 @@ import UIKit
     }
     
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.prepareForViewDidAppear()
+    }
+    
+    
     
     // MARK: - Navigations
     
     internal func willTransitToNextScene() {
         
+    }
+}
+
+
+
+// MARK: - ScrollView Delegate
+
+extension ChooseThemeColorViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        //        scrollView.layoutIfNeeded()
+//        self.adjustColorUnitScale(scrollView)
     }
 }
 
@@ -102,6 +119,8 @@ extension ChooseThemeColorViewController {
             let newColorUnitView = ColorUnitView(baseColor: color, frame: newPoint.surroundingRect(withSize: self.resources.colorUnitViewSize))
             // add action to it
             newColorUnitView.addTarget(self, action: #selector(self.didSelectColor(_:)), for: .touchUpInside)
+            // prepare for animation
+            newColorUnitView.transform = CGAffineTransform(scaleX: 0, y: 0)
             /**
              Update database. There are 2 condition needed to be considerated.
              - colorUnitViews exists, colorContainerView is nil: this is the first state right after resources is set. Here, we store the newColorUnitView to colorUnitViews.
@@ -126,9 +145,21 @@ extension ChooseThemeColorViewController {
         colorPlateScrollView.decelerationRate = .fast
         
         // If colorUnitViews exists, add colorUnitView from it and delete it afterwards. From now on, [colorUnitView] can only be refered to through colorContainerView.
+        let appearAnimation: CABasicAnimation = {
+            let anim = CABasicAnimation(keyPath: "opacity")
+            anim.fromValue = 0
+            anim.toValue = 1
+            anim.duration = 5.0
+            return anim
+        }()
         if let colorUnitViews = self.colorUnitViews {
             colorUnitViews.forEach { [unowned self] colorUnitView in
                 self.colorContainerView.addSubview(colorUnitView)
+//                colorUnitView.layer.opacity = 1.0
+                // add CAAnimation for opacity
+//                colorUnitView.layer.add(appearAnimation, forKey: nil)
+                
+
             }
             self.colorUnitViews = nil
         }
@@ -141,6 +172,23 @@ extension ChooseThemeColorViewController {
         // if a themeColor is chosen, set to true
         self.updateNextButtonState(isReady: resources.themeColor != nil)
 //        self.containerViewController?.nextButton.isEnabled = resources.themeColor == UIColor.placeHolderForThemeColor ? false : true
+    }
+    
+    
+    private func prepareForViewDidAppear() {
+        colorContainerView!.subviews.forEach({ colorUnitView in
+            UIView.animate(
+                withDuration: Standards.UIMotionDuration.superSlow,
+                delay: 0.0,
+                usingSpringWithDamping: 0.8,
+                initialSpringVelocity: 10,
+                options: .allowUserInteraction,
+                animations: {
+                    colorUnitView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                },
+                completion: nil
+            )
+        })
     }
     
     
@@ -177,13 +225,6 @@ extension ChooseThemeColorViewController {
         // update database and nextButton state.
         resources.themeColor = color
         self.updateNextButtonState(isReady: true)
-//        self.containerViewController?.nextButton.layoutWith(
-//            isEnabled: color==UIColor.placeHolderForThemeColor ? false : true,
-//            baseColor: color,
-//            accentColor: .textOnPrimaryColor,
-//            shouldShowShadow: false,
-//            borderWidth: Standards.LineWidth.SuperWide
-//        )
         // change contentOffset when selected
         let frameCenter = colorPlateScrollView.center
         let colorUnitCenter = colorUnitView.center + colorPlateScrollView.frame.origin
@@ -272,16 +313,35 @@ extension ChooseThemeColorViewController {
         let brightness: CGFloat = 1.0
         return UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: 1.0)
     }
-}
-
-
-
-// MARK: - ScrollView Delegate
-
-extension ChooseThemeColorViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        self.colorContainerView.adjustApperanceDuringScrolling(containerFrame: scrollView.frame)
-//        scrollView.layoutIfNeeded()
+    
+    
+    private func adjustColorUnitScale(_ scrollView: UIScrollView) {
+        colorContainerView.subviews.forEach { view in
+            guard let colorUnitView = view as? ColorUnitView else { return }
+            
+            let center = scrollView.convert(colorUnitView.center, to: scrollView)
+            if scrollView.bounds.contains(center) {
+                let xRotationRate: CGFloat = {
+                    let centerDisplacement = center.x - scrollView.bounds.midX
+                    if centerDisplacement >= 0 {
+                        return centerDisplacement / (scrollView.bounds.width/2)
+                    } else {
+                        return -centerDisplacement / (scrollView.bounds.width/2)
+                    }
+                }()
+                let yRotationRate: CGFloat = {
+                    let centerDisplacement = center.y - scrollView.bounds.midY
+                    if centerDisplacement >= 0 {
+                        return centerDisplacement / (scrollView.bounds.height/2)
+                    } else {
+                        return -centerDisplacement / (scrollView.bounds.height/2)
+                    }
+                }()
+//                let rotationTransfrom = CATransform3DMakeRotation(CGFloat.pi/2, 0, rotationRate, 0)
+//                colorUnitView.layer.transform = rotationTransfrom
+                colorUnitView.transform = CGAffineTransform(scaleX: 1-xRotationRate, y: 1-yRotationRate)
+            }
+        }
     }
 }
 

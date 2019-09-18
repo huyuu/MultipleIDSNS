@@ -18,6 +18,17 @@ class ColorUnitView: UIControl {
     /// a get only property for reading the color of this color unit when touched.
     internal var color: UIColor { return self.baseColor }
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.prepare()
+    }
+    
+    
+    override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+        self.prepare()
+    }
+    
     
     override func draw(_ rect: CGRect) {
         // draw the circle
@@ -84,6 +95,10 @@ class ColorUnitView: UIControl {
     
     
     // MARK: Custom Helper Functions
+    
+    private func prepare() {
+        
+    }
     
     
     internal func layoutWith(isSelected: Bool=false) {

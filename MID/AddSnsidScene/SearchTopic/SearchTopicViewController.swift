@@ -103,6 +103,7 @@ extension SearchTopicViewController {
     
     private func prepareForViewWillAppear() {
         self.updateNextButtonState(isReady: resources.shouldNavigateToChooseThemeColorScene)
+        tableView.reloadData()
     }
     
     

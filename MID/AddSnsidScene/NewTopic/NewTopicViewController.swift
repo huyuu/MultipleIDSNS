@@ -199,8 +199,8 @@ extension NewTopicViewController {
     
     
     private func updateDoneButtonState() {
+        doneButton.layoutWith(isEnabled: resources.isCreatingNewTopicDone)
         if resources.isCreatingNewTopicDone {
-            doneButton.isEnabled = true
             self.view.bringSubviewToFront(doneButton)
         } else {
             self.view.sendSubviewToBack(doneButton)
